@@ -184,13 +184,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\IO\FileData.h" />
+    <ClInclude Include="src\IO\Data.h" />
     <ClInclude Include="src\Error.h" />
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\IO\FileData.cpp" />
+    <ClCompile Include="src\IO\Data.cpp" />
     <ClCompile Include="src\Error.cpp" />
     <ClCompile Include="src\Application.cpp" />
   </ItemGroup>

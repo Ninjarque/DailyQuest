@@ -1,5 +1,5 @@
 #include "EditorAppWindow.h"
-#include "IO/FileData.h"
+#include "IO/Data.h"
 
 using namespace std;
 
@@ -24,21 +24,21 @@ void test_file(std::string fileName, int at)
 
 void EditorAppWindow::OnInit()
 {
-	FileData d;
+	Data d;
 
-	// /*
-	FileData& scene = d["Scene"];
+	/*
+	Data& scene = d["Scene"];
 
-	FileData& obj1 = scene["Obj1"];
+	Data& obj1 = scene["Obj1"];
 	obj1["CSGType"].SetString("Intersection");
 	obj1["CSGValue"].SetDouble(0.5);
 
-	FileData& child1 = obj1["Child1"];
+	Data& child1 = obj1["Child1"];
 	child1["CSGType"].SetString("Minus");
 	child1["CSGValue"].SetDouble(1.0);
 
-	FileData& sphere1 = child1["Child1"];
-	FileData& sphere2 = child1["Child2"];
+	Data& sphere1 = child1["Child1"];
+	Data& sphere2 = child1["Child2"];
 
 	sphere1["Type"].SetString("Sphere");
 	sphere1["Position"].SetDouble(0.0, 0);
@@ -52,7 +52,7 @@ void EditorAppWindow::OnInit()
 	sphere2["Position"].SetDouble(-10.0, 2);
 	sphere2["Radius"].SetDouble(2.0);
 
-	FileData& child2 = obj1["Child2"];
+	Data& child2 = obj1["Child2"];
 	child2["Type"].SetString("Cube");
 	child2["Position"].SetDouble(-1.0, 0);
 	child2["Position"].SetDouble(0.0, 1);
@@ -85,23 +85,31 @@ void EditorAppWindow::OnInit()
 	
 	d["user"]["projects"]["quotes"]["motivational"].SetString("\"One day I'll be, the best trainee!!!\"");
 
-	d["user"]["projects"]["names"]["minecraft"].SetString("To mine, and craft");
+	d["user"]["projects"]["names"]["minecraft"].SetString("To mine, and to craft");
 	
-	d["user"]["projects"]["names"]["pokemon"].SetString("Be or not to be homeless");
+	d["user"]["projects"]["names"]["pokemon"].SetString("To be or not to be homeless");
 	d["user"]["projects"]["names"]["Yu-Gi-Ho"].SetString("Is this even the right way to write it?");
 
 	//*/
-	std::string fileName = "C:\\Users\\ninja\\Desktop\\FileData.txt";
-	std::string fileName2 = "C:\\Users\\ninja\\Desktop\\FileData2.txt";
-	std::string fileName3 = "C:\\Users\\ninja\\Desktop\\FileData3.txt";
+	std::string fileName = "C:\\Users\\ninja\\Desktop\\Data.txt";
+	std::string fileName2 = "C:\\Users\\ninja\\Desktop\\Data2.txt";
+	std::string fileName3 = "C:\\Users\\ninja\\Desktop\\Data3.txt";
 	
 	bool useSizes = false;
 
-	FileData::Write(d, fileName, "\t", ',', useSizes);
+	//Data::Write(d, fileName, "\t", ',', useSizes);
 
-	FileData read;
+	Data read;
 
-	read["Scene"]["Obj1"]["Child2"];
+	//read["Histoire"];
+	// /*
+	read["Histoire"];
+	read["Monde"]["Nom"];
+	read["Monde"]["Villes"]["Roiark"]["Type"];
+	read["Monde"]["Villes"]["Doyon"]["Personnages_Secondaires"];
+	// */
+
+	//read["Scene"]["Obj1"]["Child2"];
 
 	/*
 	read["user"]["age"];
@@ -110,13 +118,13 @@ void EditorAppWindow::OnInit()
 	read["user"]["projects"]["quotes"];
 	//*/
 
-	test_file(fileName, 102);
-	test_file(fileName, 467);
+	//test_file(fileName, 102);
+	//test_file(fileName, 467);
 
-	FileData::Read(read, fileName, "\t", ',', useSizes);
-	FileData::Write(read, fileName2, "\t", ',', useSizes);
+	Data::Read(read, fileName, "\t", ',');
+	Data::Write(read, fileName2, "\t", ',', useSizes);
 	
-	std::cout << d.ToString() << std::endl;
+	//std::cout << d.ToString() << std::endl;
 	std::cout << read.ToString() << std::endl;
 }
 

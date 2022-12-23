@@ -24,7 +24,7 @@
     <ClInclude Include="src\Error.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\IO\FileData.h">
+    <ClInclude Include="src\IO\Data.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
@@ -35,7 +35,7 @@
     <ClCompile Include="src\Error.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\IO\FileData.cpp">
+    <ClCompile Include="src\IO\Data.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
