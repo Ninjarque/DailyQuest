@@ -139,7 +139,7 @@ void Data::Read(std::ifstream& file, Data& data, const std::string indent, const
 			{
 				char c;
 				file.get(c);
-				if (IsText(c) || c == '"' || c == ',' || c == ';') started_equal = true;
+				if (IsText(c) || c == '"' || c == listSep || c == ';') started_equal = true;
 				if (started_equal)
 				{
 					if (c == '"' && lst_c != '\\')
@@ -165,7 +165,7 @@ void Data::Read(std::ifstream& file, Data& data, const std::string indent, const
 						equal_property = "";
 						equal_done = true;
 					}
-					else if (c == ',')
+					else if (c == listSep)
 					{
 						if (startedEmpty || data.Has(prop))
 							data[prop].SetString(equal_property, index);
