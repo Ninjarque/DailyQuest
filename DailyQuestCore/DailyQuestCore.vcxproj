@@ -103,7 +103,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)DailyQuestCore\src\imgui;$(SolutionDir)DailyQuestCore\src\image;$(SolutionDir)DailyQuestCore\src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -126,7 +126,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)DailyQuestCore\src\imgui;$(SolutionDir)DailyQuestCore\src\image;$(SolutionDir)DailyQuestCore\src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -148,7 +148,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)DailyQuestCore\src\imgui;$(SolutionDir)DailyQuestCore\src\image;$(SolutionDir)DailyQuestCore\src</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -171,7 +171,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)DailyQuestCore\src\imgui;$(SolutionDir)DailyQuestCore\src\image;$(SolutionDir)DailyQuestCore\src</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -191,12 +191,29 @@
     <ClInclude Include="src\Core\Error.h" />
     <ClInclude Include="src\Core\Window.h" />
     <ClInclude Include="src\Core\Timer.h" />
+    <ClInclude Include="src\imgui\imconfig.h" />
+    <ClInclude Include="src\imgui\imgui.h" />
+    <ClInclude Include="src\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="src\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="src\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="src\imgui\imgui_internal.h" />
+    <ClInclude Include="src\imgui\imstb_rectpack.h" />
+    <ClInclude Include="src\imgui\imstb_textedit.h" />
+    <ClInclude Include="src\imgui\imstb_truetype.h" />
+    <ClInclude Include="src\image\image.h" />
+    <ClInclude Include="src\image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Program.cpp" />
     <ClCompile Include="src\Core\Error.cpp" />
     <ClCompile Include="src\Core\Window.cpp" />
     <ClCompile Include="src\Core\Timer.cpp" />
+    <ClCompile Include="src\imgui\imgui.cpp" />
+    <ClCompile Include="src\imgui\imgui_draw.cpp" />
+    <ClCompile Include="src\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="src\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="src\imgui\imgui_tables.cpp" />
+    <ClCompile Include="src\imgui\imgui_widgets.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

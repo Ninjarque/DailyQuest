@@ -19,16 +19,16 @@ float Timer::end(int id, TIME_TYPE timeType)
 	switch (timeType)
 	{
 	case TIME_TYPE::MILLISECONDES:
-		dt = std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count();
+		dt = (float)std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count();
 		break;
 	case TIME_TYPE::SECONDES:
-		dt = std::chrono::duration_cast<std::chrono::seconds>(e - s).count();
+		dt = (float)std::chrono::duration_cast<std::chrono::seconds>(e - s).count();
 		break;
 	case TIME_TYPE::MINUTES:
-		dt = std::chrono::duration_cast<std::chrono::minutes>(e - s).count();
+		dt = (float)std::chrono::duration_cast<std::chrono::minutes>(e - s).count();
 		break;
 	case TIME_TYPE::HOURS:
-		dt = std::chrono::duration_cast<std::chrono::hours>(e - s).count();
+		dt = (float)std::chrono::duration_cast<std::chrono::hours>(e - s).count();
 		break;
 	}
 	return dt;
