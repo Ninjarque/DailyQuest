@@ -1,6 +1,5 @@
 #include "Window.h"
 
-
 void Window::Dispose()
 {
     if (disposed)
@@ -27,6 +26,16 @@ int Window::Run()
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
+
+    glewExperimental = GL_TRUE;
+    GLenum err = glewInit();
+    if (GLEW_OK != err)
+    {
+        std::string error = (const char*)glewGetErrorString(err);
+        Error::fatalError("Error: " + error);
+    }
+    std::string glewVersion = (const char*)glewGetString(GLEW_VERSION);
+    Error::warning("Status: Using GLEW " + glewVersion);
 
     // Decide GL+GLSL versions
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -103,6 +112,9 @@ int Window::Run()
     OnInit();
 
     Timer::start(-1);
+
+    if (!SaveImGUILayout())
+        ImGui::GetIO().IniFilename = NULL;
 
     //glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 

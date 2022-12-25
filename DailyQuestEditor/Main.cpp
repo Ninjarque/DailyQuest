@@ -14,6 +14,6 @@ int main()
 	Window* window = new EditorAppWindow();
 	Application::Attach(window);
 	Application::Run();
-	int i;
-	std::cin >> i;
+	//int i;
+	//std::cin >> i;
 }

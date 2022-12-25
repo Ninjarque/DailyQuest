@@ -1,9 +1,10 @@
 #pragma once
 
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <imgui.h>
-#include <imgui_impl_glfw.h>
-#include <imgui_impl_opengl3.h>
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_glfw.h>
+#include <imgui/imgui_impl_opengl3.h>
 
 #include "Timer.h"
 
@@ -14,6 +15,7 @@
 #include <unordered_map>
 
 #include "Program.h"
+#include "Error.h"
 
 class Window : public Program
 {
@@ -31,6 +33,8 @@ protected:
 	virtual void OnUpdate(float deltaTime) = 0;
 	virtual void OnDraw() = 0;
 	virtual void OnImGUIDraw() = 0;
+
+	virtual bool SaveImGUILayout() = 0;
 
 	int m_width = 1024, m_height = 720;
 	std::string m_title;

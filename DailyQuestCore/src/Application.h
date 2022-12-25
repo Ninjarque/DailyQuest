@@ -1,8 +1,10 @@
 #pragma once
 
-#include "pch.h"
+#include <string>
+#include <vector>
 
 #include "Core/Program.h"
+#include "Error.h"
 
 class Application
 {

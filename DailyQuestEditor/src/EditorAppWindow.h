@@ -1,5 +1,10 @@
 #pragma once
-#include "pch.h"
+
+#include "image/image.h"
+#include "imgui/imgui.h"
+
+#include "Drawing/Renderer.h"
+#include "Drawing/Shader.h"
 
 #include "Core/Window.h"
 
@@ -13,10 +18,26 @@ public:
 	}
 
 protected:
+
+	GLuint texture;
+	int width;
+	int height;
+
+	int buffer_width = 500;
+	int buffer_height = 300;
+	Renderer renderer;
+	Shader shader;
+
+	float color[4] = { 0.5f, 0.3f, 0.5f, 0.4f };
+	std::vector<GLuint> textures;
+
+
 	void OnInit() override;
 	void OnDispose() override;
 	void OnUpdate(float deltaTime) override;
 	void OnDraw() override;
 	void OnImGUIDraw() override;
+
+	bool SaveImGUILayout() override { return true; }
 };
 

@@ -1,5 +1,4 @@
 #pragma once
-#include "pch.h"
 
 #include "Core/Window.h"
 
@@ -18,6 +17,8 @@ protected:
 	void OnUpdate(float deltaTime) override;
 	void OnDraw() override;
 	void OnImGUIDraw() override;
+
+	bool SaveImGUILayout() override { return false; }
 
 private:
 	float delay = 1.0f;

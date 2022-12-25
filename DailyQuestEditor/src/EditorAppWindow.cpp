@@ -1,17 +1,14 @@
 #include "EditorAppWindow.h"
-#include <imgui.h>
-#include <image.h>
 
 using namespace std;
-
-GLuint texture;
-int width;
-int height;
 
 void EditorAppWindow::OnInit()
 {
     bool ret = LoadTextureFromFile("C:\\Users\\ninja\\Pictures\\bh3rd\\2022-08-24-19-45-55_0.png", texture, width, height);
     IM_ASSERT(ret);
+
+    renderer.Init(buffer_width, buffer_height);
+    shader.Init("res/Shaders/Basic.shader");
 }
 
 void EditorAppWindow::OnDispose()
@@ -26,11 +23,17 @@ void EditorAppWindow::OnUpdate(float deltaTime)
 
 void EditorAppWindow::OnDraw()
 {
+    renderer.StartFrame(buffer_width, buffer_height, color);
+    //shader.Begin();
+
 	glBegin(GL_TRIANGLES);
 	glVertex2f(-1.0f, -1.0f);
 	glVertex2f(0.0f, 0.5f);
 	glVertex2f(0.5f, -0.5f);
 	glEnd();
+
+    //shader.End();
+    textures = renderer.EndFrame();
 }
 
 void EditorAppWindow::OnImGUIDraw()
@@ -38,11 +41,21 @@ void EditorAppWindow::OnImGUIDraw()
     static float f = 0.0f;
     static int counter = 0;
     
+    for (auto texture : textures)
+    {
+        ImGui::Begin("OpenGL Renderer texture");
+        ImGui::Text("pointer = %p", texture);
+        ImGui::Text("size = %d x %d", buffer_width, buffer_height);
+        ImGui::Image((ImTextureID)texture, ImVec2(m_width, m_height));
+        ImGui::End();
+    }
+    /*
     ImGui::Begin("OpenGL Texture Text");
     ImGui::Text("pointer = %p", texture);
     ImGui::Text("size = %d x %d", width, height);
     ImGui::Image((ImTextureID)texture, ImVec2(width, height));
     ImGui::End();
+    */
     //commande, recommendation, tests model-livre, tests sur vues
     ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
 
