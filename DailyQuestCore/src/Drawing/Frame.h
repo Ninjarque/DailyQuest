@@ -7,10 +7,10 @@
 
 #include "../Error.h"
 
-class Renderer
+class Frame
 {
 public:
-	Renderer(int textures = 1)
+	Frame(int textures = 1)
 	{
 		this->textures = textures;
 		width = 0;
@@ -18,7 +18,7 @@ public:
 		depthID = 0;
 		frameBufferID = 0;
 	}
-	~Renderer() { DeleteFramebuffer(frameBufferID, textureIDs, depthID); }
+	~Frame() { DeleteFramebuffer(frameBufferID, textureIDs, depthID); }
 
 	void Init(int width, int height)
 	{
@@ -33,7 +33,7 @@ public:
 		{
 			this->width = width;
 			this->height = height;
-			if (textureIDs.size() == textures)
+			if (frameBufferID != 0)
 				DeleteFramebuffer(frameBufferID, textureIDs, depthID);
 			CreateFramebuffer(width, height, frameBufferID, textures, textureIDs, depthID);
 		}
@@ -112,6 +112,8 @@ private:
 		textureIDs.clear();
 		glDeleteRenderbuffers(1, &depthID);
 		glDeleteFramebuffers(1, &frameBufferID);
+		depthID = 0;
+		frameBufferID = 0;
 	}
 };
 

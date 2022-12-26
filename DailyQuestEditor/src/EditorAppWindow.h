@@ -3,7 +3,7 @@
 #include "image/image.h"
 #include "imgui/imgui.h"
 
-#include "Drawing/Renderer.h"
+#include "Drawing/Frame.h"
 #include "Drawing/Shader.h"
 #include "Drawing/Model.h"
 
@@ -26,7 +26,7 @@ protected:
 
 	int buffer_width = 60;
 	int buffer_height = 40;
-	Renderer renderer;
+	Frame frame;
 	Shader shader;
 
 	Model model;

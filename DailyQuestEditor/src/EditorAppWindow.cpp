@@ -7,7 +7,7 @@ void EditorAppWindow::OnInit()
     bool ret = LoadTextureFromFile("C:\\Users\\ninja\\Pictures\\bh3rd\\2022-08-24-19-45-55_0.png", texture, width, height);
     IM_ASSERT(ret);
 
-    renderer.Init(buffer_width, buffer_height);
+    frame.Init(buffer_width, buffer_height);
     shader.Init("res/Shaders/Basic.shader");
 
     model.Init(
@@ -34,7 +34,7 @@ void EditorAppWindow::OnUpdate(float deltaTime)
 
 void EditorAppWindow::OnDraw()
 {
-    //renderer.StartFrame(buffer_width, buffer_height);
+    frame.StartFrame(buffer_width, buffer_height);
     shader.Begin();
 
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
@@ -60,7 +60,7 @@ void EditorAppWindow::OnDraw()
     model.EndModel();
 
     shader.End();
-    //textures = renderer.EndFrame();
+    textures = frame.EndFrame();
 }
 
 void EditorAppWindow::OnImGUIDraw()

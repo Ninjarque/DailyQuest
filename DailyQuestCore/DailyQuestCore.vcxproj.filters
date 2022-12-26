@@ -57,7 +57,7 @@
     <ClInclude Include="src\image\image.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\Drawing\Renderer.h">
+    <ClInclude Include="src\Drawing\Frame.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="src\Drawing\Shader.h">
