@@ -23,8 +23,11 @@ void EditorAppWindow::OnUpdate(float deltaTime)
 
 void EditorAppWindow::OnDraw()
 {
-    renderer.StartFrame(buffer_width, buffer_height, color);
+    renderer.StartFrame(buffer_width, buffer_height);
     //shader.Begin();
+
+    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glBegin(GL_TRIANGLES);
 	glVertex2f(-1.0f, -1.0f);

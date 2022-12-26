@@ -23,8 +23,8 @@ protected:
 	int width;
 	int height;
 
-	int buffer_width = 500;
-	int buffer_height = 300;
+	int buffer_width = 60;
+	int buffer_height = 40;
 	Renderer renderer;
 	Shader shader;
 
