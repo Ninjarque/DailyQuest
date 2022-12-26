@@ -9,6 +9,17 @@ void EditorAppWindow::OnInit()
 
     renderer.Init(buffer_width, buffer_height);
     shader.Init("res/Shaders/Basic.shader");
+
+    model.Init(
+        std::vector<float>{ 
+            -0.5f, -0.5f, 1.0f, 0.2f, 0.2f,
+            0.5f, -0.5f, 0.2f, 1.0f, 0.2f,
+            0.5f, 0.5f, 0.2f, 0.2f, 1.0f,
+            -0.5f, 0.5f, 0.8f, 0.8f, 0.2f
+        },
+        std::vector<int>{ 2, 3 },
+        std::vector<bool>{ false, false },
+        std::vector<unsigned int>{ 0, 1, 2, 2, 3, 0 });
 }
 
 void EditorAppWindow::OnDispose()
@@ -23,20 +34,33 @@ void EditorAppWindow::OnUpdate(float deltaTime)
 
 void EditorAppWindow::OnDraw()
 {
-    renderer.StartFrame(buffer_width, buffer_height);
-    //shader.Begin();
+    //renderer.StartFrame(buffer_width, buffer_height);
+    shader.Begin();
 
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    int modelCount;
+    ModelDrawMode modelDrawMode;
+    model.StartModel(&modelCount, &modelDrawMode);
+    
+    if (modelDrawMode == ModelDrawMode::Arrays)
+        glDrawArrays(GL_TRIANGLES, 0, modelCount);
+    else
+        glDrawElements(GL_TRIANGLES, modelCount, GL_UNSIGNED_INT, NULL);
 
+    /*
 	glBegin(GL_TRIANGLES);
 	glVertex2f(-1.0f, -1.0f);
 	glVertex2f(0.0f, 0.5f);
 	glVertex2f(0.5f, -0.5f);
 	glEnd();
+    */
+    
+    model.EndModel();
 
-    //shader.End();
-    textures = renderer.EndFrame();
+    shader.End();
+    //textures = renderer.EndFrame();
 }
 
 void EditorAppWindow::OnImGUIDraw()

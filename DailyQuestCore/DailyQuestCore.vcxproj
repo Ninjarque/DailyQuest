@@ -187,6 +187,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Drawing\Model.h" />
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\Core\Program.h" />
     <ClInclude Include="src\Core\Window.h" />
@@ -208,6 +209,7 @@
     <ClInclude Include="src\IO\Data.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Drawing\Model.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Core\Program.cpp" />
     <ClCompile Include="src\Core\Window.cpp" />

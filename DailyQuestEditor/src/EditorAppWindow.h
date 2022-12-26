@@ -5,6 +5,7 @@
 
 #include "Drawing/Renderer.h"
 #include "Drawing/Shader.h"
+#include "Drawing/Model.h"
 
 #include "Core/Window.h"
 
@@ -27,6 +28,8 @@ protected:
 	int buffer_height = 40;
 	Renderer renderer;
 	Shader shader;
+
+	Model model;
 
 	float color[4] = { 0.5f, 0.3f, 0.5f, 0.4f };
 	std::vector<GLuint> textures;
