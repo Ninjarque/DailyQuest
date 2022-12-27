@@ -108,7 +108,8 @@ void Renderer::DrawQuad(float x, float y, float width, float height, float depth
         GLuint vao;
         GLuint vbo;
         GLuint ibo;
-        CreateVertexBuffer(vao, vbo, ibo, type, 1024, true);
+        CreateVertexBuffer(vao, vbo, ibo, type, 
+            maxBufferElementCount * GetSizeofVertexes(type), true);
         currentArrayElementData[type].push_back(
             std::vector<float>()// maxBufferElementCount * GetSizeofVertexes(type))
         );
@@ -179,8 +180,6 @@ void Renderer::EndRender()
                 glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibosList[type][i]);
                 glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, iboSize,
                     (const void*)(currentArrayElementIndices[type][i].data()));
-
-                //EVERYTHING SEEMS FINE... BUT MISSING SECOND VAO FOR NOW...
 
                 int iboIndices = iboSize / sizeof(unsigned int);
                 glDrawElements(GL_TRIANGLES, iboIndices, GL_UNSIGNED_INT, nullptr);

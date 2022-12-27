@@ -6,12 +6,12 @@ void EditorAppWindow::OnInit()
 {
     bool ret = LoadTextureFromFile("C:\\Users\\ninja\\Pictures\\bh3rd\\2022-08-24-19-45-55_0.png", texture, width, height);
     IM_ASSERT(ret);
-
     int twidth; int theight;
-    LoadTextureFromFile("C:\\Users\\ninja\\Pictures\\Screenshots\\Capture d'écran_20221126_163516.png", modelTexture1, twidth, theight);
+    LoadTextureFromFile("C:\\Users\\ninja\\Pictures\\Screenshots\\Capture d'écran_20221111_173201.png", modelTexture1, twidth, theight);
+    //LoadTextureFromFile("C:\\Users\\ninja\\Pictures\\Screenshots\\Capture d'écran_20221126_163516.png", modelTexture1, twidth, theight);
     LoadTextureFromFile("C:\\Users\\ninja\\Pictures\\Screenshots\\Capture d'écran_20221216_184959.png", modelTexture2, twidth, theight);
 
-    renderer.Init(3, 8);
+    renderer.Init(64, 8);
     frame.Init(buffer_width, buffer_height);
     shader.Init("res/Shaders/Basic.shader");
 
@@ -54,14 +54,23 @@ void EditorAppWindow::OnDraw()
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    renderer.DrawQuad(-1.0f, -1.0f, 1.0f, 1.0f, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), modelTexture1);
-    renderer.DrawQuad(-1.0f, 0.0f, 1.0f, 1.0f, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), modelTexture2);
-    renderer.DrawQuad(0.0f, -1.0f, 1.0f, 1.0f, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), texture);
-    renderer.DrawQuad(0.0f, 0.0f, 1.0f, 1.0f, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), modelTexture1);
-    //for (int i = 0; i < 200; i++)
-    //{
-    //    renderer.DrawQuad(-1.0f + (float)i / 200.0f, -1.0f + (float)i / 200.0f, 1.0f, 1.0f, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), texture);
-    //}
+    //renderer.DrawQuad(-1.0f, -1.0f, 1.0f, 1.0f, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), modelTexture1);
+    //renderer.DrawQuad(-1.0f, 0.0f, 1.0f, 1.0f, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), modelTexture2);
+    //renderer.DrawQuad(0.0f, -1.0f, 1.0f, 1.0f, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), texture);
+    //renderer.DrawQuad(0.0f, 0.0f, 1.0f, 1.0f, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), modelTexture1);
+    float xs = 32.0f;
+    float ys = 32.0f;
+    for (float x = 0; x < xs; x++)
+    {
+        for (float y = 0; y < ys; y++)
+        {
+            float rx = -1.0f + x / xs * 2.0f;
+            float ry = -1.0f + y / ys * 2.0f;
+            float rw = 2.0f / xs;
+            float rh = 2.0f / ys;
+            renderer.DrawQuad(rx, ry, rw, rh, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), modelTexture1);
+        }
+    }
     
     /*
     int modelCount;
