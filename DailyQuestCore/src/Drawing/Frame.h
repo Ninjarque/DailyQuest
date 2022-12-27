@@ -3,6 +3,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/glm.hpp>
+
 #include <vector>
 
 #include "../Error.h"
@@ -27,7 +29,7 @@ public:
 		CreateFramebuffer(width, height, frameBufferID, textures, textureIDs, depthID);
 	}
 
-	void StartFrame(int width, int height, GLfloat* clearColor = nullptr)
+	void StartFrame(int width, int height, glm::vec4 color = glm::vec4(0.0f))
 	{
 		if (textureIDs.size() != textures || width != this->width || height != this->height)
 		{
@@ -40,9 +42,9 @@ public:
 		// Render to our framebuffer
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
 		glViewport(0, 0, width, height); // Render on the whole framebuffer, complete from the lower left corner to the upper right
-		if (clearColor != nullptr)
+		if (color.w > 0.0f)
 		{
-			glClearColor(clearColor[0], clearColor[1], clearColor[2], 1.0f);
+			glClearColor(color.x * color.w, color.y * color.w, color.z * color.w, color.w);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
 	}
@@ -96,7 +98,7 @@ private:
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthID);
 
-		// Set the list of draw buffers.
+		// Set the list of draw vaosList.
 		glDrawBuffers(1, drawBuffers.data()); // "1" is the size of DrawBuffers
 
 		// Error handling
