@@ -5,7 +5,7 @@
 #include "image/image.h"
 #include "imgui/imgui.h"
 
-#include "Drawing/Renderer.h"
+#include "Drawing/Renderer2D.h"
 #include "Drawing/Frame.h"
 #include "Drawing/Shader.h"
 #include "Drawing/Model.h"
@@ -27,15 +27,18 @@ protected:
 	int width;
 	int height;
 
-	int buffer_width = 60;
-	int buffer_height = 40;
-	Renderer renderer;
+	int buffer_width = 400;
+	int buffer_height = 300;
+
 	Frame frame;
 	Shader shader;
 
 	Model model;
 	GLuint modelTexture1;
 	GLuint modelTexture2;
+
+	float time = 0.0f;
+	float deltaTime = 0.0f;
 
 	float color[4] = { 0.5f, 0.3f, 0.5f, 0.4f };
 	std::vector<GLuint> textures;

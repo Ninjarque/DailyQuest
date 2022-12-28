@@ -187,7 +187,8 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Drawing\Renderer.h" />
+    <ClInclude Include="src\Drawing\Renderer2D.h" />
+    <ClInclude Include="src\Drawing\Camera.h" />
     <ClInclude Include="src\Drawing\Model.h" />
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\Core\Program.h" />
@@ -499,7 +500,7 @@
     <ClInclude Include="src\IO\Data.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Drawing\Renderer.cpp" />
+    <ClCompile Include="src\Drawing\Renderer2D.cpp" />
     <ClCompile Include="src\Drawing\Model.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Core\Program.cpp" />

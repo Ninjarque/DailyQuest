@@ -1,5 +1,7 @@
 #include "EditorAppWindow.h"
 
+#include <math.h>
+
 using namespace std;
 
 void EditorAppWindow::OnInit()
@@ -7,11 +9,12 @@ void EditorAppWindow::OnInit()
     bool ret = LoadTextureFromFile("C:\\Users\\ninja\\Pictures\\bh3rd\\2022-08-24-19-45-55_0.png", texture, width, height);
     IM_ASSERT(ret);
     int twidth; int theight;
-    LoadTextureFromFile("C:\\Users\\ninja\\Pictures\\Screenshots\\Capture d'écran_20221111_173201.png", modelTexture1, twidth, theight);
-    //LoadTextureFromFile("C:\\Users\\ninja\\Pictures\\Screenshots\\Capture d'écran_20221126_163516.png", modelTexture1, twidth, theight);
+    //LoadTextureFromFile("C:\\Users\\ninja\\Pictures\\Screenshots\\Capture d'écran_20221111_173201.png", modelTexture1, twidth, theight);
+    LoadTextureFromFile("C:\\Users\\ninja\\Pictures\\Screenshots\\Capture d'écran_20221126_163516.png", modelTexture1, twidth, theight);
     LoadTextureFromFile("C:\\Users\\ninja\\Pictures\\Screenshots\\Capture d'écran_20221216_184959.png", modelTexture2, twidth, theight);
 
-    renderer.Init(64, 8);
+    Renderer2D::Init(128);
+    
     frame.Init(buffer_width, buffer_height);
     shader.Init("res/Shaders/Basic.shader");
 
@@ -34,66 +37,88 @@ void EditorAppWindow::OnDispose()
 
 void EditorAppWindow::OnUpdate(float deltaTime)
 {
-
+    this->deltaTime = deltaTime;
+    time += deltaTime;
 }
 
 void EditorAppWindow::OnDraw()
 {
-    //glBindTextureUnit(0, modelTexture1);
-    //glBindTextureUnit(1, modelTexture2);
-    //glBindTextureUnit(2, texture);
+    std::vector<GLuint> textures = { modelTexture2 };
+    std::vector<int> sampler = { 0, 1, 2, 3, 4, 5, 6, 7 };
+    
+    /*
     shader.Begin();
+    shader.Set("v_textures", sampler.size(), sampler.data());
 
-    renderer.StartRender();
+    Renderer2D::Begin();
+
+    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    Renderer2D::Draw({ -1.0f, -1.0f }, { 2.0f, 2.0f }, 0.0f, texture);
+
+    Renderer2D::End();
+
+    shader.End();
+    
+    return;
+    */
+
+    //glViewport(0, 0, m_width, m_height);
+    shader.Begin();
 
     //frame.StartFrame(buffer_width, buffer_height);
 
-    std::vector<int> sampler = { 0, 1, 2, 3, 4, 5, 6, 7 };
+    Renderer2D::Begin();
+
+
     shader.Set("v_textures", sampler.size(), sampler.data());
 
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    //renderer.DrawQuad(-1.0f, -1.0f, 1.0f, 1.0f, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), modelTexture1);
-    //renderer.DrawQuad(-1.0f, 0.0f, 1.0f, 1.0f, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), modelTexture2);
-    //renderer.DrawQuad(0.0f, -1.0f, 1.0f, 1.0f, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), texture);
-    //renderer.DrawQuad(0.0f, 0.0f, 1.0f, 1.0f, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), modelTexture1);
-    float xs = 32.0f;
-    float ys = 32.0f;
-    for (float x = 0; x < xs; x++)
+    if (time < 100.0f)
     {
-        for (float y = 0; y < ys; y++)
+        //renderer.DrawQuad(-1.0f, 0.0f, 1.0f, 1.0f, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), modelTexture2);
+        //renderer.DrawQuad(0.0f, -1.0f, 1.0f, 1.0f, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), texture);
+        //renderer.DrawQuad(0.0f, 0.0f, 1.0f, 1.0f, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), modelTexture1);
+        float xs = 32.0f;
+        float ys = 32.0f;
+        int t = 0;
+        for (float x = 0; x < xs; x++)
         {
-            float rx = -1.0f + x / xs * 2.0f;
-            float ry = -1.0f + y / ys * 2.0f;
-            float rw = 2.0f / xs;
-            float rh = 2.0f / ys;
-            renderer.DrawQuad(rx, ry, rw, rh, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), modelTexture1);
+            for (float y = 0; y < ys; y++)
+            {
+                float rx = -1.0f + x / xs * 2.0f;
+                float ry = -1.0f + y / ys * 2.0f;
+                float rw = 2.0f / xs;
+                float rh = 2.0f / ys;
+                ry += cos(time * 10.0f * rx) * (2.0f / xs);
+                Renderer2D::Draw({ rx, ry }, { rw, rh }, 0.0f, textures[t]);
+                
+                t++;
+                t %= textures.size();
+            }
         }
     }
-    
-    /*
-    int modelCount;
-    ModelDrawMode modelDrawMode;
-    model.StartModel(&modelCount, &modelDrawMode);
-
-    if (modelDrawMode == ModelDrawMode::Arrays)
-        glDrawArrays(GL_TRIANGLES, 0, modelCount);
+    else if (time < 8.0f)
+    {
+        
+    }
     else
-        glDrawElements(GL_TRIANGLES, modelCount, GL_UNSIGNED_INT, NULL);
-    */
-    /*
-	glBegin(GL_TRIANGLES);
-	glVertex2f(-1.0f, -1.0f);
-	glVertex2f(0.0f, 0.5f);
-	glVertex2f(0.5f, -0.5f);
-	glEnd();
-    */
+    {
+        Renderer2D::Draw({ -1.0f, -1.0f }, { 2.0f, 2.0f }, 0.0f, texture);
+    }
     
-    //model.EndModel();
-    //textures = frame.EndFrame();
+    Renderer2D::End();
+    //renderer.EndRender();
 
-    renderer.EndRender();
+    //textures = frame.EndFrame();
+    //glViewport(0, 0, m_width, m_height);
+
+    //renderer.StartRender();
+    //renderer.DrawQuad(-1.0f, -1.0f, 2.0f, 2.0f, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), textures[0]);
+    //renderer.EndRender();
 
     shader.End();
 }
@@ -133,6 +158,9 @@ void EditorAppWindow::OnImGUIDraw()
     ImGui::SameLine();
     ImGui::Text("counter = %d", counter);
 
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+    ImGui::Text("Engine Application average %.3f ms/frame (%.1f FPS)",
+        deltaTime * 1000.0f, 1.0f / deltaTime);//1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+    ImGui::Text("ImGUI Application average %.3f ms/frame (%.1f FPS)",
+        1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     ImGui::End();
 }
