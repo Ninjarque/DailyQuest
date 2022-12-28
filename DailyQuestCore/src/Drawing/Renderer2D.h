@@ -1,0 +1,69 @@
+#pragma once
+
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+
+#include <string>
+#include <vector>
+#include <unordered_map>
+
+#include "Vertex2D.h"
+
+struct RendererData
+{
+	GLuint quadVAO;
+	GLuint quadVBO;
+	GLuint quadIBO;
+
+	GLuint defaultTexture = 0;
+	unsigned int defaultTextureSlot = 0;
+
+	unsigned int indexCount = 0;
+
+	Vertex2D* quadBuffer;
+	Vertex2D* quadBufferPtr;
+
+	std::unordered_map<GLuint, int> textureSlotsMap;
+	unsigned int textureSlotIndex = 0;
+};
+
+struct RendererStats
+{
+	int drawCount;
+	int quadCount;
+};
+
+class Renderer2D
+{
+public:
+
+	static void Init(int maxQuadCount, int maxTextureCount = 0);
+	static void Dispose();
+
+	static void Begin();
+	static void End();
+
+	static void Draw(glm::vec2 position, glm::vec2 size, float depth,
+		glm::vec4 color);
+	static void Draw(glm::vec2 position, glm::vec2 size, float depth,
+		GLuint textureID);
+	static void Draw(glm::vec2 position, glm::vec2 size, float depth,
+		glm::vec4 color, GLuint textureID);
+
+	static void GetStats(int& drawCount, int& quadCount);
+	static void ResetStats();
+private:
+	static int MaxQuadCount;
+	static int MaxVertexCount;
+	static int MaxIndexCount;
+	static int MaxTextureCount;
+
+
+	static RendererData data;
+	static RendererStats stats;
+
+	static void End(bool flush);
+	static void Flush();
+};
+

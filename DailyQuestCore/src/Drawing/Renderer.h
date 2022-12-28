@@ -40,7 +40,7 @@ private:
 
 	std::unordered_map<VertexType, int> currentArrayElementCounts;
 	std::unordered_map<VertexType, std::vector<std::vector<float>>> currentArrayElementData;
-	std::unordered_map<VertexType, std::vector<std::vector<unsigned int>>> currentArrayElementIndices;
+	//std::unordered_map<VertexType, std::vector<std::vector<unsigned int>>> currentArrayElementIndices;
 	std::unordered_map<VertexType, std::vector<std::unordered_map<GLuint, int>>> currentArrayElementTextures;
 
 	int GetVertexesCount(VertexType type);

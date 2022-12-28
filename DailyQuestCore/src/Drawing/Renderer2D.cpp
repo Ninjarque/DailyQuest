@@ -1,0 +1,200 @@
+#include "Renderer2D.h"
+
+int Renderer2D::MaxQuadCount;
+int Renderer2D::MaxVertexCount;
+int Renderer2D::MaxIndexCount;
+int Renderer2D::MaxTextureCount;
+
+
+RendererData Renderer2D::data;
+RendererStats Renderer2D::stats;
+
+void Renderer2D::Init(int maxQuadCount, int maxTextureCount)
+{
+	MaxQuadCount = maxQuadCount;
+	MaxVertexCount = MaxQuadCount * 4;
+	MaxIndexCount = MaxQuadCount * 6;
+	if (maxTextureCount == 0)
+	{
+		GLint max;
+		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &max);
+		maxTextureCount = max;
+	}
+	MaxTextureCount = maxTextureCount;
+
+	data.quadBuffer = new Vertex2D[MaxVertexCount];
+
+	glGenVertexArrays(1, &data.quadVAO);
+	glBindVertexArray(data.quadVAO);
+
+	glGenBuffers(1, &data.quadVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, data.quadVBO);
+	glBufferData(GL_ARRAY_BUFFER, MaxVertexCount * sizeof(Vertex2D), nullptr, GL_DYNAMIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	//glEnableVertexArrayAttrib(data.quadVAO, 0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (const void*)offsetof(Vertex2D, Position));
+
+	glEnableVertexAttribArray(1);
+	//glEnableVertexArrayAttrib(data.quadVAO, 1);
+	glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (const void*)offsetof(Vertex2D, Depth));
+
+	glEnableVertexAttribArray(2);
+	//glEnableVertexArrayAttrib(data.quadVAO, 2);
+	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (const void*)offsetof(Vertex2D, Color));
+
+	glEnableVertexAttribArray(3);
+	//glEnableVertexArrayAttrib(data.quadVAO, 3);
+	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (const void*)offsetof(Vertex2D, TexCoords));
+
+	glEnableVertexAttribArray(4);
+	//glEnableVertexArrayAttrib(data.quadVAO, 4);
+	glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (const void*)offsetof(Vertex2D, TextureID));
+
+	unsigned int* indices = new unsigned int[MaxIndexCount];
+	int offset = 0;
+	for (int i = 0; i < MaxIndexCount; i += 6)
+	{
+		indices[i] = offset;
+		indices[i + 1] = offset + 1;
+		indices[i + 2] = offset + 2;
+		indices[i + 3] = offset + 2;
+		indices[i + 4] = offset + 3;
+		indices[i + 5] = offset;
+		offset += 4;
+	}
+	glGenBuffers(1, &data.quadIBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, data.quadIBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, MaxIndexCount * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+	
+	glBindVertexArray(0);
+
+	delete[] indices;
+
+	//1 x 1 white square
+	glGenTextures(1, &data.defaultTexture);
+	glBindTexture(GL_TEXTURE_2D, data.defaultTexture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	GLuint color = 0xffffffff;
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &color);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	data.textureSlotsMap[data.defaultTexture] = data.defaultTextureSlot;
+	data.textureSlotIndex = 1;
+}
+
+void Renderer2D::Dispose()
+{
+	glDeleteVertexArrays(1, &data.quadVAO);
+	glDeleteBuffers(1, &data.quadVBO);
+	glDeleteBuffers(1, &data.quadIBO);
+
+	glDeleteTextures(1, &data.defaultTexture);
+
+	delete[] data.quadBuffer;
+}
+
+void Renderer2D::Begin()
+{
+	data.quadBufferPtr = data.quadBuffer;
+	data.textureSlotsMap.clear();
+	data.textureSlotsMap[data.defaultTexture] = data.defaultTextureSlot;
+}
+
+void Renderer2D::End()
+{
+	End(true);
+}
+void Renderer2D::End(bool flush)
+{
+	GLsizeiptr size = (uint8_t*)data.quadBufferPtr - (uint8_t*)data.quadBuffer;
+	glBindBuffer(GL_ARRAY_BUFFER, data.quadVBO);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, size, data.quadBuffer);
+	if (flush)
+		Flush();
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void Renderer2D::Flush()
+{
+	for (auto textureSlot : data.textureSlotsMap)
+	{
+		glBindTextureUnit(textureSlot.second, textureSlot.first);
+	}
+	glBindVertexArray(data.quadVAO);
+	glDrawElements(GL_TRIANGLES, data.indexCount, GL_UNSIGNED_INT, nullptr);
+	stats.drawCount++;
+
+	data.indexCount = 0;
+	data.textureSlotIndex = 1;
+
+	glBindVertexArray(0);
+}
+
+
+void Renderer2D::Draw(glm::vec2 position, glm::vec2 size, float depth, glm::vec4 color)
+{
+	Draw(position, size, depth, color, data.defaultTexture);
+}
+
+void Renderer2D::Draw(glm::vec2 position, glm::vec2 size, float depth, GLuint textureID)
+{
+	Draw(position, size, depth, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), textureID);
+}
+
+void Renderer2D::Draw(glm::vec2 position, glm::vec2 size, float depth, glm::vec4 color, GLuint textureID)
+{
+	if (data.indexCount >= MaxIndexCount || data.textureSlotIndex >= MaxTextureCount)
+	{
+		End(false);
+		Flush();
+		Begin();
+	}
+
+	if (!data.textureSlotsMap.count(textureID))
+	{
+		data.textureSlotsMap[textureID] = data.textureSlotIndex;
+		data.textureSlotIndex++;
+	}
+	float texture = data.textureSlotsMap[textureID];
+
+	//SEEMS LIKE DATA NOT TRANSFERED CORRECTLY
+	//MIGHT BE INITIALIZED RIGHT BUT SHADER SHOWING UNCORRECT DATA
+
+	*data.quadBufferPtr = 
+		Vertex2D(position.x, position.y, depth, color.x, color.y, color.z, color.w, 
+			0.0f, 0.0f, texture);
+	data.quadBufferPtr++;
+
+	*data.quadBufferPtr =
+		Vertex2D(position.x + size.x, position.y, depth, color.x, color.y, color.z, color.w,
+			1.0f, 0.0f, texture);
+	data.quadBufferPtr++;
+
+	*data.quadBufferPtr =
+		Vertex2D(position.x + size.x, position.y + size.y, depth, color.x, color.y, color.z, color.w,
+			1.0f, 1.0f, texture);
+	data.quadBufferPtr++;
+
+	*data.quadBufferPtr =
+		Vertex2D(position.x, position.y + size.y, depth, color.x, color.y, color.z, color.w,
+			0.0f, 1.0f, texture);
+	data.quadBufferPtr++;
+
+	data.indexCount += 6;
+	stats.quadCount++;
+}
+
+void Renderer2D::GetStats(int& drawCount, int& quadCount)
+{
+	drawCount = stats.drawCount;
+	quadCount = stats.quadCount;
+}
+
+void Renderer2D::ResetStats()
+{
+	stats = RendererStats();
+}

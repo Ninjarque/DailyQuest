@@ -12,8 +12,8 @@ Renderer::~Renderer()
         auto& vaos = vs.second;
         auto type = vs.first;
         currentArrayElementData[type].clear();
-        if (currentArrayElementIndices.count(type))
-            currentArrayElementIndices[type].clear();
+        //if (currentArrayElementIndices.count(type))
+        //    currentArrayElementIndices[type].clear();
         for (int i = 0; i < vaos.size(); i++)
             glDeleteBuffers(1, &vaos[i]);
         vaos.clear();
@@ -37,7 +37,7 @@ Renderer::~Renderer()
     ibosList.clear();
     currentArrayElementCounts.clear();
     currentArrayElementData.clear();
-    currentArrayElementIndices.clear();
+    //currentArrayElementIndices.clear();
 }
 
 void Renderer::Init(int maxBufferElementCount, int maxBufferTextureCount)
@@ -54,9 +54,9 @@ void Renderer::StartRender()
         auto type = elements.first;
         for (auto& lst : currentArrayElementData[type])
             lst.clear();
-        if (currentArrayElementIndices.count(type))
-            for (auto& l : currentArrayElementIndices[type])
-                l.clear();
+        //if (currentArrayElementIndices.count(type))
+        //    for (auto& l : currentArrayElementIndices[type])
+        //        l.clear();
         //if (currentArrayElementTextures.count(type))
         //    for (auto lst : currentArrayElementTextures[type])
         //        lst.clear();
@@ -113,9 +113,9 @@ void Renderer::DrawQuad(float x, float y, float width, float height, float depth
         currentArrayElementData[type].push_back(
             std::vector<float>()// maxBufferElementCount * GetSizeofVertexes(type))
         );
-        currentArrayElementIndices[type].push_back(
-            std::vector<unsigned int>()// maxBufferElementCount * GetSizeofIBO(type))
-        );
+        //currentArrayElementIndices[type].push_back(
+        //    std::vector<unsigned int>()// maxBufferElementCount * GetSizeofIBO(type))
+        //);
         currentArrayElementTextures[type].push_back(
             std::unordered_map<GLuint, int>()
         );
@@ -140,7 +140,7 @@ void Renderer::DrawQuad(float x, float y, float width, float height, float depth
         { x + width, y + height, depth, color.x, color.y, color.z, color.w, 1.0f, 1.0f, tex });
     currentArrayElementData[type][realIndex].insert(currentArrayElementData[type][realIndex].end(),
         { x, y + height, depth, color.x, color.y, color.z, color.w, 0.0f, 1.0f, tex });
-
+    /*
     unsigned int offset = currentArrayElementData[type][realIndex].size() / (GetSizeofVertexes(type) / sizeof(float)) - 1;
     offset *= GetVertexesCount(type);
         //index * GetVertexesCount(type);
@@ -150,6 +150,7 @@ void Renderer::DrawQuad(float x, float y, float width, float height, float depth
     currentArrayElementIndices[type][realIndex].push_back(2 + offset);
     currentArrayElementIndices[type][realIndex].push_back(3 + offset);
     currentArrayElementIndices[type][realIndex].push_back(0 + offset);
+    */
 }
 
 void Renderer::EndRender()
@@ -166,7 +167,7 @@ void Renderer::EndRender()
                 glBindTextureUnit(textures.second, textures.first);
             }
 
-            glBindVertexArray(vaos[i]);
+            //glBindVertexArray(vaos[i]);
 
             glBindBuffer(GL_ARRAY_BUFFER, vbosList[type][i]);
 
@@ -174,12 +175,18 @@ void Renderer::EndRender()
             glBufferSubData(GL_ARRAY_BUFFER, 0, vboSize,
                 (const void*)(currentArrayElementData[type][i].data()));
 
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+
             if (ibosList.count(type))
             {
-                int iboSize = currentArrayElementIndices[type][i].size() * sizeof(unsigned int);
-                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibosList[type][i]);
-                glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, iboSize,
-                    (const void*)(currentArrayElementIndices[type][i].data()));
+                int iboSize = 
+                    vboSize / GetSizeofVertexes(type) * GetSizeofIBO(type);
+                    //currentArrayElementIndices[type][i].size() * sizeof(unsigned int);
+                //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibosList[type][i]);
+                //glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, iboSize,
+                //    (const void*)(currentArrayElementIndices[type][i].data()));
+
+                glBindVertexArray(vaos[i]);
 
                 int iboIndices = iboSize / sizeof(unsigned int);
                 glDrawElements(GL_TRIANGLES, iboIndices, GL_UNSIGNED_INT, nullptr);
@@ -270,7 +277,21 @@ void Renderer::CreateVertexBuffer(GLuint& vao, GLuint& vbo, GLuint& ibo,
     {
         glGenBuffers(1, &ibo);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, GetSizeofIBO(type) * count, nullptr, GL_DYNAMIC_DRAW);
+        int vertexes = GetVertexesCount(type);
+        int iboLength = GetSizeofIBO(type) / sizeof(unsigned int);
+        std::vector<unsigned int> iboLst(maxBufferElementCount * iboLength);
+        int index = 0;
+        for (int i = 0; i < maxBufferElementCount; i++)
+        {
+            iboLst[index] = i * vertexes;
+            iboLst[index+1] = i * vertexes + 1;
+            iboLst[index+2] = i * vertexes + 2;
+            iboLst[index+3] = i * vertexes + 2;
+            iboLst[index+4] = i * vertexes + 3;
+            iboLst[index+5] = i * vertexes;
+            index += 6;
+        }
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, iboLst.size() * sizeof(unsigned int), iboLst.data(), GL_STATIC_DRAW);//GL_DYNAMIC_DRAW);
     }
 
     //glBindBuffer(GL_ARRAY_BUFFER, 0);
