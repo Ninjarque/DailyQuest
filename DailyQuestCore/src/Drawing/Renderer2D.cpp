@@ -102,6 +102,8 @@ void Renderer2D::Begin()
 	data.quadBufferPtr = data.quadBuffer;
 	data.textureSlotsMap.clear();
 	data.textureSlotsMap[data.defaultTexture] = data.defaultTextureSlot;
+
+	glEnable(GL_DEPTH_TEST);
 }
 
 void Renderer2D::End()
@@ -135,17 +137,17 @@ void Renderer2D::Flush()
 }
 
 
-void Renderer2D::Draw(glm::vec2 position, glm::vec2 size, float depth, glm::vec4 color)
+void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, glm::vec4 color)
 {
-	Draw(position, size, depth, color, data.defaultTexture);
+	DrawQuad(position, size, depth, color, data.defaultTexture);
 }
 
-void Renderer2D::Draw(glm::vec2 position, glm::vec2 size, float depth, GLuint textureID)
+void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, GLuint textureID)
 {
-	Draw(position, size, depth, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), textureID);
+	DrawQuad(position, size, depth, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), textureID);
 }
 
-void Renderer2D::Draw(glm::vec2 position, glm::vec2 size, float depth, glm::vec4 color, GLuint textureID)
+void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, glm::vec4 color, GLuint textureID)
 {
 	if (data.indexCount >= MaxIndexCount || data.textureSlotIndex >= MaxTextureCount)
 	{
@@ -160,9 +162,6 @@ void Renderer2D::Draw(glm::vec2 position, glm::vec2 size, float depth, glm::vec4
 		data.textureSlotIndex++;
 	}
 	float texture = data.textureSlotsMap[textureID];
-
-	//SEEMS LIKE DATA NOT TRANSFERED CORRECTLY
-	//MIGHT BE INITIALIZED RIGHT BUT SHADER SHOWING UNCORRECT DATA
 
 	*data.quadBufferPtr = 
 		Vertex2D(position.x, position.y, depth, color.x, color.y, color.z, color.w, 
@@ -186,6 +185,17 @@ void Renderer2D::Draw(glm::vec2 position, glm::vec2 size, float depth, glm::vec4
 
 	data.indexCount += 6;
 	stats.quadCount++;
+}
+
+void Renderer2D::SetUniforms(Shader& shader)
+{
+	static std::vector<int> sampler(MaxTextureCount);
+	int i = 0;
+	for (auto& s : sampler)
+	{
+		s = i; i++;
+	}
+	shader.Set("v_textures", sampler.size(), sampler.data());
 }
 
 void Renderer2D::GetStats(int& drawCount, int& quadCount)

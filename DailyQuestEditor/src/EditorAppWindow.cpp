@@ -43,8 +43,7 @@ void EditorAppWindow::OnUpdate(float deltaTime)
 
 void EditorAppWindow::OnDraw()
 {
-    std::vector<GLuint> textures = { modelTexture2 };
-    std::vector<int> sampler = { 0, 1, 2, 3, 4, 5, 6, 7 };
+    std::vector<GLuint> textures = { modelTexture1, modelTexture2 };
     
     /*
     shader.Begin();
@@ -70,9 +69,7 @@ void EditorAppWindow::OnDraw()
     //frame.StartFrame(buffer_width, buffer_height);
 
     Renderer2D::Begin();
-
-
-    shader.Set("v_textures", sampler.size(), sampler.data());
+    Renderer2D::SetUniforms(shader);    
 
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -82,8 +79,8 @@ void EditorAppWindow::OnDraw()
         //renderer.DrawQuad(-1.0f, 0.0f, 1.0f, 1.0f, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), modelTexture2);
         //renderer.DrawQuad(0.0f, -1.0f, 1.0f, 1.0f, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), texture);
         //renderer.DrawQuad(0.0f, 0.0f, 1.0f, 1.0f, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), modelTexture1);
-        float xs = 32.0f;
-        float ys = 32.0f;
+        float xs = 128.0f;
+        float ys = 128.0f;
         int t = 0;
         for (float x = 0; x < xs; x++)
         {
@@ -94,8 +91,8 @@ void EditorAppWindow::OnDraw()
                 float rw = 2.0f / xs;
                 float rh = 2.0f / ys;
                 ry += cos(time * 10.0f * rx) * (2.0f / xs);
-                Renderer2D::Draw({ rx, ry }, { rw, rh }, 0.0f, textures[t]);
-                
+                //Renderer2D::DrawQuad({ rx, ry }, { rw, rh }, 0.0f, glm::vec4(x / xs, 0.0f, y / ys, 1.0f));//textures[t]);                
+                Renderer2D::DrawQuad({ rx, ry }, { rw, rh }, 0.0f, textures[t]);                
                 t++;
                 t %= textures.size();
             }
@@ -107,7 +104,7 @@ void EditorAppWindow::OnDraw()
     }
     else
     {
-        Renderer2D::Draw({ -1.0f, -1.0f }, { 2.0f, 2.0f }, 0.0f, texture);
+        Renderer2D::DrawQuad({ -1.0f, -1.0f }, { 2.0f, 2.0f }, 0.0f, texture);
     }
     
     Renderer2D::End();
@@ -157,6 +154,11 @@ void EditorAppWindow::OnImGUIDraw()
         counter++;
     ImGui::SameLine();
     ImGui::Text("counter = %d", counter);
+
+    int drawCount, quadCount;
+    Renderer2D::GetStats(drawCount, quadCount);
+    Renderer2D::ResetStats();
+    ImGui::Text("Draw count %i, quad count %i", drawCount, quadCount);
 
     ImGui::Text("Engine Application average %.3f ms/frame (%.1f FPS)",
         deltaTime * 1000.0f, 1.0f / deltaTime);//1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);

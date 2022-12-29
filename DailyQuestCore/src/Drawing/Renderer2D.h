@@ -9,6 +9,7 @@
 #include <unordered_map>
 
 #include "Vertex2D.h"
+#include "Shader.h"
 
 struct RendererData
 {
@@ -44,12 +45,14 @@ public:
 	static void Begin();
 	static void End();
 
-	static void Draw(glm::vec2 position, glm::vec2 size, float depth,
+	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
 		glm::vec4 color);
-	static void Draw(glm::vec2 position, glm::vec2 size, float depth,
+	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
 		GLuint textureID);
-	static void Draw(glm::vec2 position, glm::vec2 size, float depth,
+	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
 		glm::vec4 color, GLuint textureID);
+
+	static void SetUniforms(Shader& shader);
 
 	static void GetStats(int& drawCount, int& quadCount);
 	static void ResetStats();
