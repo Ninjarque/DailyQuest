@@ -103,7 +103,15 @@ void Renderer2D::Begin()
 	data.textureSlotsMap.clear();
 	data.textureSlotsMap[data.defaultTexture] = data.defaultTextureSlot;
 
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+void Renderer2D::Begin(bool enableDepth)
+{
+	if (enableDepth)
+		glEnable(GL_DEPTH_TEST);
+	Begin();
 }
 
 void Renderer2D::End()
@@ -155,7 +163,7 @@ void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, glm::
 		Flush();
 		Begin();
 	}
-
+	if (textureID == 0) textureID = data.defaultTexture;
 	if (!data.textureSlotsMap.count(textureID))
 	{
 		data.textureSlotsMap[textureID] = data.textureSlotIndex;

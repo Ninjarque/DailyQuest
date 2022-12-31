@@ -43,6 +43,7 @@ public:
 	static void Dispose();
 
 	static void Begin();
+	static void Begin(bool enableDepth);
 	static void End();
 
 	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,

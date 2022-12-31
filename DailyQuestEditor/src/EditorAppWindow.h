@@ -9,6 +9,7 @@
 #include "Drawing/Frame.h"
 #include "Drawing/Shader.h"
 #include "Drawing/Model.h"
+#include "Drawing/ParticleSystem.h"
 
 #include "Core/Window.h"
 
@@ -36,6 +37,8 @@ protected:
 	Model model;
 	GLuint modelTexture1;
 	GLuint modelTexture2;
+
+	ParticleSystem particleSystem;
 
 	float time = 0.0f;
 	float deltaTime = 0.0f;
