@@ -119,6 +119,9 @@ public:
 
 	static bool GetChar(unsigned int& key, int& mods);
 
+	static bool GetClipboard(std::string& string);
+	static void SetClipboard(std::string string);
+
 private:
 	static GLFWwindow* _window;
 

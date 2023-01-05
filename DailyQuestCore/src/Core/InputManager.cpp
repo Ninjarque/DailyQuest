@@ -144,6 +144,22 @@ bool InputManager::GetChar(unsigned int& key, int& mods)
 	return false;
 }
 
+bool InputManager::GetClipboard(std::string& string)
+{
+	const char* text = glfwGetClipboardString(_window);
+	if (text)
+	{
+		string = text;
+		return true;
+	}
+	return false;
+}
+
+void InputManager::SetClipboard(std::string string)
+{
+	glfwSetClipboardString(_window, string.c_str());
+}
+
 void InputManager::UpdateType(InputType type, int input, float activity)
 {
 	std::vector<std::string> bindings;
