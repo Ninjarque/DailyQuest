@@ -11,6 +11,8 @@ std::unordered_map<InputType, InputManager::InputState> InputManager::_inputStat
 std::vector<unsigned int> InputManager::_typedKeys;
 std::vector<int> InputManager::_typedKeysMods;
 
+std::vector<std::string> InputManager::_droppedPaths;
+
 void InputManager::Init(GLFWwindow* window)
 {
 	_window = window;
@@ -20,6 +22,8 @@ void InputManager::Init(GLFWwindow* window)
 	glfwSetCursorEnterCallback(window, InputManager::MouseEnteredCallback);
 	glfwSetScrollCallback(window, InputManager::MouseScrollCallback);
 	glfwSetMouseButtonCallback(window, InputManager::MouseButtonCallback);
+
+	glfwSetDropCallback(window, InputManager::DroppedPathsCallback);
 
 	_bindingsStack.push_back(new Bindings());
 }
@@ -39,6 +43,7 @@ void InputManager::LateUpdate(float deltaTime)
 	{
 		inputState.second.Update(deltaTime);
 	}
+	_droppedPaths.clear();
 }
 
 void InputManager::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -76,6 +81,15 @@ void InputManager::MouseButtonCallback(GLFWwindow* window, int button, int actio
 	{
 	case GLFW_PRESS: UpdateType(InputType::Mouse, button, 1.0f); break;
 	case GLFW_RELEASE: UpdateType(InputType::Mouse, button, 0.0f); break;
+	}
+}
+
+void InputManager::DroppedPathsCallback(GLFWwindow* window, int count, const char** paths)
+{
+	_droppedPaths.clear();
+	for (int i = 0; i < count; i++)
+	{
+		_droppedPaths.push_back(paths[i]);
 	}
 }
 
@@ -158,6 +172,16 @@ bool InputManager::GetClipboard(std::string& string)
 void InputManager::SetClipboard(std::string string)
 {
 	glfwSetClipboardString(_window, string.c_str());
+}
+
+bool InputManager::GetDroppedPaths(std::vector<std::string>& paths)
+{
+	if (_droppedPaths.size())
+	{
+		paths = _droppedPaths;
+		return true;
+	}
+	return false;
 }
 
 void InputManager::UpdateType(InputType type, int input, float activity)

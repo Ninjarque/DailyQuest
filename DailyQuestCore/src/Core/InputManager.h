@@ -100,12 +100,6 @@ public:
 
 	static void Update(float deltaTime);
 	static void LateUpdate(float deltaTime);
-	static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-	static void CharacterModCallback(GLFWwindow* window, unsigned int key, int mods);
-	static void MousePositionCallback(GLFWwindow* window, double x, double y);
-	static void MouseEnteredCallback(GLFWwindow* window, int entered);
-	static void MouseScrollCallback(GLFWwindow* window, double xOffset, double yOffset);
-	static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 
 	static void SetBinding(InputType type, std::string newName, int key);
 
@@ -122,6 +116,8 @@ public:
 	static bool GetClipboard(std::string& string);
 	static void SetClipboard(std::string string);
 
+	static bool GetDroppedPaths(std::vector<std::string>& paths);
+
 private:
 	static GLFWwindow* _window;
 
@@ -131,10 +127,22 @@ private:
 	static std::vector<unsigned int> _typedKeys;
 	static std::vector<int> _typedKeysMods;
 
+	static std::vector<std::string> _droppedPaths;
+
 	static void UpdateType(InputType type, int input, float activity);
 
 	static bool TryGetBinding(InputType inputType, int input, std::vector<std::string>& name);
 	static bool GetState(std::string input, float& current, float& previous);
+
+
+	static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+	static void CharacterModCallback(GLFWwindow* window, unsigned int key, int mods);
+	static void MousePositionCallback(GLFWwindow* window, double x, double y);
+	static void MouseEnteredCallback(GLFWwindow* window, int entered);
+	static void MouseScrollCallback(GLFWwindow* window, double xOffset, double yOffset);
+	static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
+	static void DroppedPathsCallback(GLFWwindow* window, int count, const char** paths);
+
 
 	friend class Mouse;
 };
