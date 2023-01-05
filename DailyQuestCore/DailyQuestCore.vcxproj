@@ -187,6 +187,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Core\InputManager.h" />
     <ClInclude Include="src\Core\Random.h" />
     <ClInclude Include="src\Drawing\ParticleSystem.h" />
     <ClInclude Include="src\Drawing\Renderer2D.h" />
@@ -502,6 +503,7 @@
     <ClInclude Include="src\IO\Data.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Core\InputManager.cpp" />
     <ClCompile Include="src\Core\Random.cpp" />
     <ClCompile Include="src\Drawing\ParticleSystem.cpp" />
     <ClCompile Include="src\Drawing\Renderer2D.cpp" />

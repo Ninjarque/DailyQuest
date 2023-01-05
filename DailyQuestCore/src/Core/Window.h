@@ -7,6 +7,7 @@
 #include <imgui/imgui_impl_opengl3.h>
 
 #include "Timer.h"
+#include "InputManager.h"
 
 #include <iostream>
 #include <string>

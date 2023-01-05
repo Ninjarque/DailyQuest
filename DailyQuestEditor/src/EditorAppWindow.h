@@ -5,6 +5,8 @@
 #include "image/image.h"
 #include "imgui/imgui.h"
 
+#include "Core/InputManager.h"
+
 #include "Drawing/Renderer2D.h"
 #include "Drawing/Frame.h"
 #include "Drawing/Shader.h"

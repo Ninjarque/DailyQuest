@@ -109,6 +109,7 @@ int Window::Run()
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     Random::Init();
+    InputManager::Init(window);
 
     OnInit();
 
@@ -118,17 +119,20 @@ int Window::Run()
         ImGui::GetIO().IniFilename = NULL;
 
     //glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+    float deltaTime = 0.0f;
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
+        deltaTime = Timer::end(-1, TIME_TYPE::MILLISECONDES) / 1000.0f;
+        Timer::start(-1);
+        
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        InputManager::Update(deltaTime);
 
         /* Poll for and process events */
         glfwPollEvents();
-
-        float deltaTime = Timer::end(-1, TIME_TYPE::MILLISECONDES) / 1000.0f;
-        Timer::start(-1);
 
         OnUpdate(deltaTime);
         if (disposed)
