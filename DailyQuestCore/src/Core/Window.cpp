@@ -166,6 +166,8 @@ int Window::Run()
             ImGui::RenderPlatformWindowsDefault();
             glfwMakeContextCurrent(backup_current_context);
         }
+        InputManager::LateUpdate(deltaTime);
+
         // */
         /* Swap front and back buffers */
         glfwSwapBuffers(window);

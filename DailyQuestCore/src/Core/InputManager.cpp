@@ -15,6 +15,8 @@ void InputManager::Init(GLFWwindow* window)
 	glfwSetKeyCallback(window, InputManager::KeyCallback);
 	glfwSetCursorPosCallback(window, InputManager::MousePositionCallback);
 	glfwSetCharModsCallback(window, InputManager::CharacterModCallback);
+	glfwSetCursorEnterCallback(window, InputManager::MouseEnteredCallback);
+	glfwSetMouseButtonCallback(window, InputManager::MouseButtonCallback);
 }
 
 void InputManager::Update(float deltaTime)
@@ -26,18 +28,20 @@ void InputManager::Update(float deltaTime)
 	}
 }
 
+void InputManager::LateUpdate(float deltaTime)
+{
+	for (auto& inputState : _inputStates)
+	{
+		inputState.second.Update(deltaTime);
+	}
+}
+
 void InputManager::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	std::string keyBinding;
-	TryGetBinding(InputType::Keyboard, key, keyBinding);
 	switch (action)
 	{
-	case GLFW_PRESS:
-		_inputStates[InputType::Keyboard].Set(keyBinding, 1.0f);
-		break;
-	case GLFW_RELEASE:
-		_inputStates[InputType::Keyboard].Set(keyBinding, 0.0f);
-		break;
+	case GLFW_PRESS: UpdateType(InputType::Keyboard, key, 1.0f); break;
+	case GLFW_RELEASE: UpdateType(InputType::Keyboard, key, 0.0f); break;
 	}
 }
 
@@ -50,6 +54,19 @@ void InputManager::CharacterModCallback(GLFWwindow* window, unsigned int key, in
 void InputManager::MousePositionCallback(GLFWwindow* window, double x, double y)
 {
 	Mouse::SetPosition(x, y);
+}
+
+void InputManager::MouseEnteredCallback(GLFWwindow* window, int entered)
+{
+}
+
+void InputManager::MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
+{
+	switch (action)
+	{
+	case GLFW_PRESS: UpdateType(InputType::Mouse, button, 1.0f); break;
+	case GLFW_RELEASE: UpdateType(InputType::Mouse, button, 0.0f); break;
+	}
 }
 
 void InputManager::PushBindings(Bindings* bindings)
@@ -85,7 +102,7 @@ float InputManager::IsPressed(std::string input)
 	float current;
 	float previous;
 	GetState(input, current, previous);
-	return current - previous;
+	return glm::max(0.0f, current - previous);
 }
 
 float InputManager::IsReleased(std::string input)
@@ -93,7 +110,7 @@ float InputManager::IsReleased(std::string input)
 	float current;
 	float previous;
 	GetState(input, current, previous);
-	return previous - current;
+	return glm::max(0.0f, previous - current);
 }
 
 bool InputManager::GetChar(unsigned int& key, int& mods)
@@ -109,24 +126,39 @@ bool InputManager::GetChar(unsigned int& key, int& mods)
 	return false;
 }
 
-bool InputManager::TryGetBinding(InputType inputType, int input, std::string& name)
+void InputManager::UpdateType(InputType type, int input, float activity)
+{
+	std::vector<std::string> bindings;
+	TryGetBinding(type, input, bindings);
+	for (auto binding : bindings)
+		_inputStates[type].Set(binding, activity);
+}
+
+bool InputManager::TryGetBinding(InputType inputType, int input, std::vector<std::string>& name)
 {
 	for (auto bindings : _bindingsStack)
 	{
 		if (bindings->TryGetBinding(inputType, input, name))
 			return true;
 	}
-	name = std::to_string(input);
+	name.push_back(std::to_string(input));
 	return false;
 }
 
 bool InputManager::GetState(std::string input, float& current, float& previous)
 {
+	current = 0.0f;
+	previous = 0.0f;
+	float c_current = 0.0f;
+	float c_previous = 0.0f;
+	bool found = false;
 	for (auto inputState : _inputStates)
 	{
-		if (inputState.second.Get(input, current, previous))
+		if (inputState.second.Get(input, c_current, c_previous))
 		{
-			return true;
+			current = c_current > current ? c_current : current;
+			previous = c_previous > previous ? c_previous : previous;
+			found = true;
 		}
 	}
 	return false;
@@ -146,17 +178,29 @@ void Mouse::Show()
 {
 	glfwSetInputMode(InputManager::_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
-//Implement dis and test bindings and we'll be good for now
+
 void Bindings::SetBinding(InputType type, std::string newName, int key)
 {
+	_bindings[type][newName].push_back(key);
+	_reverseBindings[type][key].push_back(newName);
 }
 
-bool Bindings::TryGetBinding(InputType type, int key, std::string& name)
+bool Bindings::TryGetBinding(InputType type, int key, std::vector<std::string>& name)
 {
+	if (_reverseBindings[type].count(key))
+	{
+		name = _reverseBindings[type][key];
+		return true;
+	}
 	return false;
 }
 
-bool Bindings::TryGetReverseBinding(InputType type, std::string name, int& key)
+bool Bindings::TryGetReverseBinding(InputType type, std::string name, std::vector<int>& key)
 {
+	if (_bindings[type].count(name))
+	{
+		key = _bindings[type][name];
+		return true;
+	}
 	return false;
 }

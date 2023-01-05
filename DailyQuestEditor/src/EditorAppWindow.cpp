@@ -38,6 +38,13 @@ void EditorAppWindow::OnInit()
         glm::vec4(-1.5f, -1.0f, -1.0f, -2.0f),
         0.01f, 0.01f, 0.01f
     ));
+
+    Bindings* b = new Bindings();
+    b->SetBinding(InputType::Keyboard, "Jump", GLFW_KEY_SPACE);
+    b->SetBinding(InputType::Keyboard, "Jump", GLFW_KEY_UP);
+    b->SetBinding(InputType::Keyboard, "Spawn", GLFW_KEY_SPACE);
+    b->SetBinding(InputType::Mouse, "Spawn", GLFW_MOUSE_BUTTON_1);
+    InputManager::PushBindings(b);
 }
 
 void EditorAppWindow::OnDispose()
@@ -51,9 +58,14 @@ void EditorAppWindow::OnUpdate(float deltaTime)
     time += deltaTime;
     static float particleSpawnTime = 0.0f;
     particleSpawnTime += deltaTime;
-
+    bool spawn = false;
     if (particleSpawnTime > 0.02f)
     {
+        spawn = true;
+    }
+    if (InputManager::IsDown("Spawn") && spawn)
+    {
+        particleSpawnTime = 0.0f;
         ParticleProperties prop(
             1.0f,
             glm::vec3(0.0f, -0.7f, 0.0f),
@@ -80,7 +92,6 @@ void EditorAppWindow::OnUpdate(float deltaTime)
         {
             particleSystem.Emit(fire);
         }
-        particleSpawnTime = 0.0f;
     }
 
     particleSystem.Update(deltaTime);
