@@ -38,14 +38,19 @@ class Mouse
 public:
 	static void SetPosition(double x, double y);
 	static void GetPosition(double& x, double& y) { x = _x; y = _y; }
+	static void GetScroll(double& xOffset, double& yOffset) 
+	{ xOffset = _xScroll; yOffset = _yScroll; }
 
 	static void Hide();
 	static void Show();
 private:
 	static void SetDataPosition(double x, double y) { _x = x; _y = y; }
+	static void SetDataScroll(double xOffset, double yOffset) { _xScroll = xOffset; _yScroll = yOffset; }
 
 	static double _x;
 	static double _y;
+	static double _xScroll;
+	static double _yScroll;
 	friend class InputManager;
 };
 
@@ -99,6 +104,7 @@ public:
 	static void CharacterModCallback(GLFWwindow* window, unsigned int key, int mods);
 	static void MousePositionCallback(GLFWwindow* window, double x, double y);
 	static void MouseEnteredCallback(GLFWwindow* window, int entered);
+	static void MouseScrollCallback(GLFWwindow* window, double xOffset, double yOffset);
 	static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 
 	static void SetBinding(InputType type, std::string newName, int key);

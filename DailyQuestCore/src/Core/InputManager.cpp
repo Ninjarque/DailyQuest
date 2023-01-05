@@ -2,6 +2,8 @@
 
 double Mouse::_x;
 double Mouse::_y;
+double Mouse::_xScroll;
+double Mouse::_yScroll;
 
 GLFWwindow* InputManager::_window;
 std::vector<Bindings*> InputManager::_bindingsStack;
@@ -16,6 +18,7 @@ void InputManager::Init(GLFWwindow* window)
 	glfwSetCursorPosCallback(window, InputManager::MousePositionCallback);
 	glfwSetCharModsCallback(window, InputManager::CharacterModCallback);
 	glfwSetCursorEnterCallback(window, InputManager::MouseEnteredCallback);
+	glfwSetScrollCallback(window, InputManager::MouseScrollCallback);
 	glfwSetMouseButtonCallback(window, InputManager::MouseButtonCallback);
 
 	_bindingsStack.push_back(new Bindings());
@@ -55,11 +58,16 @@ void InputManager::CharacterModCallback(GLFWwindow* window, unsigned int key, in
 
 void InputManager::MousePositionCallback(GLFWwindow* window, double x, double y)
 {
-	Mouse::SetPosition(x, y);
+	Mouse::SetDataPosition(x, y);
 }
 
 void InputManager::MouseEnteredCallback(GLFWwindow* window, int entered)
 {
+}
+
+void InputManager::MouseScrollCallback(GLFWwindow* window, double xOffset, double yOffset)
+{
+	Mouse::SetDataScroll(xOffset, yOffset);
 }
 
 void InputManager::MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
