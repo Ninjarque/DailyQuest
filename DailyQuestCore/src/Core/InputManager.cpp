@@ -17,6 +17,8 @@ void InputManager::Init(GLFWwindow* window)
 	glfwSetCharModsCallback(window, InputManager::CharacterModCallback);
 	glfwSetCursorEnterCallback(window, InputManager::MouseEnteredCallback);
 	glfwSetMouseButtonCallback(window, InputManager::MouseButtonCallback);
+
+	_bindingsStack.push_back(new Bindings());
 }
 
 void InputManager::Update(float deltaTime)
@@ -67,6 +69,14 @@ void InputManager::MouseButtonCallback(GLFWwindow* window, int button, int actio
 	case GLFW_PRESS: UpdateType(InputType::Mouse, button, 1.0f); break;
 	case GLFW_RELEASE: UpdateType(InputType::Mouse, button, 0.0f); break;
 	}
+}
+
+void InputManager::SetBinding(InputType type, std::string newName, int key)
+{
+	if (_bindingsStack.size() == 0)
+		PushBindings(new Bindings());
+	Bindings* b = _bindingsStack[_bindingsStack.size() - 1];
+	b->SetBinding(type, newName, key);
 }
 
 void InputManager::PushBindings(Bindings* bindings)
@@ -136,8 +146,9 @@ void InputManager::UpdateType(InputType type, int input, float activity)
 
 bool InputManager::TryGetBinding(InputType inputType, int input, std::vector<std::string>& name)
 {
-	for (auto bindings : _bindingsStack)
+	for (int i = _bindingsStack.size() - 1; i >= 0; i--)
 	{
+		auto bindings = _bindingsStack[i];
 		if (bindings->TryGetBinding(inputType, input, name))
 			return true;
 	}

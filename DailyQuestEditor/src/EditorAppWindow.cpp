@@ -39,12 +39,8 @@ void EditorAppWindow::OnInit()
         0.01f, 0.01f, 0.01f
     ));
 
-    Bindings* b = new Bindings();
-    b->SetBinding(InputType::Keyboard, "Jump", GLFW_KEY_SPACE);
-    b->SetBinding(InputType::Keyboard, "Jump", GLFW_KEY_UP);
-    b->SetBinding(InputType::Keyboard, "Spawn", GLFW_KEY_SPACE);
-    b->SetBinding(InputType::Mouse, "Spawn", GLFW_MOUSE_BUTTON_1);
-    InputManager::PushBindings(b);
+    InputManager::SetBinding(InputType::Keyboard, "Spawn", GLFW_KEY_SPACE);
+    InputManager::SetBinding(InputType::Mouse, "Spawn", GLFW_MOUSE_BUTTON_1);
 }
 
 void EditorAppWindow::OnDispose()

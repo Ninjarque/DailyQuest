@@ -101,6 +101,8 @@ public:
 	static void MouseEnteredCallback(GLFWwindow* window, int entered);
 	static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 
+	static void SetBinding(InputType type, std::string newName, int key);
+
 	static void PushBindings(Bindings* bindings);
 	static Bindings* PopBindings();
 
