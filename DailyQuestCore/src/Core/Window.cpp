@@ -118,6 +118,10 @@ int Window::Run()
         {
             Window::Current->ResizeCallback(window, width, height);
         });
+    glfwSetWindowFocusCallback(window, [](GLFWwindow* window, int focus)
+        {
+            Window::Current->FocusCallback(window, focus);
+        });
 
     OnInit();
 
@@ -134,7 +138,6 @@ int Window::Run()
     {
         if (disposed)
             break;
-        float deltaTime;
         if (UpdateCall(deltaTime))
         {
             DrawCall(deltaTime);
@@ -160,6 +163,11 @@ void Window::GetSize(int& width, int& height)
     height = m_height;
 }
 
+void Window::SetFreezeOnLostFocus(bool freeze)
+{
+    freezes = freeze;
+}
+
 void Window::Close()
 {
     glfwDestroyWindow(window);
@@ -182,6 +190,28 @@ void Window::ResizeCallback(GLFWwindow* window, int width, int height)
     {
         DrawCall(deltaTime);
         LateUpdateCall(deltaTime);
+    }
+}
+
+void Window::FocusCallback(GLFWwindow* window, int focus)
+{
+    if (focus)
+    {
+        focused = true;
+        Timer::end(-1, TIME_TYPE::MILLISECONDES);
+    }
+    else if (freezes)
+    {
+        focused = false;
+        while (!focused)
+        {
+            /* Poll for and process events */
+            glfwPollEvents();
+        }
+    }
+    else
+    {
+        focused = false;
     }
 }
 

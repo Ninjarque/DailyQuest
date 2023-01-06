@@ -33,6 +33,8 @@ public:
 
 	void GetSize(int& width, int& height);
 
+	void SetFreezeOnLostFocus(bool freeze);
+
 protected:
 	virtual void OnInit() = 0;
 	virtual void OnDispose() = 0;
@@ -49,10 +51,14 @@ protected:
 	GLFWwindow* window = nullptr;
 private:
 	void ResizeCallback(GLFWwindow* window, int width, int height);
+	void FocusCallback(GLFWwindow* window, int focus);
+
 	bool UpdateCall(float& deltaTime);
 	void DrawCall(float deltaTime);
 	void LateUpdateCall(float deltaTime);
 
 	bool disposed = false;
+	bool focused = true;
+	bool freezes = false;
 	ImGuiIO* _io = nullptr;
 };
