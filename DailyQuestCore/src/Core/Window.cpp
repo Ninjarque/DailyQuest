@@ -1,5 +1,7 @@
 #include "Window.h"
 
+Window* Window::Current;
+
 void Window::Dispose()
 {
     if (disposed)
@@ -60,14 +62,17 @@ int Window::Run()
     //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
 #endif
 
+    InputManager::Init(window);
+    Window::Current = this;
+
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
+    _io = &ImGui::GetIO(); (void)_io;
+    _io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+    _io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+    _io->ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
     //io.ConfigViewportsNoAutoMerge = true;
     //io.ConfigViewportsNoTaskBarIcon = true;
 
@@ -77,7 +82,7 @@ int Window::Run()
 
     // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
     ImGuiStyle& style = ImGui::GetStyle();
-    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    if (_io->ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
         style.WindowRounding = 0.0f;
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;
@@ -106,10 +111,13 @@ int Window::Run()
     // Our state
     bool show_demo_window = true;
     bool show_another_window = false;
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     Random::Init();
-    InputManager::Init(window);
+
+    glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int width, int height)
+        {
+            Window::Current->ResizeCallback(window, width, height);
+        });
 
     OnInit();
 
@@ -124,53 +132,14 @@ int Window::Run()
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
-        deltaTime = Timer::end(-1, TIME_TYPE::MILLISECONDES) / 1000.0f;
-        Timer::start(-1);
-        
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        InputManager::Update(deltaTime);
-
-        /* Poll for and process events */
-        glfwPollEvents();
-
-        OnUpdate(deltaTime);
         if (disposed)
             break;
-        // Start the Dear ImGui frame
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-        OnImGUIDraw();
-
-        // Rendering
-        ImGui::Render();
-        int display_w, display_h;
-        glfwGetFramebufferSize(window, &display_w, &display_h);
-        glViewport(0, 0, display_w, display_h);
-        glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
-        OnDraw();
-        
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-        // Update and Render additional Platform Windows
-        // (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
-        //  For this specific demo app we could also call glfwMakeContextCurrent(window) directly)
-        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+        float deltaTime;
+        if (UpdateCall(deltaTime))
         {
-            GLFWwindow* backup_current_context = glfwGetCurrentContext();
-            ImGui::UpdatePlatformWindows();
-            ImGui::RenderPlatformWindowsDefault();
-            glfwMakeContextCurrent(backup_current_context);
+            DrawCall(deltaTime);
+            LateUpdateCall(deltaTime);
         }
-        InputManager::LateUpdate(deltaTime);
-
-        // */
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
     }
 
     // Cleanup
@@ -193,3 +162,74 @@ void Window::Close()
 }
 
 bool Window::ShouldRestart() { return m_shouldRestart; }
+
+void Window::ResizeCallback(GLFWwindow* window, int width, int height)
+{
+    if (disposed)
+        return;
+    float deltaTime;
+    if (UpdateCall(deltaTime))
+    {
+        DrawCall(deltaTime);
+        LateUpdateCall(deltaTime);
+    }
+}
+
+bool Window::UpdateCall(float& deltaTime)
+{
+    deltaTime = Timer::end(-1, TIME_TYPE::MILLISECONDES) / 1000.0f;
+    Timer::start(-1);
+
+    InputManager::Update(deltaTime);
+
+    /* Poll for and process events */
+    glfwPollEvents();
+
+    OnUpdate(deltaTime);
+    if (disposed)
+        return false;
+    return true;
+}
+
+void Window::DrawCall(float deltaTime)
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Start the Dear ImGui frame
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+
+    OnImGUIDraw();
+
+    // Rendering
+    ImGui::Render();
+    int display_w, display_h;
+    glfwGetFramebufferSize(window, &display_w, &display_h);
+    glViewport(0, 0, display_w, display_h);
+    
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    OnDraw();
+
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+    // Update and Render additional Platform Windows
+    // (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
+    //  For this specific demo app we could also call glfwMakeContextCurrent(window) directly)
+    if (_io->ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    {
+        GLFWwindow* backup_current_context = glfwGetCurrentContext();
+        ImGui::UpdatePlatformWindows();
+        ImGui::RenderPlatformWindowsDefault();
+        glfwMakeContextCurrent(backup_current_context);
+    }
+    // */
+    /* Swap front and back buffers */
+    glfwSwapBuffers(window);
+}
+
+void Window::LateUpdateCall(float deltaTime)
+{
+    InputManager::LateUpdate(deltaTime);
+}

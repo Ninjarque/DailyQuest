@@ -29,6 +29,8 @@ public:
 
 	bool ShouldRestart() override;
 
+	static Window* Current;
+
 protected:
 	virtual void OnInit() = 0;
 	virtual void OnDispose() = 0;
@@ -44,5 +46,11 @@ protected:
 
 	GLFWwindow* window = nullptr;
 private:
+	void ResizeCallback(GLFWwindow* window, int width, int height);
+	bool UpdateCall(float& deltaTime);
+	void DrawCall(float deltaTime);
+	void LateUpdateCall(float deltaTime);
+
 	bool disposed = false;
+	ImGuiIO* _io = nullptr;
 };
