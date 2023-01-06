@@ -3,6 +3,8 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
+#include "Core/Window.h"
+
 class Camera
 {
 public:
@@ -47,7 +49,10 @@ protected:
 
 	glm::mat4 CalculateTransforms()
 	{
-		glm::mat4 res = glm::mat4(1.0f);
+		int width, height;
+		Window::Current->GetSize(width, height);
+		glm::mat4 res = glm::ortho(0.0f, (float)width, 0.0f, (float)height, 0.0f, 1000.0f) 
+			* glm::scale(glm::mat4(1.0f), glm::vec3(scale));
 
 		return res;
 	}
