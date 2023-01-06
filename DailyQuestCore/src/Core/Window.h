@@ -31,6 +31,8 @@ public:
 
 	static Window* Current;
 
+	void GetSize(int& width, int& height);
+
 protected:
 	virtual void OnInit() = 0;
 	virtual void OnDispose() = 0;

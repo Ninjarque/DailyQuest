@@ -39,7 +39,7 @@ void EditorAppWindow::OnInit()
         0.01f, 0.01f, 0.01f
     ));
 
-    InputManager::SetBinding(InputType::Keyboard, "Spawn", GLFW_KEY_SPACE);
+    InputManager::SetBinding(InputType::Keyboard, "Test", GLFW_KEY_SPACE);
     InputManager::SetBinding(InputType::Mouse, "Spawn", GLFW_MOUSE_BUTTON_1);
 }
 
@@ -58,6 +58,12 @@ void EditorAppWindow::OnUpdate(float deltaTime)
     if (particleSpawnTime > 0.02f)
     {
         spawn = true;
+    }
+    if (InputManager::IsPressed("Test"))
+    {
+        int w, h;
+        Window::Current->GetSize(w, h);
+        std::cout << "Width : " << w << ", Height : " << h << std::endl;
     }
     if (InputManager::IsDown("Spawn") && spawn)
     {

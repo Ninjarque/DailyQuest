@@ -154,6 +154,12 @@ int Window::Run()
     return 0;
 }
 
+void Window::GetSize(int& width, int& height)
+{
+    width = m_width;
+    height = m_height;
+}
+
 void Window::Close()
 {
     glfwDestroyWindow(window);
@@ -167,6 +173,10 @@ void Window::ResizeCallback(GLFWwindow* window, int width, int height)
 {
     if (disposed)
         return;
+    int display_w, display_h;
+    glfwGetFramebufferSize(window, &display_w, &display_h);
+    m_width = display_w;
+    m_height = display_h;
     float deltaTime;
     if (UpdateCall(deltaTime))
     {
