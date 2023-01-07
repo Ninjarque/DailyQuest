@@ -35,6 +35,7 @@ protected:
 
 	Frame frame;
 	Shader shader;
+	Camera camera;
 
 	Model model;
 	GLuint modelTexture1;

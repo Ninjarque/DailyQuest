@@ -41,6 +41,8 @@ void EditorAppWindow::OnInit()
 
     InputManager::SetBinding(InputType::Keyboard, "Test", GLFW_KEY_SPACE);
     InputManager::SetBinding(InputType::Mouse, "Spawn", GLFW_MOUSE_BUTTON_1);
+
+    camera = Camera(glm::vec2(0.0f, 0.0f), 1.0f);
 }
 
 void EditorAppWindow::OnDispose()
@@ -59,36 +61,34 @@ void EditorAppWindow::OnUpdate(float deltaTime)
     {
         spawn = true;
     }
+    int w, h;
+    Window::Current->GetSize(w, h);
     if (InputManager::IsPressed("Test"))
     {
-        int w, h;
-        Window::Current->GetSize(w, h);
-        std::cout << "Width : " << w << ", Height : " << h << std::endl;
+        Bindings* b = new Bindings();
+        b->SetBinding(InputType::Mouse, "None", GLFW_MOUSE_BUTTON_1);
+        InputManager::PushBindings(b);
+        if (InputManager::IsDown("None"))
+        {
+            std::cout << "Redirected in real time dude" << std::endl;
+        }
     }
     if (InputManager::IsDown("Spawn") && spawn)
     {
+        double x;
+        double y;
+        Mouse::GetPosition(x, y);
         particleSpawnTime = 0.0f;
-        ParticleProperties prop(
-            1.0f,
-            glm::vec3(0.0f, -0.7f, 0.0f),
-            glm::vec3(0.0f),
-            glm::vec3(0.03f, 0.04f, 1.0f) * 0.2f,
-            glm::vec4(1.0f, sin(time) * sin(time), cos(time) * cos(time), 1.0f),
-            0);
-        prop.PositionVariation = glm::vec3(0.03f) * cos(time) * cos(time);
-        prop.Velocity = glm::vec3(0.0f, -0.3f, 0.0f) * cos(time) * cos(time);
-        prop.VelocityVariation = glm::vec3(0.3f, 0.5f, 0.0f) * 0.2f * cos(time) * cos(time);
-        prop.ColorChange = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);
         ParticleProperties fire(
             1.0f,
-            glm::vec3(0.0f, -0.7f, 0.0f),
+            glm::vec3((float)x, (float)y, 0.0f),
             glm::vec3(0.0f),
-            glm::vec3(0.03f, 0.13f, 1.0f) * 2.8f,
+            glm::vec3(100.0f, 200.0f, 100.0f),
             glm::vec4(1.0f, 0.4f, 0.3f, 1.0f),
             modelTexture1);
-        fire.PositionVariation = glm::vec3(0.03f) * 1.2f;
-        fire.Velocity = glm::vec3(0.0f, -0.3f, 0.0f) * 1.5f;
-        fire.VelocityVariation = glm::vec3(0.3f, 0.5f, 0.0f) * 0.2f * 1.5f;
+        fire.PositionVariation = glm::vec3(0.03f) * (float)h;
+        fire.Velocity = glm::vec3(0.0f, -0.3f, 0.0f) * 0.5f * (float)h;
+        fire.VelocityVariation = glm::vec3(0.3f, 0.5f, 0.0f) * 0.2f * (float)h;
         fire.ColorChange = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);
         for (int i = 0; i < 30; i++)
         {
@@ -101,14 +101,13 @@ void EditorAppWindow::OnUpdate(float deltaTime)
 
 void EditorAppWindow::OnDraw()
 {
+    int w, h;
+    Window::Current->GetSize(w, h);
     std::vector<GLuint> textures = { modelTexture1, modelTexture2 };
     
     // /*
     shader.Begin();
     
-    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     //Renderer2D::Begin();
     //Renderer2D::SetUniforms(shader);
 
@@ -121,7 +120,6 @@ void EditorAppWindow::OnDraw()
 
     shader.End();
     
-    return;
     // */
 
     //glViewport(0, 0, m_width, m_height);
@@ -129,13 +127,9 @@ void EditorAppWindow::OnDraw()
 
     //frame.StartFrame(buffer_width, buffer_height);
 
-    Renderer2D::Begin();
-    Renderer2D::SetUniforms(shader);    
+    Renderer2D::Begin(&camera, &shader);
 
-    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    if (time < 100.0f)
+    if (false)//(time < 100.0f)
     {
         //renderer.DrawQuad(-1.0f, 0.0f, 1.0f, 1.0f, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), modelTexture2);
         //renderer.DrawQuad(0.0f, -1.0f, 1.0f, 1.0f, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), texture);
@@ -147,11 +141,11 @@ void EditorAppWindow::OnDraw()
         {
             for (float y = 0; y < ys; y++)
             {
-                float rx = -1.0f + x / xs * 2.0f;
-                float ry = -1.0f + y / ys * 2.0f;
-                float rw = 2.0f / xs;
-                float rh = 2.0f / ys;
-                ry += cos(time * 10.0f * rx) * (2.0f / xs);
+                float rx = x / xs * w;
+                float ry = y / ys * h;
+                float rw = w / xs;
+                float rh = h / ys;
+                ry += cos(time * 0.05f * (rx - (0.5f * w))) * (h / xs * 4.0f);
                 Renderer2D::DrawQuad({ rx, ry }, { rw, rh }, 0.0f, glm::vec4(x / xs, 0.0f, y / ys, 1.0f));//textures[t]);                
                 //Renderer2D::DrawQuad({ rx, ry }, { rw, rh }, 0.0f, textures[t]);                
                 t++;
@@ -159,13 +153,12 @@ void EditorAppWindow::OnDraw()
             }
         }
     }
-    else if (time < 8.0f)
-    {
-        
-    }
     else
     {
-        Renderer2D::DrawQuad({ -1.0f, -1.0f }, { 2.0f, 2.0f }, 0.0f, texture);
+        double x;
+        double y;
+        Mouse::GetPosition(x, y);
+        Renderer2D::DrawQuad({ (float)w / 2.0f, (float)h / 2.0f }, { (float)x- (float)w / 2.0f, (float)y - (float)h / 2.0f }, 0.0f, texture);
     }
     
     Renderer2D::End();
