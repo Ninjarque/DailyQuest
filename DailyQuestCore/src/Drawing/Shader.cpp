@@ -34,13 +34,13 @@ void Shader::Set(const char* name, double value) { glUniform1d(GetUniform(name),
 void Shader::Set(const char* name, int count, int* value) { glUniform1iv(GetUniform(name), count, value); }
 void Shader::Set(const char* name, int count, float* value) { glUniform1fv(GetUniform(name), count, value); }
 void Shader::Set(const char* name, int count, double* value) { glUniform1dv(GetUniform(name), count, value); }
-void Shader::SetMatrix4(const char* name, float* value)
+void Shader::SetMatrix4(const char* name, glm::mat4 value)
 {
-	glUniformMatrix4fv(GetUniform(name), 1, GL_FALSE, value);
+	glUniformMatrix4fv(GetUniform(name), 1, GL_FALSE, glm::value_ptr(value));
 }
-void Shader::SetMatrix3(const char* name, float* value)
+void Shader::SetMatrix3(const char* name, glm::mat3 value)
 {
-	glUniformMatrix3fv(GetUniform(name), 1, GL_FALSE, value);
+	glUniformMatrix3fv(GetUniform(name), 1, GL_FALSE, glm::value_ptr(value));
 }
 
 void Shader::Begin() { glUseProgram(program); }

@@ -148,18 +148,16 @@ void ParticleSystem::Render()
 
 void ParticleSystem::_Render2DBegin(Shader& shader)
 {
-	Renderer2D::Begin(false);
+	Renderer2D::Begin(&shader, false);
 
 	glDisable(GL_DEPTH_TEST);
-
-	Renderer2D::SetUniforms(shader);
 }
 void ParticleSystem::_Render2DDraw(Shader& shader, const ParticleData& data,
 	const int& currentCount, const int& maxCount)
 {
 	glm::vec2 pos = glm::vec2(data.Position.x - data.Scale.x / 2.0f, data.Position.y - data.Scale.x / 2.0f);
 	glm::vec2 size = glm::vec2(data.Scale.x, data.Scale.y);
-	Renderer2D::DrawQuad(pos, size, (float)currentCount / (float)maxCount, 
+	Renderer2D::DrawQuad(pos, size, 0.0f, 
 		data.Color, data.TextureID);
 }
 void ParticleSystem::_Render2DEnd(Shader& shader)

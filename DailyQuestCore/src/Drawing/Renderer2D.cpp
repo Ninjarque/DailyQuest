@@ -5,6 +5,10 @@ int Renderer2D::MaxVertexCount;
 int Renderer2D::MaxIndexCount;
 int Renderer2D::MaxTextureCount;
 
+Camera* Renderer2D::_currentCamera;
+Camera* Renderer2D::_defaultCamera = new Camera();
+
+Shader* Renderer2D::_currentShader;
 
 RendererData Renderer2D::data;
 RendererStats Renderer2D::stats;
@@ -97,8 +101,26 @@ void Renderer2D::Dispose()
 	delete[] data.quadBuffer;
 }
 
-void Renderer2D::Begin()
+void Renderer2D::Begin(Shader* shader)
 {
+	Begin(_defaultCamera, shader);
+}
+void Renderer2D::Begin(Shader* shader, bool enableDepth)
+{
+	Begin(_defaultCamera, shader, enableDepth);
+}
+void Renderer2D::Begin(Camera* camera, Shader* shader, bool enableDepth)
+{
+	if (enableDepth)
+		glEnable(GL_DEPTH_TEST);
+	Begin(camera, shader);
+}
+
+void Renderer2D::Begin(Camera* camera, Shader* shader)
+{
+	_currentCamera = camera;
+	_currentShader = shader;
+
 	data.quadBufferPtr = data.quadBuffer;
 	data.textureSlotsMap.clear();
 	data.textureSlotsMap[data.defaultTexture] = data.defaultTextureSlot;
@@ -106,12 +128,8 @@ void Renderer2D::Begin()
 	//glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-}
-void Renderer2D::Begin(bool enableDepth)
-{
-	if (enableDepth)
-		glEnable(GL_DEPTH_TEST);
-	Begin();
+
+	SetUniforms(_currentShader);
 }
 
 void Renderer2D::End()
@@ -161,7 +179,7 @@ void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, glm::
 	{
 		End(false);
 		Flush();
-		Begin();
+		Begin(_currentCamera, _currentShader);
 	}
 	if (textureID == 0) textureID = data.defaultTexture;
 	if (!data.textureSlotsMap.count(textureID))
@@ -195,7 +213,7 @@ void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, glm::
 	stats.quadCount++;
 }
 
-void Renderer2D::SetUniforms(Shader& shader)
+void Renderer2D::SetUniforms(Shader* shader)
 {
 	static std::vector<int> sampler(MaxTextureCount);
 	int i = 0;
@@ -203,7 +221,8 @@ void Renderer2D::SetUniforms(Shader& shader)
 	{
 		s = i; i++;
 	}
-	shader.Set("v_textures", sampler.size(), sampler.data());
+	shader->Set("v_textures", sampler.size(), sampler.data());
+	shader->SetMatrix4("P", _currentCamera->GetTransforms());
 }
 
 void Renderer2D::GetStats(int& drawCount, int& quadCount)

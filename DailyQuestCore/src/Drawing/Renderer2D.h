@@ -9,6 +9,7 @@
 #include <unordered_map>
 
 #include "Vertex2D.h"
+#include "Camera.h"
 #include "Shader.h"
 
 struct RendererData
@@ -42,8 +43,10 @@ public:
 	static void Init(int maxQuadCount, int maxTextureCount = 0);
 	static void Dispose();
 
-	static void Begin();
-	static void Begin(bool enableDepth);
+	static void Begin(Shader* shader);
+	static void Begin(Shader* shader, bool enableDepth);
+	static void Begin(Camera* camera, Shader* shader);
+	static void Begin(Camera* camera, Shader* shader, bool enableDepth);
 	static void End();
 
 	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
@@ -53,8 +56,6 @@ public:
 	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
 		glm::vec4 color, GLuint textureID);
 
-	static void SetUniforms(Shader& shader);
-
 	static void GetStats(int& drawCount, int& quadCount);
 	static void ResetStats();
 private:
@@ -63,6 +64,11 @@ private:
 	static int MaxIndexCount;
 	static int MaxTextureCount;
 
+	static Camera* _currentCamera;
+	static Camera* _defaultCamera;
+	static Shader* _currentShader;
+
+	static void SetUniforms(Shader* shader);
 
 	static RendererData data;
 	static RendererStats stats;

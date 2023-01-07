@@ -130,7 +130,7 @@ int Window::Run()
     if (!SaveImGUILayout())
         ImGui::GetIO().IniFilename = NULL;
 
-    //glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     float deltaTime = 0.0f;
 
     /* Loop until the user closes the window */
@@ -168,6 +168,11 @@ void Window::SetFreezeOnLostFocus(bool freeze)
     freezes = freeze;
 }
 
+bool Window::NeedsViewportRecalculations()
+{
+    return _needsRecalculations;
+}
+
 void Window::Close()
 {
     glfwDestroyWindow(window);
@@ -181,6 +186,7 @@ void Window::ResizeCallback(GLFWwindow* window, int width, int height)
 {
     if (disposed)
         return;
+    _needsRecalculations = true;
     int display_w, display_h;
     glfwGetFramebufferSize(window, &display_w, &display_h);
     m_width = display_w;
@@ -197,6 +203,7 @@ void Window::FocusCallback(GLFWwindow* window, int focus)
 {
     if (focus)
     {
+        _needsRecalculations = true;
         focused = true;
         Timer::end(-1, TIME_TYPE::MILLISECONDES);
     }
@@ -272,4 +279,6 @@ void Window::DrawCall(float deltaTime)
 void Window::LateUpdateCall(float deltaTime)
 {
     InputManager::LateUpdate(deltaTime);
+
+    _needsRecalculations = false;
 }

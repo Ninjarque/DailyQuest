@@ -8,6 +8,13 @@
 class Camera
 {
 public:
+	Camera()
+	{
+		this->position = glm::vec2(0.0f, 0.0f);
+		this->scale = 1.0f;
+		matrix = glm::mat4(1.0f);
+		needsRecalculation = true;
+	}
 	Camera(glm::vec2 position, float scale) 
 	{ 
 		this->position = position;
@@ -32,7 +39,7 @@ public:
 
 	glm::mat4 GetTransforms()
 	{
-		if (needsRecalculation)
+		if (needsRecalculation || Window::Current->NeedsViewportRecalculations())
 		{
 			matrix = CalculateTransforms();
 			needsRecalculation = false;
@@ -51,8 +58,8 @@ protected:
 	{
 		int width, height;
 		Window::Current->GetSize(width, height);
-		glm::mat4 res = glm::ortho(0.0f, (float)width, 0.0f, (float)height, 0.0f, 1000.0f) 
-			* glm::scale(glm::mat4(1.0f), glm::vec3(scale));
+		glm::mat4 res = glm::ortho(0.0f, (float)width, (float)height, 0.0f, -1.0f, 1000.0f)
+			;//* glm::scale(glm::mat4(1.0f), glm::vec3(scale));
 
 		return res;
 	}

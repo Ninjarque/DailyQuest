@@ -35,6 +35,8 @@ public:
 
 	void SetFreezeOnLostFocus(bool freeze);
 
+	bool NeedsViewportRecalculations();
+
 protected:
 	virtual void OnInit() = 0;
 	virtual void OnDispose() = 0;
@@ -61,4 +63,6 @@ private:
 	bool focused = true;
 	bool freezes = false;
 	ImGuiIO* _io = nullptr;
+
+	bool _needsRecalculations = false;
 };

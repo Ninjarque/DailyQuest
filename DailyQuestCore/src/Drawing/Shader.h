@@ -2,6 +2,8 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <vector>
 #include <unordered_map>
@@ -27,8 +29,8 @@ public:
 	void Set(const char* name, int count, int* value);
 	void Set(const char* name, int count, float* value);
 	void Set(const char* name, int count, double* value);
-	void SetMatrix4(const char* name, float* value);
-	void SetMatrix3(const char* name, float* value);
+	void SetMatrix4(const char* name, glm::mat4 value);
+	void SetMatrix3(const char* name, glm::mat3 value);
 
 	void Begin();
 	void End();
