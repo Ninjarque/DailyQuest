@@ -68,10 +68,10 @@ void EditorAppWindow::OnUpdate(float deltaTime)
         Bindings* b = new Bindings();
         b->SetBinding(InputType::Mouse, "None", GLFW_MOUSE_BUTTON_1);
         InputManager::PushBindings(b);
-        if (InputManager::IsDown("None"))
-        {
-            std::cout << "Redirected in real time dude" << std::endl;
-        }
+    }
+    if (InputManager::IsReleased("None"))
+    {
+        std::cout << "Hold on" << std::endl;
     }
     if (InputManager::IsDown("Spawn") && spawn)
     {

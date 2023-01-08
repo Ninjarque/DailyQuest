@@ -14,6 +14,8 @@ enum class InputType
 	Mouse
 };
 
+class InputManager;
+
 class Bindings
 {
 public:
@@ -24,6 +26,9 @@ public:
 	bool TryGetBinding(InputType type, int key, std::vector<std::string>& name);
 	bool TryGetReverseBinding(InputType type, std::string name, std::vector<int>& key);
 
+	void Conversions(Bindings& targetBindings,
+		std::unordered_map<InputType, 
+		std::unordered_map<std::string, std::vector<std::string>>>& toTargets);
 private:
 	std::unordered_map<InputType,
 		std::unordered_map<std::string, std::vector<int>>> _bindings;
@@ -31,7 +36,6 @@ private:
 		std::unordered_map<int, std::vector<std::string>>> _reverseBindings;
 };
 
-class InputManager;
 
 class Mouse
 {
@@ -90,6 +94,23 @@ private:
 			}
 			return false;
 		}
+		void Replace(std::string currentName, std::string newName)
+		{
+			float current = 0.0f;
+			float previous = 0.0f;
+			if (_currentState.count(currentName))
+			{
+				current = _currentState[currentName];
+				_currentState.erase(currentName);
+				if (_previousState.count(currentName))
+				{
+					previous = _previousState[currentName];
+					_previousState.erase(currentName);
+				}
+			}
+			_currentState[newName] = current;
+			_previousState[newName] = previous;
+		}
 	private:
 		std::unordered_map<std::string, float> _currentState;
 		std::unordered_map<std::string, float> _previousState;
@@ -133,7 +154,18 @@ private:
 
 	static bool TryGetBinding(InputType inputType, int input, std::vector<std::string>& name);
 	static bool GetState(std::string input, float& current, float& previous);
-
+	static void ResolvePushStates(Bindings* newBindings);
+	static void PushStates(
+		InputType inputType,
+		Bindings* newBindings, Bindings* oldBindings, 
+		std::string newName, std::string oldName, float currentValue, float previousValue
+	);
+	static void ResolvePopStates(Bindings* newBindings);
+	static void PopStates(
+		InputType inputType,
+		Bindings* newBindings, Bindings* oldBindings,
+		std::string newName, std::string oldName, float currentValue, float previousValue
+	);
 
 	static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	static void CharacterModCallback(GLFWwindow* window, unsigned int key, int mods);

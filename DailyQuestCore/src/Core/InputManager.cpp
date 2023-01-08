@@ -103,12 +103,14 @@ void InputManager::SetBinding(InputType type, std::string newName, int key)
 
 void InputManager::PushBindings(Bindings* bindings)
 {
+	ResolvePushStates(bindings);
 	_bindingsStack.push_back(bindings);
 }
 
 Bindings* InputManager::PopBindings()
 {
 	Bindings* b = _bindingsStack.back();
+	ResolvePopStates(b);
 	_bindingsStack.erase(_bindingsStack.end());
 	return b;
 }
@@ -223,6 +225,66 @@ bool InputManager::GetState(std::string input, float& current, float& previous)
 	return false;
 }
 
+void InputManager::ResolvePushStates(Bindings* newBindings)
+{
+	for (auto& inputState : _inputStates)
+	{
+		std::unordered_map<int, bool> alreadyResolved;
+		std::unordered_map<std::string, float> stateCurrent;
+		std::unordered_map<std::string, float> statePrevious;
+		inputState.second.GetState(stateCurrent, statePrevious);
+		for (int i = _bindingsStack.size() - 1; i >= 0; i--)
+		{
+			auto binding = _bindingsStack[i];
+			for (auto current : stateCurrent)
+			{
+				std::vector<int> inputs;
+				if (binding->TryGetReverseBinding(inputState.first,
+					current.first, inputs))
+				{
+					for (auto input : inputs)
+					{
+						if (alreadyResolved.count(input)) continue;
+						std::vector<std::string> names;
+						if (newBindings->TryGetBinding(inputState.first, input, names))
+						{
+							float previous = 0.0f;
+							if (statePrevious.count(current.first))
+								previous = statePrevious[current.first];
+							for (auto name : names)
+							{
+								PushStates(inputState.first,
+									newBindings, binding,
+									name, current.first,
+									current.second,
+									previous);
+							}
+							alreadyResolved[input] = true;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+void InputManager::PushStates(
+	InputType inputType, Bindings* newBindings, Bindings* oldBindings,
+	std::string newName, std::string oldName, float currentValue, float previousValue)
+{
+
+}
+
+void InputManager::ResolvePopStates(Bindings* newBindings)
+{
+}
+
+void InputManager::PopStates(
+	InputType inputType, Bindings* newBindings, Bindings* oldBindings,
+	std::string newName, std::string oldName, float currentValue, float previousValue)
+{
+}
+
 void Mouse::SetPosition(double x, double y)
 {
 	glfwSetCursorPos(InputManager::_window, x, y);
@@ -262,4 +324,17 @@ bool Bindings::TryGetReverseBinding(InputType type, std::string name, std::vecto
 		return true;
 	}
 	return false;
+}
+
+void Bindings::Conversions(Bindings& targetBindings, 
+	std::unordered_map<InputType,
+		std::unordered_map<std::string, std::vector<std::string>>>& toTargets)
+{
+	for (auto type : _bindings)
+	{
+		for (auto currentBindings : type.second)
+		{
+
+		}
+	}
 }
