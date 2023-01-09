@@ -94,7 +94,7 @@ private:
 			}
 			return false;
 		}
-		void Replace(std::string currentName, std::string newName)
+		void Replace(std::string currentName, std::vector<std::string> newNames)
 		{
 			float current = 0.0f;
 			float previous = 0.0f;
@@ -108,8 +108,11 @@ private:
 					_previousState.erase(currentName);
 				}
 			}
-			_currentState[newName] = current;
-			_previousState[newName] = previous;
+			for (auto newName : newNames)
+			{
+				_currentState[newName] = current;
+				_previousState[newName] = previous;
+			}
 		}
 	private:
 		std::unordered_map<std::string, float> _currentState;
@@ -155,17 +158,7 @@ private:
 	static bool TryGetBinding(InputType inputType, int input, std::vector<std::string>& name);
 	static bool GetState(std::string input, float& current, float& previous);
 	static void ResolvePushStates(Bindings* newBindings);
-	static void PushStates(
-		InputType inputType,
-		Bindings* newBindings, Bindings* oldBindings, 
-		std::string newName, std::string oldName, float currentValue, float previousValue
-	);
 	static void ResolvePopStates(Bindings* newBindings);
-	static void PopStates(
-		InputType inputType,
-		Bindings* newBindings, Bindings* oldBindings,
-		std::string newName, std::string oldName, float currentValue, float previousValue
-	);
 
 	static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	static void CharacterModCallback(GLFWwindow* window, unsigned int key, int mods);
