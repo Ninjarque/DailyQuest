@@ -73,7 +73,7 @@ void EditorAppWindow::OnUpdate(float deltaTime)
     {
         std::cout << "Hold on" << std::endl;
     }
-    if (InputManager::IsDown("Spawn") && spawn)
+    if ((InputManager::IsDown("Spawn") || InputManager::IsDown("None")) && spawn)
     {
         double x;
         double y;
