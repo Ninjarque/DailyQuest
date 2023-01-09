@@ -7,7 +7,7 @@ using namespace std;
 void EditorAppWindow::OnInit()
 {
     bool ret = LoadTextureFromFile("C:\\Users\\ninja\\Pictures\\bh3rd\\2022-08-24-19-45-55_0.png", texture, width, height);
-    IM_ASSERT(ret);
+    //IM_ASSERT(ret);
     int twidth; int theight;
     LoadTextureFromFile("C:\\Users\\ninja\\Pictures\\pink_soldier_x7.png", modelTexture1, twidth, theight);
     //LoadTextureFromFile("C:\\Users\\ninja\\Pictures\\Screenshots\\Capture d'écran_20221111_173201.png", modelTexture1, twidth, theight);
@@ -85,7 +85,7 @@ void EditorAppWindow::OnUpdate(float deltaTime)
             glm::vec3(0.0f),
             glm::vec3(100.0f, 200.0f, 100.0f),
             glm::vec4(1.0f, 0.4f, 0.3f, 1.0f),
-            modelTexture1);
+            0);
         fire.PositionVariation = glm::vec3(0.03f) * (float)h;
         fire.Velocity = glm::vec3(0.0f, -0.3f, 0.0f) * 0.5f * (float)h;
         fire.VelocityVariation = glm::vec3(0.3f, 0.5f, 0.0f) * 0.2f * (float)h;
