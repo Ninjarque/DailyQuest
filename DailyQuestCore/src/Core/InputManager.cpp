@@ -239,10 +239,22 @@ void InputManager::ResolvePushStates(Bindings* newBindings)
 		{
 			for (auto target : type.second)
 			{
-				if (alreadySeen.count(target.first))
+				bool seen = false;
+				for (auto currentTarget : target.second)
+				{
+					if (alreadySeen.count(currentTarget))
+					{
+						seen = true;
+						break;
+					}
+				}
+				if (seen)
 					continue;
 				_inputStates[type.first].Replace(target.first, target.second);
-				alreadySeen[target.first] = true;
+				for (auto currentTarget : target.second)
+				{
+					alreadySeen[currentTarget] = true;
+				}
 			}
 		}
 	}
@@ -262,10 +274,22 @@ void InputManager::ResolvePopStates(Bindings* newBindings)
 		{
 			for (auto target : type.second)
 			{
-				if (alreadySeen.count(target.first))
+				bool seen = false;
+				for (auto currentTarget : target.second)
+				{
+					if (alreadySeen.count(currentTarget))
+					{
+						seen = true;
+						break;
+					}
+				}
+				if (seen)
 					continue;
 				_inputStates[type.first].Replace(target.first, target.second);
-				alreadySeen[target.first] = true;
+				for (auto currentTarget : target.second)
+				{
+					alreadySeen[currentTarget] = true;
+				}
 			}
 		}
 	}
