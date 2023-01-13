@@ -110,8 +110,8 @@ void InputManager::PushBindings(Bindings* bindings)
 Bindings* InputManager::PopBindings()
 {
 	Bindings* b = _bindingsStack.back();
+	_bindingsStack.erase(_bindingsStack.end() - 1);
 	ResolvePopStates(b);
-	_bindingsStack.erase(_bindingsStack.end());
 	return b;
 }
 

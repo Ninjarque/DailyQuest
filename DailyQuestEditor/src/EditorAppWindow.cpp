@@ -39,7 +39,8 @@ void EditorAppWindow::OnInit()
         0.01f, 0.01f, 0.01f
     ));
 
-    InputManager::SetBinding(InputType::Keyboard, "Test", GLFW_KEY_SPACE);
+    InputManager::SetBinding(InputType::Keyboard, "A", GLFW_KEY_Q);
+    InputManager::SetBinding(InputType::Keyboard, "Z", GLFW_KEY_W);
     InputManager::SetBinding(InputType::Mouse, "Spawn", GLFW_MOUSE_BUTTON_1);
 
     camera = Camera(glm::vec2(0.0f, 0.0f), 1.0f);
@@ -63,11 +64,15 @@ void EditorAppWindow::OnUpdate(float deltaTime)
     }
     int w, h;
     Window::Current->GetSize(w, h);
-    if (InputManager::IsPressed("Test"))
+    if (InputManager::IsPressed("A"))
     {
         Bindings* b = new Bindings();
         b->SetBinding(InputType::Mouse, "None", GLFW_MOUSE_BUTTON_1);
         InputManager::PushBindings(b);
+    }
+    if (InputManager::IsPressed("Z"))
+    {
+        InputManager::PopBindings();
     }
     if (InputManager::IsReleased("None"))
     {
