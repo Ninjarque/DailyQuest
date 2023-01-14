@@ -203,6 +203,7 @@ void Window::FocusCallback(GLFWwindow* window, int focus)
 {
     if (focus)
     {
+        Window::Current = this;
         _needsRecalculations = true;
         focused = true;
         Timer::end(-1, TIME_TYPE::MILLISECONDES);
