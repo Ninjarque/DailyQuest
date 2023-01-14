@@ -68,6 +68,11 @@ bool Data::Has(const std::string& name) const
 	return m_mapObjects.count(name) != 0;
 }
 
+Data* Data::GetChild(int index)
+{
+	if (index < 0 || index >= m_vecObjects.size()) return nullptr;
+	return &m_vecObjects[index].second;
+}
 int Data::GetChildCount() const
 {
 	return m_vecObjects.size();
@@ -201,6 +206,10 @@ void Data::Read(std::ifstream& file, Data& data, const std::string indent, const
 			stop = true;
 			break;
 			//return;
+		case DataType::EndOfFile:
+			stop = true;
+			break;
+			//return;
 		}
 	}
 }
@@ -214,7 +223,10 @@ void Data::ExtractInfo(std::ifstream& file, std::string& data, DataType& type)
 	{
 		char c;
 		if (!file.get(c))
-			break;
+		{
+			type = DataType::EndOfFile;
+			return;
+		}
 
 		switch (c)
 		{

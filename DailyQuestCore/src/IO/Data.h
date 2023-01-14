@@ -19,6 +19,7 @@ enum DataType
 	Semicolon,
 	OpeningBracket,
 	ClosingBracket,
+	EndOfFile,
 };
 
 class Data
@@ -64,6 +65,7 @@ public:
 	Data& operator[](const std::string& name);
 	bool Has(const std::string& name) const;
 
+	Data* GetChild(int index);
 	int GetChildCount() const;
 
 	static bool Read(Data& data, const std::string& fileName, const std::string indent = "\t", const char listSep = ',');

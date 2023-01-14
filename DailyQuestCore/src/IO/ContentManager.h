@@ -28,10 +28,21 @@ public:
 		delete d;
 		return t;
 	}
-	template<class T> static T* Load(std::string file, Data* dataToFill)
+	template<class T> static T* Load(std::string file, Data* dataToFill, bool ignoreRoot = true)
 	{
+		int hierarchy = 0;
+		Data* realData = dataToFill;
+		while (ignoreRoot && realData->GetChildCount() == 1)
+		{
+			realData = realData->GetChild(0);
+		}
 		if (!Data::Read(*dataToFill, file))
 			return nullptr;
+
+		if (ignoreRoot)
+		{
+			dataToFill = realData;
+		}
 
 		Serializable* s = (Serializable*)(new T());
 		s->Load(*dataToFill);
