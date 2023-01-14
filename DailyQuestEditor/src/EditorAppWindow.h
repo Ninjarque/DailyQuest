@@ -7,13 +7,18 @@
 
 #include "Core/InputManager.h"
 
+#include "Core/Window.h"
+
 #include "Drawing/Renderer2D.h"
 #include "Drawing/Frame.h"
 #include "Drawing/Shader.h"
 #include "Drawing/Model.h"
 #include "Drawing/ParticleSystem.h"
 
-#include "Core/Window.h"
+#include "IO/ContentManager.h"
+#include "IO/Serializable.h"
+
+#include "Node.h"
 
 class EditorAppWindow : public Window
 {

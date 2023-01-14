@@ -203,6 +203,7 @@
     <ClInclude Include="src\Drawing\Vertex.h" />
     <ClInclude Include="src\Drawing\Vertex2D.h" />
     <ClInclude Include="src\Error.h" />
+    <ClInclude Include="src\IO\Serializable.h" />
     <ClInclude Include="src\vendor\glm\common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\compute_common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\compute_vector_relational.hpp" />

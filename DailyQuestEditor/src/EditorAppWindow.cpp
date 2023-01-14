@@ -44,6 +44,30 @@ void EditorAppWindow::OnInit()
     InputManager::SetBinding(InputType::Mouse, "Spawn", GLFW_MOUSE_BUTTON_1);
 
     camera = Camera(glm::vec2(0.0f, 0.0f), 1.0f);
+
+    NodeList* lst = new NodeList(
+        std::vector<Node*>
+        {
+            new Node("Root"),
+            new Node("Cube", new Node("CubeChild1"), new Node("CubeChild2")),
+            new Node("Sphere")
+        }
+    );
+
+    Node* n = new Node("Root",
+        new Node("Sub1",
+            new Node("SubSub1"),
+            new Node("SubSub2")
+            ),
+        new Node("Sub2")
+        );
+
+    std::cout << "Node list :\n" << std::endl << lst->ToString() << std::endl;
+    ContentManager::Save("C:\\Users\\ninja\\Desktop\\NODE.nd", lst);
+    Data d;
+    d["Node1"];
+    Node* n2 = ContentManager::Load<Node>("C:\\Users\\ninja\\Desktop\\NODE.nd", &d);
+    std::cout << "Node : \n" << std::endl << n2->ToString() << std::endl;
 }
 
 void EditorAppWindow::OnDispose()
