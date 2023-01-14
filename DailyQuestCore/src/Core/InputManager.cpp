@@ -274,22 +274,11 @@ void InputManager::ResolvePopStates(Bindings* newBindings)
 		{
 			for (auto target : type.second)
 			{
-				bool seen = false;
-				for (auto currentTarget : target.second)
-				{
-					if (alreadySeen.count(currentTarget))
-					{
-						seen = true;
-						break;
-					}
-				}
-				if (seen)
+				if (alreadySeen.count(target.first)) 
 					continue;
+
 				_inputStates[type.first].Replace(target.first, target.second);
-				for (auto currentTarget : target.second)
-				{
-					alreadySeen[currentTarget] = true;
-				}
+				alreadySeen[target.first] = true;
 			}
 		}
 	}
