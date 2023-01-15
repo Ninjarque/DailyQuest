@@ -2,7 +2,6 @@
 
 #include <glm/glm.hpp>
 
-#include "image/image.h"
 #include "imgui/imgui.h"
 
 #include "Core/InputManager.h"
@@ -14,6 +13,8 @@
 #include "Drawing/Shader.h"
 #include "Drawing/Model.h"
 #include "Drawing/ParticleSystem.h"
+
+#include "Drawing/Image.h"
 
 #include "IO/ContentManager.h"
 #include "IO/Serializable.h"
@@ -31,9 +32,7 @@ public:
 
 protected:
 
-	GLuint texture;
-	int width;
-	int height;
+	Texture* texture = nullptr;
 
 	int buffer_width = 400;
 	int buffer_height = 300;
@@ -43,8 +42,8 @@ protected:
 	Camera camera;
 
 	Model model;
-	GLuint modelTexture1;
-	GLuint modelTexture2;
+	Texture* modelTexture1 = nullptr;
+	Texture* modelTexture2 = nullptr;
 
 	ParticleSystem particleSystem;
 

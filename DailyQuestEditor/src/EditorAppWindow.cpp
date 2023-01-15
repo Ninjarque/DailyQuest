@@ -6,13 +6,12 @@ using namespace std;
 
 void EditorAppWindow::OnInit()
 {
-    bool ret = LoadTextureFromFile("C:\\Users\\ninja\\Pictures\\bh3rd\\2022-08-24-19-45-55_0.png", texture, width, height);
+    texture = Image::Load("C:\\Users\\ninja\\Pictures\\bh3rd\\2022-08-24-19-45-55_0.png");
     //IM_ASSERT(ret);
-    int twidth; int theight;
-    LoadTextureFromFile("C:\\Users\\ninja\\Pictures\\pink_soldier_x7.png", modelTexture1, twidth, theight);
+    modelTexture1 = Image::Load("C:\\Users\\ninja\\Pictures\\pink_soldier_x7.png");
     //LoadTextureFromFile("C:\\Users\\ninja\\Pictures\\Screenshots\\Capture d'écran_20221111_173201.png", modelTexture1, twidth, theight);
     //LoadTextureFromFile("C:\\Users\\ninja\\Pictures\\Screenshots\\Capture d'écran_20221126_163516.png", modelTexture1, twidth, theight);
-    LoadTextureFromFile("C:\\Users\\ninja\\Pictures\\Screenshots\\Capture d'écran_20221216_184959.png", modelTexture2, twidth, theight);
+    modelTexture2 = Image::Load("C:\\Users\\ninja\\Pictures\\Screenshots\\Capture d'écran_20221216_184959.png");
 
     Renderer2D::Init(128);
     
@@ -132,7 +131,7 @@ void EditorAppWindow::OnDraw()
 {
     int w, h;
     Window::Current->GetSize(w, h);
-    std::vector<GLuint> textures = { modelTexture1, modelTexture2 };
+    std::vector<Texture*> textures = { modelTexture1, modelTexture2 };
     
     // /*
     shader.Begin();

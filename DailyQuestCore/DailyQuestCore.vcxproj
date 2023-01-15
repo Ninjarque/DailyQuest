@@ -187,6 +187,9 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Drawing\Color.h" />
+    <ClInclude Include="src\Drawing\Image.h" />
+    <ClInclude Include="src\Drawing\Texture.h" />
     <ClInclude Include="src\IO\ContentManager.h" />
     <ClInclude Include="src\Core\InputManager.h" />
     <ClInclude Include="src\Core\Random.h" />
@@ -500,11 +503,11 @@
     <ClInclude Include="src\vendor\imgui\imstb_rectpack.h" />
     <ClInclude Include="src\vendor\imgui\imstb_textedit.h" />
     <ClInclude Include="src\vendor\imgui\imstb_truetype.h" />
-    <ClInclude Include="src\vendor\image\image.h" />
     <ClInclude Include="src\vendor\image\stb_image.h" />
     <ClInclude Include="src\IO\Data.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Drawing\Image.cpp" />
     <ClCompile Include="src\IO\ContentManager.cpp" />
     <ClCompile Include="src\Core\InputManager.cpp" />
     <ClCompile Include="src\Core\Random.cpp" />
@@ -518,7 +521,6 @@
     <ClCompile Include="src\Drawing\Shader.cpp" />
     <ClCompile Include="src\Error.cpp" />
     <ClCompile Include="src\vendor\glm\detail\glm.cpp" />
-    <ClCompile Include="src\vendor\image\image.cpp" />
     <ClCompile Include="src\vendor\imgui\imgui.cpp" />
     <ClCompile Include="src\vendor\imgui\imgui_draw.cpp" />
     <ClCompile Include="src\vendor\imgui\imgui_impl_glfw.cpp" />

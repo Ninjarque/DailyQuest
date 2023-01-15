@@ -11,6 +11,7 @@
 #include "Vertex2D.h"
 #include "Camera.h"
 #include "Shader.h"
+#include "Texture.h"
 
 struct RendererData
 {
@@ -55,6 +56,10 @@ public:
 		GLuint textureID);
 	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
 		glm::vec4 color, GLuint textureID);
+	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
+		Texture* texture);
+	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
+		glm::vec4 color, Texture* texture);
 
 	static void GetStats(int& drawCount, int& quadCount);
 	static void ResetStats();

@@ -173,6 +173,18 @@ void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, GLuin
 	DrawQuad(position, size, depth, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), textureID);
 }
 
+void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, Texture* texture)
+{
+	GLuint id = 0; if (texture != nullptr) id = *texture;
+	DrawQuad(position, size, depth, id);
+}
+
+void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, glm::vec4 color, Texture* texture)
+{
+	GLuint id = 0; if (texture != nullptr) id = *texture;
+	DrawQuad(position, size, depth, color, id);
+}
+
 void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, glm::vec4 color, GLuint textureID)
 {
 	if (data.indexCount >= MaxIndexCount || data.textureSlotIndex >= MaxTextureCount)
