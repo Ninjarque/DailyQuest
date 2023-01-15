@@ -187,6 +187,8 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Localization\LocalizationManager.h" />
+    <ClInclude Include="src\Animation\AnimationManager.h" />
     <ClInclude Include="src\Drawing\Color.h" />
     <ClInclude Include="src\Drawing\Image.h" />
     <ClInclude Include="src\Drawing\Texture.h" />
@@ -507,6 +509,8 @@
     <ClInclude Include="src\IO\Data.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Localization\LocalizationManager.cpp" />
+    <ClCompile Include="src\Animation\AnimationManager.cpp" />
     <ClCompile Include="src\Drawing\Image.cpp" />
     <ClCompile Include="src\IO\ContentManager.cpp" />
     <ClCompile Include="src\Core\InputManager.cpp" />
