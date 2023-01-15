@@ -79,6 +79,7 @@ void EditorAppWindow::OnInit()
     CommandManager::Push(new AddCommand(3.0f, &TestExpression));
     std::cout << "Test expression current " << TestExpression << std::endl;
     CommandManager::Push(new AddCommand(4.0f, &TestExpression));
+    CommandManagerPrint();
     std::cout << "Test expression current " << TestExpression << std::endl;
     CommandManager::Undo();
     std::cout << "Test expression current " << TestExpression << std::endl;
@@ -87,6 +88,7 @@ void EditorAppWindow::OnInit()
     CommandManager::Undo();
     std::cout << "Test expression current " << TestExpression << std::endl;
     CommandManager::Undo();
+    CommandManagerPrint();
     std::cout << "Test expression current " << TestExpression << std::endl;
     CommandManager::Do();
     std::cout << "Test expression current " << TestExpression << std::endl;
@@ -95,27 +97,35 @@ void EditorAppWindow::OnInit()
     CommandManager::Do();
     std::cout << "Test expression current " << TestExpression << std::endl;
     CommandManager::Do();
+    CommandManagerPrint();
     std::cout << "Test expression current " << TestExpression << std::endl;
     CommandManager::Undo();
     std::cout << "Test expression current " << TestExpression << std::endl;
     CommandManager::Undo();
+    CommandManagerPrint();
     std::cout << "Test expression current " << TestExpression << std::endl;
     CommandManager::Push(new MultCommand(5.0f, &TestExpression));
+    CommandManagerPrint();
     std::cout << "Test expression current " << TestExpression << std::endl;
     CommandManager::Undo();
+    CommandManagerPrint();
     std::cout << "Test expression current " << TestExpression << std::endl;
     CommandManager::Do();
     std::cout << "Test expression current " << TestExpression << std::endl;
     CommandManager::Do();
+    CommandManagerPrint();
     std::cout << "Test expression current " << TestExpression << std::endl;
     CommandManager::Undo();
     std::cout << "Test expression current " << TestExpression << std::endl;
     CommandManager::Undo();
+    CommandManagerPrint();
     std::cout << "Test expression current " << TestExpression << std::endl;
     CommandManager::Push(new AddCommand(-1.0f, &TestExpression));
+    CommandManagerPrint();
     std::cout << "Test expression current " << TestExpression << std::endl;
     CommandManager::Do();
     std::cout << "Test expression current " << TestExpression << std::endl;
+    CommandManagerPrint();
 }
 
 void EditorAppWindow::OnDispose()

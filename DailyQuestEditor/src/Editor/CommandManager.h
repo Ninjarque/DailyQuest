@@ -95,6 +95,10 @@ public:
 	static void Undo();
 
 	static void Push(ICommand* command);
+
+	static std::vector<ICommand*> GetCommands();
+	static int GetCommandStackIndex();
+	static int GetCommandCount();
 private:
 	static CommandQueue* _queueBegin;
 	static CommandQueue* _commands;

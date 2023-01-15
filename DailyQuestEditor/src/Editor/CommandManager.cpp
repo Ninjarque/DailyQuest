@@ -63,3 +63,32 @@ void CommandManager::Push(ICommand* command)
 		_queueLength--;
 	}
 }
+
+std::vector<ICommand*> CommandManager::GetCommands()
+{
+	std::vector<ICommand*> commands;
+	CommandQueue* c = _queueBegin->GetNext();
+	while (c != nullptr)
+	{
+		commands.push_back(c->GetCommand());
+		c = c->GetNext();
+	}
+	return commands;
+}
+
+int CommandManager::GetCommandCount()
+{
+	int count = 0;
+	CommandQueue* c = _queueBegin->GetNext();
+	while (c != nullptr)
+	{
+		count++;
+		c = c->GetNext();
+	}
+	return count;
+}
+
+int CommandManager::GetCommandStackIndex()
+{
+	return _queueLength;
+}

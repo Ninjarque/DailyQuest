@@ -35,6 +35,27 @@ public:
 
 protected:
 
+	void CommandManagerPrint()
+	{
+		std::cout << "Command stack size " << CommandManager::GetCommandCount() << std::endl;
+		std::cout << "Command stack index " << CommandManager::GetCommandStackIndex() << std::endl;
+		std::vector<ICommand*> commands = CommandManager::GetCommands();
+		if (commands.size() != CommandManager::GetCommandCount()) std::cout << "WUUUUT" << std::endl;
+		for (int i = 0; i < commands.size(); i++)
+		{
+			AddCommand* add = dynamic_cast<AddCommand*>(commands[i]);
+			if (add != nullptr)
+			{
+				std::cout << "Command [" << add->ToString() << "]" << std::endl;
+			}
+			MultCommand* mult = dynamic_cast<MultCommand*>(commands[i]);
+			if (mult != nullptr)
+			{
+				std::cout << "Command [" << mult->ToString() << "]" << std::endl;
+			}
+		}
+	}
+
 	Texture* texture = nullptr;
 
 	int buffer_width = 400;
