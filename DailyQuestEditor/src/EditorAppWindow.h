@@ -19,6 +19,9 @@
 #include "IO/ContentManager.h"
 #include "IO/Serializable.h"
 
+#include "Editor/CommandManager.h"
+#include "Test/CommandTests.h"
+
 #include "Node.h"
 
 class EditorAppWindow : public Window
@@ -53,6 +56,7 @@ protected:
 	float color[4] = { 0.5f, 0.3f, 0.5f, 0.4f };
 	std::vector<GLuint> textures;
 
+	float TestExpression;
 
 	void OnInit() override;
 	void OnDispose() override;

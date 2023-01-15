@@ -179,6 +179,7 @@
     <ClInclude Include="src\Node.h" />
     <ClInclude Include="src\EditorLauncherWindow.h" />
     <ClInclude Include="src\EditorAppWindow.h" />
+    <ClInclude Include="src\Test\CommandTests.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\Shaders\Basic.shader" />

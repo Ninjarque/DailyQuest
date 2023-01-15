@@ -67,6 +67,55 @@ void EditorAppWindow::OnInit()
     d["Node1"];
     Node* n2 = ContentManager::Load<Node>("C:\\Users\\ninja\\Desktop\\NODE.nd", &d);
     std::cout << "Node : \n" << std::endl << n2->ToString() << std::endl;
+
+    CommandManager::Init(3);
+
+    TestExpression = 0.0f;
+    std::cout << "Test expression current " << TestExpression << std::endl;
+    CommandManager::Push(new AddCommand(1.0f, &TestExpression));
+    std::cout << "Test expression current " << TestExpression << std::endl;
+    CommandManager::Push(new AddCommand(2.0f, &TestExpression));
+    std::cout << "Test expression current " << TestExpression << std::endl;
+    CommandManager::Push(new AddCommand(3.0f, &TestExpression));
+    std::cout << "Test expression current " << TestExpression << std::endl;
+    CommandManager::Push(new AddCommand(4.0f, &TestExpression));
+    std::cout << "Test expression current " << TestExpression << std::endl;
+    CommandManager::Undo();
+    std::cout << "Test expression current " << TestExpression << std::endl;
+    CommandManager::Undo();
+    std::cout << "Test expression current " << TestExpression << std::endl;
+    CommandManager::Undo();
+    std::cout << "Test expression current " << TestExpression << std::endl;
+    CommandManager::Undo();
+    std::cout << "Test expression current " << TestExpression << std::endl;
+    CommandManager::Do();
+    std::cout << "Test expression current " << TestExpression << std::endl;
+    CommandManager::Do();
+    std::cout << "Test expression current " << TestExpression << std::endl;
+    CommandManager::Do();
+    std::cout << "Test expression current " << TestExpression << std::endl;
+    CommandManager::Do();
+    std::cout << "Test expression current " << TestExpression << std::endl;
+    CommandManager::Undo();
+    std::cout << "Test expression current " << TestExpression << std::endl;
+    CommandManager::Undo();
+    std::cout << "Test expression current " << TestExpression << std::endl;
+    CommandManager::Push(new MultCommand(5.0f, &TestExpression));
+    std::cout << "Test expression current " << TestExpression << std::endl;
+    CommandManager::Undo();
+    std::cout << "Test expression current " << TestExpression << std::endl;
+    CommandManager::Do();
+    std::cout << "Test expression current " << TestExpression << std::endl;
+    CommandManager::Do();
+    std::cout << "Test expression current " << TestExpression << std::endl;
+    CommandManager::Undo();
+    std::cout << "Test expression current " << TestExpression << std::endl;
+    CommandManager::Undo();
+    std::cout << "Test expression current " << TestExpression << std::endl;
+    CommandManager::Push(new AddCommand(-1.0f, &TestExpression));
+    std::cout << "Test expression current " << TestExpression << std::endl;
+    CommandManager::Do();
+    std::cout << "Test expression current " << TestExpression << std::endl;
 }
 
 void EditorAppWindow::OnDispose()
