@@ -19,6 +19,8 @@
 #include "Error.h"
 #include "Random.h"
 
+#include "IO/ContentManager.h"
+
 class Window : public Program
 {
 public:

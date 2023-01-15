@@ -123,6 +123,8 @@ int Window::Run()
             Window::Current->FocusCallback(window, focus);
         });
 
+    ContentManager::Init();
+
     OnInit();
 
     Timer::start(-1);
