@@ -5,17 +5,56 @@
 class ICommand
 {
 public:
+	void Execute() { Do(); _done = true; }
+	void Revert() { Undo(); _done = false; }
+
+	bool IsDone() { return _done; }
+protected:
 	virtual void Do() = 0;
 	virtual void Undo() = 0;
+private:
+	bool _done = false;
 };
 
 class CommandQueue
 {
 public:
 
+	CommandQueue()
+	{
+		_command = nullptr;
+		_next = nullptr;
+		_previous = nullptr;
+	}
+
+	void Dispose()
+	{
+		if (_previous != nullptr)
+		{
+			_previous->Dispose();
+			delete _previous;
+		}
+		if (_next != nullptr)
+		{
+			_next->_previous = nullptr;
+			if (_command == nullptr && _next->_command != nullptr)
+			{
+				delete _next->_command;
+				_next->_command = nullptr;
+			}
+		}
+		if (_command != nullptr) delete _command;
+		_command = nullptr;
+		_next = nullptr;
+		_previous = nullptr;
+	}
 	void DisposeNext()
 	{
-		if (_next != nullptr) _next->DisposeNext();
+		if (_next != nullptr)
+		{
+			_next->DisposeNext();
+			delete _next;
+		}
 		if (_command != nullptr) delete _command;
 
 		_next = nullptr;
@@ -24,24 +63,18 @@ public:
 
 	void Push(ICommand* command)
 	{
-		if (_command != nullptr) _next->Push(command);
-		else
+		if (_next == nullptr)
 		{
-			_command = command;
 			_next = new CommandQueue();
-			_next->_previous = this;
 		}
-	}
-	void SetCommand(ICommand* command)
-	{
-		_command = command;
-		if (_next != nullptr)
-		{
+		else
 			_next->DisposeNext();
-			delete _next;
-			_next = nullptr;
-		}
+		_next->_command = command;
+		_next->_previous = this;
 	}
+	CommandQueue* GetNext() { return _next; }
+	CommandQueue* GetPrevious() { return _previous; }
+	ICommand* GetCommand() { return _command; }
 
 private:
 	CommandQueue* _previous = nullptr;
@@ -53,13 +86,19 @@ private:
 class CommandManager
 {
 public:
-	bool CanDo();
-	bool CanUndo();
+	static void Init(int maxCommandQueueLength);
 
-	void Do();
-	void Undo();
+	static bool CanDo();
+	static bool CanUndo();
+
+	static void Do();
+	static void Undo();
+
+	static void Push(ICommand* command);
 private:
-	CommandQueue* _head;
-	CommandQueue* _commands;
+	static CommandQueue* _queueBegin;
+	static CommandQueue* _commands;
+	static int _queueLength;
+	static int _maxQueueLength;
 };
 
