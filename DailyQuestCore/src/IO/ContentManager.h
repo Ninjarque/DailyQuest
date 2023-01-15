@@ -14,7 +14,7 @@
 class ContentManager
 {
 public:
-	static void Init(std::string root);
+	static void Init();
 
 	static bool Save(std::string file, Data& data);
 	static Data* Load(std::string file);

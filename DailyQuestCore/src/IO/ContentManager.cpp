@@ -2,9 +2,9 @@
 
 std::string ContentManager::Root;
 
-void ContentManager::Init(std::string root)
+void ContentManager::Init()
 {
-	Root = root;
+	Root = "";
 }
 
 bool ContentManager::Save(std::string file, Data& data)
