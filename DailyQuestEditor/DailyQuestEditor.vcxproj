@@ -163,6 +163,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Editor\CommandManager.cpp" />
     <ClCompile Include="src\Node.cpp" />
     <ClCompile Include="src\EditorLauncherWindow.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -174,6 +175,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Editor\CommandManager.h" />
     <ClInclude Include="src\Node.h" />
     <ClInclude Include="src\EditorLauncherWindow.h" />
     <ClInclude Include="src\EditorAppWindow.h" />
