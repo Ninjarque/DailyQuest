@@ -90,5 +90,5 @@ int CommandManager::GetCommandCount()
 
 int CommandManager::GetCommandStackIndex()
 {
-	return _queueLength;
+	return _queueLength - 1;//_queueLength - (_commands->GetCommand() != nullptr ? 1 : 0);
 }
