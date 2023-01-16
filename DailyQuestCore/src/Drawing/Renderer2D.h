@@ -55,11 +55,19 @@ public:
 	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
 		GLuint textureID);
 	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
+		GLuint textureID, glm::vec2 uv_position, glm::vec2 uv_size);
+	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
 		glm::vec4 color, GLuint textureID);
+	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
+		glm::vec4 color, GLuint textureID, glm::vec2 uv_position, glm::vec2 uv_size);
 	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
 		Texture* texture);
 	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
+		Texture* texture, glm::vec2 uv_position, glm::vec2 uv_size);
+	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
 		glm::vec4 color, Texture* texture);
+	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
+		glm::vec4 color, Texture* texture, glm::vec2 uv_position, glm::vec2 uv_size);
 
 	static void GetStats(int& drawCount, int& quadCount);
 	static void ResetStats();

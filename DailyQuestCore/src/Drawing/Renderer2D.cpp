@@ -173,10 +173,21 @@ void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, GLuin
 	DrawQuad(position, size, depth, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), textureID);
 }
 
+void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, GLuint textureID, glm::vec2 uv_position, glm::vec2 uv_size)
+{
+	DrawQuad(position, size, depth, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), textureID, uv_position, uv_size);
+}
+
 void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, Texture* texture)
 {
 	GLuint id = 0; if (texture != nullptr) id = *texture;
 	DrawQuad(position, size, depth, id);
+}
+
+void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, Texture* texture, glm::vec2 uv_position, glm::vec2 uv_size)
+{
+	GLuint id = 0; if (texture != nullptr) id = *texture;
+	DrawQuad(position, size, depth, id, uv_position, uv_size);
 }
 
 void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, glm::vec4 color, Texture* texture)
@@ -185,7 +196,18 @@ void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, glm::
 	DrawQuad(position, size, depth, color, id);
 }
 
+void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, glm::vec4 color, Texture* texture, glm::vec2 uv_position, glm::vec2 uv_size)
+{
+	GLuint id = 0; if (texture != nullptr) id = *texture;
+	DrawQuad(position, size, depth, color, id, glm::vec2(0.0f), glm::vec2(1.0f));
+}
+
 void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, glm::vec4 color, GLuint textureID)
+{
+	DrawQuad(position, size, depth, color, textureID, glm::vec2(0.0f), glm::vec2(1.0f));
+}
+
+void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, glm::vec4 color, GLuint textureID, glm::vec2 uv_position, glm::vec2 uv_size)
 {
 	if (data.indexCount >= MaxIndexCount || data.textureSlotIndex >= MaxTextureCount)
 	{
@@ -201,24 +223,24 @@ void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, glm::
 	}
 	float texture = data.textureSlotsMap[textureID];
 
-	*data.quadBufferPtr = 
-		Vertex2D(position.x, position.y, depth, color.x, color.y, color.z, color.w, 
-			0.0f, 0.0f, texture);
+	*data.quadBufferPtr =
+		Vertex2D(position.x, position.y, depth, color.x, color.y, color.z, color.w,
+			uv_position.x, uv_position.y, texture);
 	data.quadBufferPtr++;
 
 	*data.quadBufferPtr =
 		Vertex2D(position.x + size.x, position.y, depth, color.x, color.y, color.z, color.w,
-			1.0f, 0.0f, texture);
+			uv_size.x, uv_position.y, texture);
 	data.quadBufferPtr++;
 
 	*data.quadBufferPtr =
 		Vertex2D(position.x + size.x, position.y + size.y, depth, color.x, color.y, color.z, color.w,
-			1.0f, 1.0f, texture);
+			uv_size.x, uv_size.y, texture);
 	data.quadBufferPtr++;
 
 	*data.quadBufferPtr =
 		Vertex2D(position.x, position.y + size.y, depth, color.x, color.y, color.z, color.w,
-			0.0f, 1.0f, texture);
+			uv_position.x, uv_size.y, texture);
 	data.quadBufferPtr++;
 
 	data.indexCount += 6;
