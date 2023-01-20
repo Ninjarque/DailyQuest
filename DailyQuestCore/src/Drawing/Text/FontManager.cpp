@@ -27,7 +27,7 @@ Font* FontManager::Create(std::string fontFilePath)
             // setDimensions or setDimensionsConstraint to find the best value
             packer.setDimensionsConstraint(msdf_atlas::TightAtlasPacker::DimensionsConstraint::SQUARE);
             // setScale for a fixed size or setMinimumScale to use the largest that fits
-            packer.setMinimumScale(24.0);
+            packer.setMinimumScale(32.0);
             // setPixelRange or setUnitRange
             packer.setPixelRange(2.0);
             packer.setMiterLimit(1.0);
@@ -79,6 +79,7 @@ Font* FontManager::Create(std::string fontFilePath)
                 std::unordered_map<unsigned int, glm::vec2> positions;
                 std::unordered_map<unsigned int, glm::vec2> sizes;
                 std::unordered_map<unsigned int, glm::vec2> bearings;
+                std::unordered_map<unsigned int, float> advances;
                 for (auto glyph : glyphs)
                 {
                     if (glyph.isWhitespace())
@@ -90,10 +91,27 @@ Font* FontManager::Create(std::string fontFilePath)
                     glyph.getQuadAtlasBounds(x, y, w, h);
                     positions[character] = glm::vec2(x, y);
                     sizes[character] = glm::vec2(w - x, h - y);
-                    bearings[character] = glm::vec2(0.0f,0.0f);
+                    double l, b, r, t;
+                    glyph.getQuadPlaneBounds(l, b, r, t);
+
+                    msdfgen::Shape shape;
+                    msdfgen::Shape::Bounds bounds;
+                    double advance;
+                    msdfgen::loadGlyph(shape, font, character, &advance);
+                    if (shape.validate() && shape.contours.size() > 0)
+                    {
+                        shape.normalize();
+                        //shape.inverseYAxis = true;
+
+                        bounds = shape.getBounds(4);
+                    }
+                    bearings[character] = glm::vec2((float)bounds.l/64.0f,(float)bounds.t/64.0f);
+                    //std::cout << bearings[character].y << std::endl;
+
+                    advances[character] = (float)glyph.getAdvance();
                 }
 
-                return new Font(texture, positions, sizes, bearings, (float)lineSpacing, (float)whiteSpace, (float)tabSpacing);
+                return new Font(texture, positions, sizes, bearings, advances, (float)lineSpacing, (float)whiteSpace, (float)tabSpacing, (float)metricRatio);
             }
             else
             {

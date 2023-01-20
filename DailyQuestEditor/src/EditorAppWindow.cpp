@@ -173,7 +173,8 @@ void EditorAppWindow::OnDraw()
     shader.End();
     
 
-    font->Render(&textShader, "HELLO tha WORLDO", glm::vec2(0.0f, h / 2.0f), glm::vec2(8.0f, 8.0f), glm::vec4(1.0f,1.0,0.0,1.0f));
+    font->Render(&textShader, "Use the msdf_atlas::BitmapAtlasStorage::getData() function instead. This function returns a pointer to the underlying pixel data buffer as a void* type. You can then cast this pointer to the appropriate data type (unsigned char, float, etc.) and use it as you would use any other array of pixels.", 
+        glm::vec2(0.0f, 0.0f), glm::vec2(w, h), 4.0f, glm::vec4(1.0f,1.0,0.0,1.0f));
 
     // */
 

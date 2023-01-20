@@ -37,9 +37,7 @@ class FontHandle {
 
     FT_Face face;
     bool ownership;
-
 };
-
 struct FtContext {
     Point2 position;
     Shape *shape;
@@ -218,5 +216,4 @@ bool getKerning(double &output, FontHandle *font, GlyphIndex glyphIndex1, GlyphI
 bool getKerning(double &output, FontHandle *font, unicode_t unicode1, unicode_t unicode2) {
     return getKerning(output, font, GlyphIndex(FT_Get_Char_Index(font->face, unicode1)), GlyphIndex(FT_Get_Char_Index(font->face, unicode2)));
 }
-
 }
