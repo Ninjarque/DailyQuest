@@ -17,6 +17,7 @@ void EditorAppWindow::OnInit()
     
     frame.Init(buffer_width, buffer_height);
     shader.Init("res/Shaders/Basic.shader");
+    textShader.Init("res/Shaders/TextShader.shader");
 
     model.Init(
         std::vector<float>{ 
@@ -76,16 +77,9 @@ void EditorAppWindow::OnInit()
     std::cout << "Test expression current " << TestExpression << std::endl;
     CommandManager::Push(new AddCommand(2.0f, &TestExpression));
     std::cout << "Test expression current " << TestExpression << std::endl;
-    CommandManager::Push(new AddCommand(3.0f, &TestExpression));
-    std::cout << "Test expression current " << TestExpression << std::endl;
     CommandManager::Push(new AddCommand(4.0f, &TestExpression));
+    std::cout << "Test expression current " << TestExpression << std::endl;
     CommandManagerPrint();
-    std::cout << "Test expression current " << TestExpression << std::endl;
-    CommandManager::Undo();
-    std::cout << "Test expression current " << TestExpression << std::endl;
-    CommandManager::Undo();
-    std::cout << "Test expression current " << TestExpression << std::endl;
-    CommandManager::Undo();
     std::cout << "Test expression current " << TestExpression << std::endl;
     CommandManager::Undo();
     CommandManagerPrint();
@@ -94,38 +88,9 @@ void EditorAppWindow::OnInit()
     std::cout << "Test expression current " << TestExpression << std::endl;
     CommandManager::Do();
     std::cout << "Test expression current " << TestExpression << std::endl;
-    CommandManager::Do();
-    std::cout << "Test expression current " << TestExpression << std::endl;
-    CommandManager::Do();
     CommandManagerPrint();
-    std::cout << "Test expression current " << TestExpression << std::endl;
-    CommandManager::Undo();
-    std::cout << "Test expression current " << TestExpression << std::endl;
-    CommandManager::Undo();
-    CommandManagerPrint();
-    std::cout << "Test expression current " << TestExpression << std::endl;
-    CommandManager::Push(new MultCommand(5.0f, &TestExpression));
-    CommandManagerPrint();
-    std::cout << "Test expression current " << TestExpression << std::endl;
-    CommandManager::Undo();
-    CommandManagerPrint();
-    std::cout << "Test expression current " << TestExpression << std::endl;
-    CommandManager::Do();
-    std::cout << "Test expression current " << TestExpression << std::endl;
-    CommandManager::Do();
-    CommandManagerPrint();
-    std::cout << "Test expression current " << TestExpression << std::endl;
-    CommandManager::Undo();
-    std::cout << "Test expression current " << TestExpression << std::endl;
-    CommandManager::Undo();
-    CommandManagerPrint();
-    std::cout << "Test expression current " << TestExpression << std::endl;
-    CommandManager::Push(new AddCommand(-1.0f, &TestExpression));
-    CommandManagerPrint();
-    std::cout << "Test expression current " << TestExpression << std::endl;
-    CommandManager::Do();
-    std::cout << "Test expression current " << TestExpression << std::endl;
-    CommandManagerPrint();
+
+    font = FontManager::Create("C:\\Users\\ninja\\Downloads\\GothamMedium.ttf");
 }
 
 void EditorAppWindow::OnDispose()
@@ -191,7 +156,7 @@ void EditorAppWindow::OnDraw()
     int w, h;
     Window::Current->GetSize(w, h);
     std::vector<Texture*> textures = { modelTexture1, modelTexture2 };
-    
+
     // /*
     shader.Begin();
     
@@ -207,6 +172,9 @@ void EditorAppWindow::OnDraw()
 
     shader.End();
     
+
+    font->Render(&textShader, "HELLO tha WORLDO", glm::vec2(0.0f, h / 2.0f), glm::vec2(8.0f, 8.0f), glm::vec4(1.0f,1.0,0.0,1.0f));
+
     // */
 
     //glViewport(0, 0, m_width, m_height);

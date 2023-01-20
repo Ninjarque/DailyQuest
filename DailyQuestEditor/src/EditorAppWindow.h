@@ -22,6 +22,9 @@
 #include "Editor/CommandManager.h"
 #include "Test/CommandTests.h"
 
+#include "Drawing/Text/FontManager.h"
+#include "Drawing/Text/Font.h"
+
 #include "Node.h"
 
 class EditorAppWindow : public Window
@@ -43,12 +46,12 @@ protected:
 		if (commands.size() != CommandManager::GetCommandCount()) std::cout << "WUUUUT" << std::endl;
 		for (int i = 0; i < commands.size(); i++)
 		{
-			AddCommand* add = dynamic_cast<AddCommand*>(commands[i]);
+			AddCommand* add = static_cast<AddCommand*>(commands[i]);
 			if (add != nullptr)
 			{
 				std::cout << "Command [" << add->ToString() << "]" << std::endl;
 			}
-			MultCommand* mult = dynamic_cast<MultCommand*>(commands[i]);
+			MultCommand* mult = static_cast<MultCommand*>(commands[i]);
 			if (mult != nullptr)
 			{
 				std::cout << "Command [" << mult->ToString() << "]" << std::endl;
@@ -63,6 +66,7 @@ protected:
 
 	Frame frame;
 	Shader shader;
+	Shader textShader;
 	Camera camera;
 
 	Model model;
@@ -70,6 +74,8 @@ protected:
 	Texture* modelTexture2 = nullptr;
 
 	ParticleSystem particleSystem;
+
+	Font* font;
 
 	float time = 0.0f;
 	float deltaTime = 0.0f;

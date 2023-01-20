@@ -50,5 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\Shaders\Basic.shader" />
+    <None Include="res\Shaders\TextShader.shader" />
   </ItemGroup>
 </Project>

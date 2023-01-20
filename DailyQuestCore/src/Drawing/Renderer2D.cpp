@@ -230,17 +230,17 @@ void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, glm::
 
 	*data.quadBufferPtr =
 		Vertex2D(position.x + size.x, position.y, depth, color.x, color.y, color.z, color.w,
-			uv_size.x, uv_position.y, texture);
+			uv_position.x + uv_size.x, uv_position.y, texture);
 	data.quadBufferPtr++;
 
 	*data.quadBufferPtr =
 		Vertex2D(position.x + size.x, position.y + size.y, depth, color.x, color.y, color.z, color.w,
-			uv_size.x, uv_size.y, texture);
+			uv_position.x + uv_size.x, uv_position.y + uv_size.y, texture);
 	data.quadBufferPtr++;
 
 	*data.quadBufferPtr =
 		Vertex2D(position.x, position.y + size.y, depth, color.x, color.y, color.z, color.w,
-			uv_position.x, uv_size.y, texture);
+			uv_position.x, uv_position.y + uv_size.y, texture);
 	data.quadBufferPtr++;
 
 	data.indexCount += 6;
