@@ -190,11 +190,15 @@ bool FontManager::ExpandFontCharset(std::string fontFilePath,
 
                 for (auto glyph : glyphs)
                 {
-                    if (glyph.isWhitespace())
-                        continue;
                     unsigned int character = glyph.getCodepoint();
                     if (!character)
                         continue;
+
+                    if (glyph.isWhitespace())
+                    {
+                        newCharDatas[character] = CharData();
+                        continue;
+                    }
 
                     msdfgen::Shape shape;
                     msdfgen::Shape::Bounds bounds;
