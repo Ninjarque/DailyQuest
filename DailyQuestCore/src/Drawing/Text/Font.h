@@ -48,6 +48,14 @@ public:
 	void Render(Shader* fontShader, std::u32string text, 
 		glm::vec2 position, glm::vec2 bounds, float textSize, glm::vec4 color);
 
+	void Render(Shader* fontShader, std::u32string text,
+		glm::vec2 position, glm::vec2 bounds, float textSize, glm::vec4 color,
+		float borders, glm::vec4 borderColor, glm::vec2 shadowOffset, glm::vec4 shadowColor);
+
+	/*
+	Maybe make static Render use std::string and create Font if not already made
+	could make it easier to use
+	*/
 	static void Render(Font* font, Shader* fontShader, std::string text, 
 		glm::vec2 position, glm::vec2 bounds, float textSize, glm::vec4 color);
 
@@ -63,6 +71,10 @@ private:
 	float _tabSpacing;
 	float _metricRatio;
 	bool _disposed;
+
+	inline float lerp(float x, float y, float t) {
+		return x * (1.f - t) + y * t;
+	}
 
 	std::u32string to_utf32(std::string s)
 	{

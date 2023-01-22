@@ -3,16 +3,19 @@
 std::unordered_map<Font*, std::string> FontManager::_fontFilePath;
 std::unordered_map<Font*, std::vector<Texture*>> FontManager::_fontTextures;
 std::unordered_map<Font*, std::vector<msdf_atlas::Charset>> FontManager::_fontCharsets;
+std::unordered_map<Font*, FontDetails> FontManager::_fontDetails;
 
 
-Font* FontManager::Create(std::string fontFilePath)
+Font* FontManager::Create(std::string fontFilePath,
+    FontDetails details)
 {
-    return Create(fontFilePath, msdf_atlas::Charset::ASCII);
+    return Create(fontFilePath, msdf_atlas::Charset::ASCII, details);
 }
 
-Font* FontManager::Create(std::string fontFilePath, std::vector<unsigned int> charsetParts)
+Font* FontManager::Create(std::string fontFilePath, std::vector<unsigned int> charsetParts,
+    FontDetails details)
 {
-    Font* font = Create(fontFilePath);
+    Font* font = Create(fontFilePath, details);
     if (font != nullptr)
     {
         for (auto c : charsetParts)
@@ -24,18 +27,20 @@ Font* FontManager::Create(std::string fontFilePath, std::vector<unsigned int> ch
     return nullptr;
 }
 
-Font* FontManager::Create(std::string fontFilePath, msdf_atlas::Charset baseCharset)
+Font* FontManager::Create(std::string fontFilePath, msdf_atlas::Charset baseCharset,
+    FontDetails details)
 {
     std::unordered_map<unsigned int, CharData> charDatas;
     float baseY, lineSpacing, whiteSpace, tabSpacing, metricRatio;
     Texture* texture;
     if (ExpandFontCharset(fontFilePath, baseCharset, charDatas,
-        baseY, lineSpacing, whiteSpace, tabSpacing, metricRatio, texture))
+        baseY, lineSpacing, whiteSpace, tabSpacing, metricRatio, texture, details))
     {
         Font* font = new Font(charDatas, baseY, lineSpacing, whiteSpace, tabSpacing, metricRatio);
         _fontFilePath[font] = fontFilePath;
         _fontCharsets[font].push_back(baseCharset);
         _fontTextures[font].push_back(texture);
+        _fontDetails[font] = details;
         return font;
     }
     return nullptr;
@@ -51,6 +56,7 @@ void FontManager::Delete(Font* font)
     _fontFilePath.erase(font);
     _fontTextures.erase(font);
     _fontCharsets.erase(font);
+    _fontDetails.erase(font);
 
     font->Dispose();
 }
@@ -80,8 +86,9 @@ bool FontManager::TryExpand(Font* font, unsigned int targetChar)
     std::unordered_map<unsigned int, CharData> charDatas;
     float a, b, c, d, e;
     Texture* texture;
+    FontDetails details = _fontDetails[font];
     if (ExpandFontCharset(_fontFilePath[font], charSet, charDatas,
-        a, b, c, d, e, texture))
+        a, b, c, d, e, texture), details)
     {
         _fontTextures[font].push_back(texture);
         font->Expand(charDatas);
@@ -116,7 +123,7 @@ bool FontManager::TryGetCharsetBounds(Font* font, unsigned int character, unsign
 bool FontManager::ExpandFontCharset(std::string fontFilePath, 
     msdf_atlas::Charset newChars, std::unordered_map<unsigned int, CharData>& newCharDatas,
     float& baseY, float& lineSpacing, float& whiteSpace, float& tabSpacing, float& metricRatio,
-    Texture*& texture)
+    Texture*& texture, FontDetails details)
 {
     // Initialize instance of FreeType library
     if (msdfgen::FreetypeHandle* ft = msdfgen::initializeFreetype()) {
@@ -142,7 +149,17 @@ bool FontManager::ExpandFontCharset(std::string fontFilePath,
             // setDimensions or setDimensionsConstraint to find the best value
             packer.setDimensionsConstraint(msdf_atlas::TightAtlasPacker::DimensionsConstraint::SQUARE);
             // setScale for a fixed size or setMinimumScale to use the largest that fits
-            packer.setMinimumScale(32.0);
+            double inputEm = 24.0f;
+            switch (details)
+            {
+            case FontDetails::Small: inputEm = 16.0f; break;
+            case FontDetails::Better: inputEm = 36.0f; break;
+            case FontDetails::ReallyAccurate: inputEm = 42.0f; break;
+            case FontDetails::Overkill: inputEm = 52.0f; break;
+            case FontDetails::Default: default: inputEm = 26.0f; break;
+            }
+
+            packer.setMinimumScale(inputEm);
             // setPixelRange or setUnitRange
             packer.setPixelRange(2.0);
             packer.setMiterLimit(1.0);

@@ -35,8 +35,11 @@ uniform sampler2D v_textures[8];
 
 layout(location = 0) out vec4 color;
 
-const float width = 0.35;
-const float edge = 0.09;
+uniform float char_width = 0.35;
+uniform float char_edge = 0.09;
+
+uniform float border_width = 0.4;
+uniform float border_edge = 0.09;
 
 float median(float r, float g, float b) {
 	return max(min(r, g), min(max(r, g), b));
@@ -53,12 +56,12 @@ void main()
 	//color = mtsdf;
 	//return;
 	vec3 msd = mtsdf.rgb;
-	float distance = 1.0 - mtsdf.a;
-	float alpha = 1.0 - smoothstep(width, width + edge, distance);
 	float sd = median(msd.r, msd.g, msd.b);
+	float distance = 1.0 - mtsdf.a;
+	float alpha = 1.0 - smoothstep(char_width, char_width + char_edge, distance);
 	float screenPxDistance = screenPxRange() * (sd - 0.5);
-	float opacity = clamp(screenPxDistance + 0.5, 0.0, 1.0);
-	color = vec4(v_color.rgb, alpha * v_color.a * opacity);
+	float opacity = clamp(screenPxDistance + 0.5, char_edge, 1.0);
+	color = vec4(v_color.rgb, alpha * opacity);
 	//color = vec4(v_texCoord.x, v_texCoord.y, v_texIndex, 1.0);
 	//color = vec4(0.0,0.0,0.0,1.0);
 };

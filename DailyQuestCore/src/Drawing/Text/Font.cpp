@@ -34,17 +34,30 @@ void Font::Render(Shader* fontShader, std::string text,
 	Render(fontShader, str, position, bounds, textSize, color);
 }
 
-void Font::Render(Shader* fontShader, std::u32string text, 
+void Font::Render(Shader* fontShader, std::u32string text,
 	glm::vec2 position, glm::vec2 bounds, float textSize, glm::vec4 color)
+{
+	Render(fontShader, text, position, bounds, textSize, color,
+		0.0f, glm::vec4(0.0f), glm::vec2(0.0f), glm::vec4(0.0f));
+}
+
+void Font::Render(Shader* fontShader, std::u32string text, 
+	glm::vec2 position, glm::vec2 bounds, float textSize, glm::vec4 color,
+	float borders, glm::vec4 borderColor, glm::vec2 shadowOffset, glm::vec4 shadowColor)
 {
 	fontShader->Begin();
 
 	Renderer2D::Begin(fontShader);
+	
+	float char_width = lerp(0.35f, 0.43f, textSize / 200.0f);
+	float char_edge = lerp(0.5f, 0.1f, textSize / 200.0f);
+	fontShader->Set("char_width", char_width);
+	fontShader->Set("char_edge", char_edge);
 
 	glm::vec4 rect;
 	glm::vec4 uvRect;
 	float x = 0.0f;
-	float y = _lineSpacing * textSize / _metricRatio;//_baseY;
+	float y = textSize + _baseY;//_lineSpacing; //* textSize / _metricRatio;//_baseY;
 	float advance = 0.0f;
 	Texture* texture;
 
@@ -75,17 +88,18 @@ void Font::Render(Shader* fontShader, std::u32string text,
 				glm::vec2 uvSize = glm::vec2((uvRect.z - uvRect.x) / width, (uvRect.w - uvRect.y) / height);
 				uvPos.y += uvSize.y;
 				uvSize.y *= -1.0f;
-
+				// /*
 				if (x + advance > bounds.x)
 				{
 					x = 0.0f;
-					y += _lineSpacing * textSize / _metricRatio;
+					y += textSize + _baseY;//_lineSpacing * textSize / _metricRatio;
 				}
-				if (y + (rect.w) > bounds.y)
+				if (y - (rect.w) > bounds.y)
 				{
 					i = text.size();
 					break;
 				}
+				// */
 				glm::vec2 shownPos = glm::vec2(x + rect.x, y - rect.y);//glm::vec2(x + bearing.x, y + bearing.y + _lineSpacing * textSize / _metricRatio / 2.0f) + position;
 				glm::vec2 shownSize = glm::vec2(rect.z - rect.x, -rect.w + rect.y);//size;
 				Renderer2D::DrawQuad(shownPos + position, shownSize, 0.0f, texture, uvPos, uvSize);

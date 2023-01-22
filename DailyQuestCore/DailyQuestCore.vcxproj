@@ -1017,6 +1017,8 @@
     <None Include="Dependencies\GLEW\doc\install.html" />
     <None Include="Dependencies\GLEW\doc\log.html" />
     <None Include="Dependencies\GLEW\doc\wglew.html" />
+    <None Include="Dependencies\GLFW\lib\Win32\glfw3.dll" />
+    <None Include="Dependencies\GLFW\lib\x64\glfw3.dll" />
     <None Include="src\vendor\glm\detail\func_common.inl" />
     <None Include="src\vendor\glm\detail\func_common_simd.inl" />
     <None Include="src\vendor\glm\detail\func_exponential.inl" />
@@ -1159,6 +1161,20 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="src\vendor\msdfgen\Msdfgen.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="Dependencies\Freetype\Lib\Win32\freetype.lib" />
+    <Library Include="Dependencies\Freetype\Lib\x64\freetype.lib" />
+    <Library Include="Dependencies\GLEW\lib\Win32\glew32.lib" />
+    <Library Include="Dependencies\GLEW\lib\Win32\glew32s.lib" />
+    <Library Include="Dependencies\GLEW\lib\x64\glew32.lib" />
+    <Library Include="Dependencies\GLEW\lib\x64\glew32s.lib" />
+    <Library Include="Dependencies\GLFW\lib\Win32\glfw3.lib" />
+    <Library Include="Dependencies\GLFW\lib\Win32\glfw3dll.lib" />
+    <Library Include="Dependencies\GLFW\lib\Win32\glfw3_mt.lib" />
+    <Library Include="Dependencies\GLFW\lib\x64\glfw3.lib" />
+    <Library Include="Dependencies\GLFW\lib\x64\glfw3dll.lib" />
+    <Library Include="Dependencies\GLFW\lib\x64\glfw3_mt.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

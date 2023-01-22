@@ -2882,10 +2882,26 @@
     <None Include="Dependencies\GLEW\doc\install.html" />
     <None Include="Dependencies\GLEW\doc\log.html" />
     <None Include="Dependencies\GLEW\doc\wglew.html" />
+    <None Include="Dependencies\GLFW\lib\x64\glfw3.dll" />
+    <None Include="Dependencies\GLFW\lib\Win32\glfw3.dll" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="src\vendor\msdfgen\Msdfgen.rc">
       <Filter>Fichiers de ressources</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="Dependencies\GLFW\lib\x64\glfw3.lib" />
+    <Library Include="Dependencies\GLFW\lib\x64\glfw3_mt.lib" />
+    <Library Include="Dependencies\GLFW\lib\x64\glfw3dll.lib" />
+    <Library Include="Dependencies\GLFW\lib\Win32\glfw3.lib" />
+    <Library Include="Dependencies\GLFW\lib\Win32\glfw3_mt.lib" />
+    <Library Include="Dependencies\GLFW\lib\Win32\glfw3dll.lib" />
+    <Library Include="Dependencies\GLEW\lib\x64\glew32.lib" />
+    <Library Include="Dependencies\GLEW\lib\x64\glew32s.lib" />
+    <Library Include="Dependencies\GLEW\lib\Win32\glew32.lib" />
+    <Library Include="Dependencies\GLEW\lib\Win32\glew32s.lib" />
+    <Library Include="Dependencies\Freetype\Lib\x64\freetype.lib" />
+    <Library Include="Dependencies\Freetype\Lib\Win32\freetype.lib" />
   </ItemGroup>
 </Project>

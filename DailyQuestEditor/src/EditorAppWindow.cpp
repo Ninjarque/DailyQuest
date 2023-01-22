@@ -91,8 +91,12 @@ void EditorAppWindow::OnInit()
     CommandManagerPrint();
 
     //font = FontManager::Create("C:\\Users\\ninja\\Downloads\\GothamMedium.ttf");
-    //font = FontManager::Create("C:\\Users\\ninja\\Downloads\\pokemon-gb-font\\PokemonUnownGb-YAWa.ttf");
-    font = FontManager::Create("C:\\Users\\ninja\\Downloads\\ohayou-oniichan-font\\OhayouOniichan-51dnz.ttf");
+    //font = FontManager::Create("C:\\Users\\ninja\\Downloads\\pokemon-gb-font\\PokemonGb-RAeo.ttf");
+    //font = FontManager::Create("C:\\Users\\ninja\\Downloads\\ohayou-oniichan-font\\OhayouOniichan-51dnz.ttf");
+    //font = FontManager::Create("C:\\Users\\ninja\\Downloads\\Japan-pPaZ.ttf");
+    //font = FontManager::Create("C:\\Users\\ninja\\Downloads\\Bento-2OXaW.otf");
+    //font = FontManager::Create("C:\\Users\\ninja\\Downloads\\Xiomara-wWLw.ttf");
+    font = FontManager::Create("C:\\Users\\ninja\\Downloads\\ConsolaMono-DBA0.ttf", FontDetails::Better);
 }
 
 void EditorAppWindow::OnDispose()
@@ -176,9 +180,11 @@ void EditorAppWindow::OnDraw()
     
 
     font->Render(&textShader, "Use the msdf_atlas::BitmapAtlasStorage::getData() function instead. This function returns a pointer to the underlying pixel data buffer as a void* type. You can then cast this pointer to the appropriate data type (unsigned char, float, etc.) and use it as you would use any other array of pixels.", 
-        glm::vec2(0.0f, 0.0f), glm::vec2(w, h/2.0f), 4.0f, glm::vec4(1.0f,1.0,0.0,1.0f));
+        glm::vec2(0.0f, 0.0f), glm::vec2(w, h/2.0f), 50.0f, glm::vec4(1.0f,1.0,0.0,1.0f));
     font->Render(&textShader, U"ça beigne là tranquille Gaëlle ? こんにちは ou bien ?",
-        glm::vec2(0.0f, h/2.0f), glm::vec2(w, h/2.0f), 3.0f, glm::vec4(1.0f, 1.0, 0.0, 1.0f));
+        glm::vec2(0.0f, h/2.0f), glm::vec2(w, h/2.0f), 200.0f, glm::vec4(1.0f, 1.0, 0.0, 1.0f));
+    //font->Render(&textShader, U"t",
+    //    glm::vec2(0.0f, h / 2.0f), glm::vec2(w, h / 2.0f), 3.0f, glm::vec4(1.0f, 1.0, 0.0, 1.0f));
 
     // */
 
@@ -218,7 +224,7 @@ void EditorAppWindow::OnDraw()
         double x;
         double y;
         Mouse::GetPosition(x, y);
-        Renderer2D::DrawQuad({ (float)w / 2.0f, (float)h / 2.0f }, { (float)x- (float)w / 2.0f, (float)y - (float)h / 2.0f }, 0.0f, texture);
+        //Renderer2D::DrawQuad({ (float)w / 2.0f, (float)h / 2.0f }, { (float)x- (float)w / 2.0f, (float)y - (float)h / 2.0f }, 0.0f, texture);
     }
     
     Renderer2D::End();
