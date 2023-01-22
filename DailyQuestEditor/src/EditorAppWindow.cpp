@@ -90,13 +90,9 @@ void EditorAppWindow::OnInit()
     std::cout << "Test expression current " << TestExpression << std::endl;
     CommandManagerPrint();
 
-    //font = FontManager::Create("C:\\Users\\ninja\\Downloads\\GothamMedium.ttf");
-    //font = FontManager::Create("C:\\Users\\ninja\\Downloads\\pokemon-gb-font\\PokemonGb-RAeo.ttf");
-    //font = FontManager::Create("C:\\Users\\ninja\\Downloads\\ohayou-oniichan-font\\OhayouOniichan-51dnz.ttf");
-    //font = FontManager::Create("C:\\Users\\ninja\\Downloads\\Japan-pPaZ.ttf");
-    //font = FontManager::Create("C:\\Users\\ninja\\Downloads\\Bento-2OXaW.otf");
-    //font = FontManager::Create("C:\\Users\\ninja\\Downloads\\Xiomara-wWLw.ttf");
-    font = FontManager::Create("C:\\Users\\ninja\\Downloads\\ConsolaMono-DBA0.ttf", FontDetails::Better);
+    //font = FontManager::Create("res/Fonts/Pokemon.ttf", FontDetails::Better);
+    //font = FontManager::Create("res/Fonts/Xiomara.ttf", FontDetails::Better);
+    font = FontManager::Create("res/Fonts/Consola.ttf", FontDetails::Better);
 }
 
 void EditorAppWindow::OnDispose()
