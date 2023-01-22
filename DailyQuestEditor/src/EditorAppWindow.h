@@ -71,7 +71,6 @@ protected:
 
 	Model model;
 	Texture* modelTexture1 = nullptr;
-	Texture* modelTexture2 = nullptr;
 
 	ParticleSystem particleSystem;
 
