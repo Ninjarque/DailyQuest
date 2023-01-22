@@ -86,8 +86,8 @@ void Font::Render(Shader* fontShader, std::u32string text,
 					i = text.size();
 					break;
 				}
-				glm::vec2 shownPos = glm::vec2(x - rect.x, y - rect.y);//glm::vec2(x + bearing.x, y + bearing.y + _lineSpacing * textSize / _metricRatio / 2.0f) + position;
-				glm::vec2 shownSize = glm::vec2(rect.z + rect.x, -rect.w + rect.y);//size;
+				glm::vec2 shownPos = glm::vec2(x + rect.x, y - rect.y);//glm::vec2(x + bearing.x, y + bearing.y + _lineSpacing * textSize / _metricRatio / 2.0f) + position;
+				glm::vec2 shownSize = glm::vec2(rect.z - rect.x, -rect.w + rect.y);//size;
 				Renderer2D::DrawQuad(shownPos + position, shownSize, 0.0f, texture, uvPos, uvSize);
 				x += advance;//size.x;
 			}
