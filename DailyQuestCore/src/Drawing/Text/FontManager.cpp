@@ -183,10 +183,13 @@ bool FontManager::ExpandFontCharset(std::string fontFilePath,
                 msdfgen::getFontMetrics(metrics, font);
                 lineSpacing = metrics.lineHeight;
 
-                metricRatio = 64 / metrics.emSize;
+                double em = metrics.emSize;
+                metricRatio = 64 / em;
                 whiteSpace *= metricRatio;
                 tabSpacing *= metricRatio;
                 lineSpacing *= metricRatio;
+
+                baseY = metrics.ascenderY;
 
                 for (auto glyph : glyphs)
                 {
@@ -219,16 +222,15 @@ bool FontManager::ExpandFontCharset(std::string fontFilePath,
                     t *= metrics.emSize;
                     r *= metrics.emSize;
                     b *= metrics.emSize;
+                    //advance = glyph.getAdvance();
                     CharData charData = CharData(
-                        glm::vec4((float)l, (float)t, (float)r, (float)b),
+                        glm::vec4((float)l/ baseY, (float)t/ baseY, (float)r/ baseY, (float)b/ baseY),
                         glm::vec4(x, y, w, h),
-                        (float)(glyph.getAdvance() * metrics.emSize),
+                        (float)advance / baseY,//(float)(advance * metrics.emSize / baseY),
                         texture
                     );
                     newCharDatas[character] = charData;
                 }
-
-                baseY = metrics.ascenderY;
 
                 //_fontFilePath[font] = fontFilePath;
                 //_fontTextures[font].push_back(texture);
