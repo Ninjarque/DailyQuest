@@ -2226,6 +2226,24 @@
     <ClInclude Include="src\vendor\utf8\utf8.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="src\vendor\GL\eglew.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vendor\GL\glew.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vendor\GL\glxew.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vendor\GL\wglew.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vendor\GLFW\glfw3.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vendor\GLFW\glfw3native.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Window.cpp">
@@ -2854,6 +2872,16 @@
     <None Include="src\vendor\glm\gtx\wrap.inl">
       <Filter>Fichiers d%27en-tête</Filter>
     </None>
+    <None Include="Dependencies\GLEW\doc\advanced.html" />
+    <None Include="Dependencies\GLEW\doc\basic.html" />
+    <None Include="Dependencies\GLEW\doc\build.html" />
+    <None Include="Dependencies\GLEW\doc\credits.html" />
+    <None Include="Dependencies\GLEW\doc\glew.html" />
+    <None Include="Dependencies\GLEW\doc\glxew.html" />
+    <None Include="Dependencies\GLEW\doc\index.html" />
+    <None Include="Dependencies\GLEW\doc\install.html" />
+    <None Include="Dependencies\GLEW\doc\log.html" />
+    <None Include="Dependencies\GLEW\doc\wglew.html" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="src\vendor\msdfgen\Msdfgen.rc">

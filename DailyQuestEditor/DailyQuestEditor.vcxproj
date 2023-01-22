@@ -101,13 +101,13 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);GLEW_STATIC;DEBUG</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)DailyQuestCore\src;$(SolutionDir)DailyQuestCore\src\vendor;$(SolutionDir)DailyQuestCore\src\vendor\msdfgen;$(SolutionDir)DailyQuestCore\src\vendor\msdfgen\ext;$(SolutionDir)DailyQuestCore\src\vendor\msdfgen\freetype\include;$(SolutionDir)DailyQuestCore\src\vendor\msdf-atlas-gen;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)DailyQuestCore\src;$(SolutionDir)DailyQuestCore\src\vendor;$(SolutionDir)DailyQuestCore\src\vendor\msdfgen;$(SolutionDir)DailyQuestCore\src\vendor\msdfgen\ext;$(SolutionDir)DailyQuestCore\src\vendor\msdfgen\freetype\include;$(SolutionDir)DailyQuestCore\src\vendor\msdf-atlas-gen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;glu32.lib;glfw3.lib;glew32s.lib;freetype.lib;DailyQuestCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\GLEW\lib\$(Platform);$(SolutionDir)Dependencies\GLFW\lib\$(Platform);$(SolutionDir)Dependencies\Freetype\lib\$(Platform);$(SolutionDir)bin\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)DailyQuestCore\Dependencies\GLEW\lib\$(Platform);$(SolutionDir)DailyQuestCore\Dependencies\GLFW\lib\$(Platform);$(SolutionDir)DailyQuestCore\Dependencies\Freetype\lib\$(Platform);$(SolutionDir)bin\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -119,7 +119,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);GLEW_STATIC;RELEASE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)DailyQuestCore\src;$(SolutionDir)DailyQuestCore\src\vendor;$(SolutionDir)DailyQuestCore\src\vendor\msdfgen;$(SolutionDir)DailyQuestCore\src\vendor\msdfgen\ext;$(SolutionDir)DailyQuestCore\src\vendor\msdfgen\freetype\include;$(SolutionDir)DailyQuestCore\src\vendor\msdf-atlas-gen;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)DailyQuestCore\src;$(SolutionDir)DailyQuestCore\src\vendor;$(SolutionDir)DailyQuestCore\src\vendor\msdfgen;$(SolutionDir)DailyQuestCore\src\vendor\msdfgen\ext;$(SolutionDir)DailyQuestCore\src\vendor\msdfgen\freetype\include;$(SolutionDir)DailyQuestCore\src\vendor\msdf-atlas-gen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -127,7 +127,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;glu32.lib;glfw3.lib;glew32s.lib;freetype.lib;DailyQuestCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\GLEW\lib\$(Platform);$(SolutionDir)Dependencies\GLFW\lib\$(Platform);$(SolutionDir)Dependencies\Freetype\lib\$(Platform);$(SolutionDir)bin\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)DailyQuestCore\Dependencies\GLEW\lib\$(Platform);$(SolutionDir)DailyQuestCore\Dependencies\GLFW\lib\$(Platform);$(SolutionDir)DailyQuestCore\Dependencies\Freetype\lib\$(Platform);$(SolutionDir)bin\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -137,13 +137,13 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);GLEW_STATIC;DEBUG</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)DailyQuestCore\src;$(SolutionDir)DailyQuestCore\src\vendor;$(SolutionDir)DailyQuestCore\src\vendor\msdfgen;$(SolutionDir)DailyQuestCore\src\vendor\msdfgen\ext;$(SolutionDir)DailyQuestCore\src\vendor\msdfgen\freetype\include;$(SolutionDir)DailyQuestCore\src\vendor\msdf-atlas-gen;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)DailyQuestCore\src;$(SolutionDir)DailyQuestCore\src\vendor;$(SolutionDir)DailyQuestCore\src\vendor\msdfgen;$(SolutionDir)DailyQuestCore\src\vendor\msdfgen\ext;$(SolutionDir)DailyQuestCore\src\vendor\msdfgen\freetype\include;$(SolutionDir)DailyQuestCore\src\vendor\msdf-atlas-gen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;glu32.lib;glfw3.lib;glew32s.lib;freetype.lib;DailyQuestCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\GLEW\lib\$(Platform);$(SolutionDir)Dependencies\GLFW\lib\$(Platform);$(SolutionDir)Dependencies\Freetype\lib\$(Platform);$(SolutionDir)bin\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)DailyQuestCore\Dependencies\GLEW\lib\$(Platform);$(SolutionDir)DailyQuestCore\Dependencies\GLFW\lib\$(Platform);$(SolutionDir)DailyQuestCore\Dependencies\Freetype\lib\$(Platform);$(SolutionDir)bin\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -155,7 +155,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);GLEW_STATIC;RELEASE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)DailyQuestCore\src;$(SolutionDir)DailyQuestCore\src\vendor;$(SolutionDir)DailyQuestCore\src\vendor\msdfgen;$(SolutionDir)DailyQuestCore\src\vendor\msdfgen\ext;$(SolutionDir)DailyQuestCore\src\vendor\msdfgen\freetype\include;$(SolutionDir)DailyQuestCore\src\vendor\msdf-atlas-gen;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)DailyQuestCore\src;$(SolutionDir)DailyQuestCore\src\vendor;$(SolutionDir)DailyQuestCore\src\vendor\msdfgen;$(SolutionDir)DailyQuestCore\src\vendor\msdfgen\ext;$(SolutionDir)DailyQuestCore\src\vendor\msdfgen\freetype\include;$(SolutionDir)DailyQuestCore\src\vendor\msdf-atlas-gen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -163,7 +163,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;glu32.lib;glfw3.lib;glew32s.lib;freetype.lib;DailyQuestCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\GLEW\lib\$(Platform);$(SolutionDir)Dependencies\GLFW\lib\$(Platform);$(SolutionDir)Dependencies\Freetype\lib\$(Platform);$(SolutionDir)bin\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)DailyQuestCore\Dependencies\GLEW\lib\$(Platform);$(SolutionDir)DailyQuestCore\Dependencies\GLFW\lib\$(Platform);$(SolutionDir)DailyQuestCore\Dependencies\Freetype\lib\$(Platform);$(SolutionDir)bin\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
