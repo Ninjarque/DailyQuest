@@ -52,4 +52,17 @@
     <None Include="res\Shaders\Basic.shader" />
     <None Include="res\Shaders\TextShader.shader" />
   </ItemGroup>
+  <ItemGroup>
+    <Font Include="res\Fonts\Consola.ttf" />
+    <Font Include="res\Fonts\Pokemon.ttf" />
+    <Font Include="res\Fonts\Xiomara.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\Images\img1.png">
+      <Filter>Fichiers de ressources</Filter>
+    </Image>
+    <Image Include="res\Images\soldier.png">
+      <Filter>Fichiers de ressources</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

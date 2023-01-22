@@ -51,6 +51,11 @@ void CommandManager::Undo()
 
 void CommandManager::Push(ICommand* command)
 {
+	if (_commands->GetCommand() != nullptr && _commands->GetCommand()->TryMerge(command))
+	{
+		delete command;
+		return;
+	}
 	_commands->Push(command);
 	Do();
 

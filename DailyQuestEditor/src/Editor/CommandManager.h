@@ -7,6 +7,7 @@ class ICommand
 public:
 	void Execute() { Do(); _done = true; }
 	void Revert() { Undo(); _done = false; }
+	virtual bool TryMerge(ICommand* other) = 0;
 
 	bool IsDone() { return _done; }
 protected:

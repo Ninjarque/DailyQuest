@@ -19,6 +19,16 @@ public:
 	void Undo() override {
 		*_expression = *_expression - _value;
 	}
+	bool TryMerge(ICommand* other) override {
+		if (AddCommand* command = dynamic_cast<AddCommand*>(other))
+		{
+			Undo();
+			_value += command->_value;
+			Do();
+			return true;
+		}
+		return false;
+	}
 	std::string ToString() override {
 		return "Add (" + std::to_string(_value) + ")";
 	}
@@ -36,6 +46,16 @@ public:
 	}
 	void Undo() override {
 		*_expression = _dtExpression;
+	}
+	bool TryMerge(ICommand* other) override {
+		if (MultCommand* command = dynamic_cast<MultCommand*>(other))
+		{
+			Undo();
+			_value *= command->_value;
+			Do();
+			return true;
+		}
+		return false;
 	}
 	std::string ToString() override {
 		return "Mult (" + std::to_string(_value) + ")";
