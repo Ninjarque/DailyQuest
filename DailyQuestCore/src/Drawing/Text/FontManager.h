@@ -11,9 +11,29 @@
 #include <msdfgen.h>
 #include <msdf-atlas-gen.h>
 
+struct CharData;
+class Font;
+
 class FontManager
 {
 public:
 	static Font* Create(std::string fontFilePath);
+	static Font* Create(std::string fontFilePath, msdf_atlas::Charset baseCharset);
+	static Font* Create(std::string fontFilePath, std::vector<unsigned int> charsetParts);
+	static void Delete(Font* font);
+
+	static bool TryExpand(Font* font, unsigned int targetChar);
+
+private:
+	static bool TryGetCharsetBounds(Font* font, unsigned int character,
+		unsigned int& minChar, unsigned int& maxChar);
+	static bool ExpandFontCharset(std::string fontFilePath,
+		msdf_atlas::Charset newChars, std::unordered_map<unsigned int, CharData>& newCharDatas,
+		float& baseY, float& lineSpacing, float& whiteSpace, float& tabSpacing, float& metricRatio,
+		Texture*& texture);
+
+	static std::unordered_map<Font*, std::string> _fontFilePath;
+	static std::unordered_map<Font*, std::vector<Texture*>> _fontTextures;
+	static std::unordered_map<Font*, std::vector<msdf_atlas::Charset>> _fontCharsets;
 };
 

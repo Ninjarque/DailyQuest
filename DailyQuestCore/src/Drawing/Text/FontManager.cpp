@@ -1,8 +1,123 @@
 #include "FontManager.h"
 
+std::unordered_map<Font*, std::string> FontManager::_fontFilePath;
+std::unordered_map<Font*, std::vector<Texture*>> FontManager::_fontTextures;
+std::unordered_map<Font*, std::vector<msdf_atlas::Charset>> FontManager::_fontCharsets;
+
+
 Font* FontManager::Create(std::string fontFilePath)
 {
-    bool success = false;
+    return Create(fontFilePath, msdf_atlas::Charset::ASCII);
+}
+
+Font* FontManager::Create(std::string fontFilePath, std::vector<unsigned int> charsetParts)
+{
+    Font* font = Create(fontFilePath);
+    if (font != nullptr)
+    {
+        for (auto c : charsetParts)
+        {
+            TryExpand(font, c);
+        }
+        return font;
+    }
+    return nullptr;
+}
+
+Font* FontManager::Create(std::string fontFilePath, msdf_atlas::Charset baseCharset)
+{
+    std::unordered_map<unsigned int, CharData> charDatas;
+    float baseY, lineSpacing, whiteSpace, tabSpacing, metricRatio;
+    Texture* texture;
+    if (ExpandFontCharset(fontFilePath, baseCharset, charDatas,
+        baseY, lineSpacing, whiteSpace, tabSpacing, metricRatio, texture))
+    {
+        Font* font = new Font(charDatas, baseY, lineSpacing, whiteSpace, tabSpacing, metricRatio);
+        _fontFilePath[font] = fontFilePath;
+        _fontCharsets[font].push_back(baseCharset);
+        _fontTextures[font].push_back(texture);
+        return font;
+    }
+    return nullptr;
+}
+
+void FontManager::Delete(Font* font)
+{
+    if (font == nullptr)
+        return;
+    std::vector<Texture*> textures = _fontTextures[font];
+    for (auto texture : textures)
+        texture->Dispose();
+    _fontFilePath.erase(font);
+    _fontTextures.erase(font);
+    _fontCharsets.erase(font);
+
+    font->Dispose();
+}
+
+bool FontManager::TryExpand(Font* font, unsigned int targetChar)
+{
+    if (font == nullptr) return false;
+    unsigned int minChar, maxChar;
+    if (!TryGetCharsetBounds(font, targetChar, minChar, maxChar))
+    {
+        font->Expand(std::unordered_map<unsigned int, CharData>{ { targetChar, CharData() } });
+        return false;
+    }
+    unsigned int distMin = targetChar - minChar;
+    unsigned int distMax = maxChar - targetChar;
+    msdf_atlas::Charset charSet;
+    if (distMin > distMax)
+    {
+        charSet = msdf_atlas::Charset::MakeForTarget(distMin + 1);
+    }
+    else
+    {
+        charSet = msdf_atlas::Charset::MakeForTarget(targetChar);
+    }
+    _fontCharsets[font].push_back(charSet);
+    
+    std::unordered_map<unsigned int, CharData> charDatas;
+    float a, b, c, d, e;
+    Texture* texture;
+    if (ExpandFontCharset(_fontFilePath[font], charSet, charDatas,
+        a, b, c, d, e, texture))
+    {
+        _fontTextures[font].push_back(texture);
+        font->Expand(charDatas);
+        return true;
+    }
+
+    return false;
+}
+
+bool FontManager::TryGetCharsetBounds(Font* font, unsigned int character, unsigned int& minChar, unsigned int& maxChar)
+{
+    std::vector<msdf_atlas::Charset> charsets = _fontCharsets[font];
+    minChar = -1;
+    maxChar = 0;
+    for (auto charset : charsets)
+    {
+        auto begin = charset.first();
+        auto end = charset.last();
+        if (begin < character && end > character) return false;
+        if (end < character && character - end > maxChar)
+        {
+            maxChar = end;
+        }
+        if (character < begin && begin - character < minChar)
+        {
+            minChar = begin;
+        }
+    }
+    return true;
+}
+
+bool FontManager::ExpandFontCharset(std::string fontFilePath, 
+    msdf_atlas::Charset newChars, std::unordered_map<unsigned int, CharData>& newCharDatas,
+    float& baseY, float& lineSpacing, float& whiteSpace, float& tabSpacing, float& metricRatio,
+    Texture*& texture)
+{
     // Initialize instance of FreeType library
     if (msdfgen::FreetypeHandle* ft = msdfgen::initializeFreetype()) {
         // Load font file
@@ -16,7 +131,7 @@ Font* FontManager::Create(std::string fontFilePath)
             // The second argument can be ignored unless you mix different font sizes in one atlas.
             // In the last argument, you can specify a charset other than ASCII.
             // To load specific glyph indices, use loadGlyphs instead.
-            fontGeometry.loadCharset(font, 1.0, msdf_atlas::Charset::ASCII);
+            fontGeometry.loadCharset(font, 1.0, newChars);
             // Apply MSDF edge coloring. See edge-coloring.h for other coloring strategies.
             const double maxCornerAngle = 3.0;
             for (msdf_atlas::GlyphGeometry& glyph : glyphs)
@@ -50,36 +165,29 @@ Font* FontManager::Create(std::string fontFilePath)
             generator.setThreadCount(4);
             // Generate atlas bitmap
             generator.generate(glyphs.data(), glyphs.size());
-            // The atlas bitmap can now be retrieved via atlasStorage as a BitmapConstRef.
-            // The glyphs array (or fontGeometry) contains positioning data for typesetting text.
-
-            //std::vector<Color> imageData(width * height);
+            
             auto& storage = generator.atlasStorage();
+            
             // Get the pointer to the underlying pixel data
             auto pixels = storage.data();
-            //float* pixels = //((msdfgen::Bitmap<float, 3>)generator.atlasStorage()).operator msdfgen::BitmapRef<float, 3>().pixels;
             Texture* texture = nullptr;
             if (pixels != nullptr)
             {
-                //for (int i = 0; i < imageData.size(); i++)
-                //    imageData[i] = Color(pixels[i * 4] / 1.0f, pixels[i * 4 + 1] / 1.0f, pixels[i * 4 + 2] / 1.0f, pixels[i * 4 + 3] / 1.0f);
                 texture = Image::Create(width, height, pixels);
-                success = true;//myProject::submitAtlasBitmapAndLayout(generator.atlasStorage(), glyphs);
-                double whiteSpace, tabSpacing;
-                msdfgen::getFontWhitespaceWidth(whiteSpace, tabSpacing, font);
+
+                double wSpace, tSpacing;
+                msdfgen::getFontWhitespaceWidth(wSpace, tSpacing, font);
+                whiteSpace = (float)wSpace;
+                tabSpacing = (float)tSpacing;
                 msdfgen::FontMetrics metrics;
                 msdfgen::getFontMetrics(metrics, font);
-                double lineSpacing = metrics.lineHeight;
+                lineSpacing = metrics.lineHeight;
 
-                double metricRatio = 64 / metrics.emSize;
+                metricRatio = 64 / metrics.emSize;
                 whiteSpace *= metricRatio;
                 tabSpacing *= metricRatio;
                 lineSpacing *= metricRatio;
 
-                std::unordered_map<unsigned int, glm::vec2> positions;
-                std::unordered_map<unsigned int, glm::vec2> sizes;
-                std::unordered_map<unsigned int, glm::vec2> bearings;
-                std::unordered_map<unsigned int, float> advances;
                 for (auto glyph : glyphs)
                 {
                     if (glyph.isWhitespace())
@@ -87,12 +195,6 @@ Font* FontManager::Create(std::string fontFilePath)
                     unsigned int character = glyph.getCodepoint();
                     if (!character)
                         continue;
-                    double x, y, w, h;
-                    glyph.getQuadAtlasBounds(x, y, w, h);
-                    positions[character] = glm::vec2(x, y);
-                    sizes[character] = glm::vec2(w - x, h - y);
-                    double l, b, r, t;
-                    glyph.getQuadPlaneBounds(l, b, r, t);
 
                     msdfgen::Shape shape;
                     msdfgen::Shape::Bounds bounds;
@@ -100,18 +202,34 @@ Font* FontManager::Create(std::string fontFilePath)
                     msdfgen::loadGlyph(shape, font, character, &advance);
                     if (shape.validate() && shape.contours.size() > 0)
                     {
-                        shape.normalize();
+                        //shape.normalize();
                         //shape.inverseYAxis = true;
 
-                        bounds = shape.getBounds(4);
+                        bounds = shape.getBounds(0.0f);
                     }
-                    bearings[character] = glm::vec2((float)bounds.l/64.0f,(float)bounds.t/64.0f);
-                    //std::cout << bearings[character].y << std::endl;
-
-                    advances[character] = (float)glyph.getAdvance();
+                    double l, b, r, t;
+                    glyph.getQuadPlaneBounds(l, b, r, t);
+                    double x, y, w, h;
+                    glyph.getQuadAtlasBounds(x, y, w, h);
+                    l *= metrics.emSize;
+                    t *= metrics.emSize;
+                    r *= metrics.emSize;
+                    b *= metrics.emSize;
+                    CharData charData = CharData(
+                        glm::vec4((float)l, (float)t, (float)r, (float)b),
+                        glm::vec4(x, y, w, h),
+                        (float)(glyph.getAdvance() * metrics.emSize),
+                        texture
+                    );
+                    newCharDatas[character] = charData;
                 }
 
-                return new Font(texture, positions, sizes, bearings, advances, (float)lineSpacing, (float)whiteSpace, (float)tabSpacing, (float)metricRatio);
+                baseY = metrics.ascenderY;
+
+                //_fontFilePath[font] = fontFilePath;
+                //_fontTextures[font].push_back(texture);
+                //_fontCharsets[font].push_back(newChars);
+                return true;
             }
             else
             {
@@ -128,6 +246,5 @@ Font* FontManager::Create(std::string fontFilePath)
         }
         msdfgen::deinitializeFreetype(ft);
     }
-
-	return nullptr;
+    return false;
 }
