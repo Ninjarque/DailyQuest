@@ -1,4 +1,4 @@
-#include "EditorAppWindow.h"
+﻿#include "EditorAppWindow.h"
 
 #include <math.h>
 
@@ -9,9 +9,9 @@ void EditorAppWindow::OnInit()
     texture = Image::Load("C:\\Users\\ninja\\Pictures\\bh3rd\\2022-08-24-19-45-55_0.png");
     //IM_ASSERT(ret);
     modelTexture1 = Image::Load("C:\\Users\\ninja\\Pictures\\pink_soldier_x7.png");
-    //LoadTextureFromFile("C:\\Users\\ninja\\Pictures\\Screenshots\\Capture d'�cran_20221111_173201.png", modelTexture1, twidth, theight);
-    //LoadTextureFromFile("C:\\Users\\ninja\\Pictures\\Screenshots\\Capture d'�cran_20221126_163516.png", modelTexture1, twidth, theight);
-    modelTexture2 = Image::Load("C:\\Users\\ninja\\Pictures\\Screenshots\\Capture d'�cran_20221216_184959.png");
+    //LoadTextureFromFile("C:\\Users\\ninja\\Pictures\\Screenshots\\Capture d'écran_20221111_173201.png", modelTexture1, twidth, theight);
+    //LoadTextureFromFile("C:\\Users\\ninja\\Pictures\\Screenshots\\Capture d'écran_20221126_163516.png", modelTexture1, twidth, theight);
+    modelTexture2 = Image::Load("C:\\Users\\ninja\\Pictures\\Screenshots\\Capture d'écran_20221216_184959.png");
 
     Renderer2D::Init(128);
     
@@ -90,7 +90,9 @@ void EditorAppWindow::OnInit()
     std::cout << "Test expression current " << TestExpression << std::endl;
     CommandManagerPrint();
 
-    font = FontManager::Create("C:\\Users\\ninja\\Downloads\\GothamMedium.ttf");
+    //font = FontManager::Create("C:\\Users\\ninja\\Downloads\\GothamMedium.ttf");
+    //font = FontManager::Create("C:\\Users\\ninja\\Downloads\\pokemon-gb-font\\PokemonUnownGb-YAWa.ttf");
+    font = FontManager::Create("C:\\Users\\ninja\\Downloads\\ohayou-oniichan-font\\OhayouOniichan-51dnz.ttf");
 }
 
 void EditorAppWindow::OnDispose()
@@ -174,7 +176,9 @@ void EditorAppWindow::OnDraw()
     
 
     font->Render(&textShader, "Use the msdf_atlas::BitmapAtlasStorage::getData() function instead. This function returns a pointer to the underlying pixel data buffer as a void* type. You can then cast this pointer to the appropriate data type (unsigned char, float, etc.) and use it as you would use any other array of pixels.", 
-        glm::vec2(0.0f, 0.0f), glm::vec2(w, h), 4.0f, glm::vec4(1.0f,1.0,0.0,1.0f));
+        glm::vec2(0.0f, 0.0f), glm::vec2(w, h/2.0f), 4.0f, glm::vec4(1.0f,1.0,0.0,1.0f));
+    font->Render(&textShader, U"ça beigne là tranquille Gaëlle ? こんにちは ou bien ?",
+        glm::vec2(0.0f, h/2.0f), glm::vec2(w, h/2.0f), 3.0f, glm::vec4(1.0f, 1.0, 0.0, 1.0f));
 
     // */
 
@@ -232,6 +236,7 @@ void EditorAppWindow::OnDraw()
 
 void EditorAppWindow::OnImGUIDraw()
 {
+    return;
     static float f = 0.0f;
     static int counter = 0;
     

@@ -922,8 +922,15 @@
     <ClInclude Include="src\vendor\msdfgen\skia\include\utils\SkShadowUtils.h" />
     <ClInclude Include="src\vendor\msdfgen\skia\include\utils\SkTextUtils.h" />
     <ClInclude Include="src\vendor\msdfgen\skia\include\utils\SkTraceEventPhase.h" />
+    <ClInclude Include="src\vendor\utf8\utf8.h" />
+    <ClInclude Include="src\vendor\utf8\utf8\checked.h" />
+    <ClInclude Include="src\vendor\utf8\utf8\core.h" />
+    <ClInclude Include="src\vendor\utf8\utf8\cpp11.h" />
+    <ClInclude Include="src\vendor\utf8\utf8\cpp17.h" />
+    <ClInclude Include="src\vendor\utf8\utf8\unchecked.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Drawing\Text\Font.cpp" />
     <ClCompile Include="src\Drawing\Text\FontManager.cpp" />
     <ClCompile Include="src\Localization\LocalizationManager.cpp" />
     <ClCompile Include="src\Animation\AnimationManager.cpp" />
