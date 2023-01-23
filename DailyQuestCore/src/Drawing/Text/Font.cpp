@@ -34,25 +34,41 @@ void Font::Render(Shader* fontShader, std::string text,
 	Render(fontShader, str, position, bounds, textSize, color);
 }
 
+void Font::Render(Shader* fontShader, std::string text, glm::vec2 position, glm::vec2 bounds, float textSize, glm::vec4 color, float borders, glm::vec2 shadowOffset, glm::vec4 secondColor)
+{
+	std::u32string str = to_utf32(text);
+	Render(fontShader, str, position, bounds, textSize, color,
+		0.0f, glm::vec2(0.0f), glm::vec4(0.0f));
+}
+
 void Font::Render(Shader* fontShader, std::u32string text,
 	glm::vec2 position, glm::vec2 bounds, float textSize, glm::vec4 color)
 {
 	Render(fontShader, text, position, bounds, textSize, color,
-		0.0f, glm::vec4(0.0f), glm::vec2(0.0f), glm::vec4(0.0f));
+		0.0f, glm::vec2(0.0f), glm::vec4(0.0f));
 }
 
 void Font::Render(Shader* fontShader, std::u32string text, 
 	glm::vec2 position, glm::vec2 bounds, float textSize, glm::vec4 color,
-	float borders, glm::vec4 borderColor, glm::vec2 shadowOffset, glm::vec4 shadowColor)
+	float borders, glm::vec2 shadowOffset, glm::vec4 secondColor)
 {
 	fontShader->Begin();
 
 	Renderer2D::Begin(fontShader);
 	
-	float char_width = lerp(0.35f, 0.43f, textSize / 200.0f);
-	float char_edge = lerp(0.5f, 0.1f, textSize / 200.0f);
+	float metricsModifier = lerp(1.5f, 1.0f, _metricRatio / 4.0f);
+	float char_width = lerp(0.45f, 0.5f, textSize / 200.0f / metricsModifier);
+	float char_edge = lerp(0.4f, 0.1f, textSize / 200.0f / metricsModifier);
 	fontShader->Set("char_width", char_width);
 	fontShader->Set("char_edge", char_edge);
+
+	fontShader->Set("border_width", char_width + borders);
+	fontShader->Set("border_edge", char_edge);
+	fontShader->Set("second_color", secondColor);
+
+	fontShader->Set("shadow_offset", shadowOffset / _metricRatio);
+
+	fontShader->Set("metrics_ratio", _metricRatio);
 
 	glm::vec4 rect;
 	glm::vec4 uvRect;
@@ -102,6 +118,8 @@ void Font::Render(Shader* fontShader, std::u32string text,
 				// */
 				glm::vec2 shownPos = glm::vec2(x + rect.x, y - rect.y);//glm::vec2(x + bearing.x, y + bearing.y + _lineSpacing * textSize / _metricRatio / 2.0f) + position;
 				glm::vec2 shownSize = glm::vec2(rect.z - rect.x, -rect.w + rect.y);//size;
+				//glm::vec2 shadowPosOffset = glm::vec2(glm::max(0.0f, shadowOffset.x / (float)width), glm::min(0.0f, shadowOffset.y / (float)height));
+				//glm::vec2 shadowSizeOffset = glm::vec2(glm::abs(shadowOffset.x / (float)width), -glm::abs(shadowOffset.y / (float)height));
 				Renderer2D::DrawQuad(shownPos + position, shownSize, 0.0f, texture, uvPos, uvSize);
 				x += advance;//size.x;
 			}

@@ -16,6 +16,7 @@ class Font;
 
 enum FontDetails
 {
+	Oversimplified,
 	Small,
 	Default,
 	Better,

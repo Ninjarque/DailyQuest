@@ -88,7 +88,7 @@ bool FontManager::TryExpand(Font* font, unsigned int targetChar)
     Texture* texture;
     FontDetails details = _fontDetails[font];
     if (ExpandFontCharset(_fontFilePath[font], charSet, charDatas,
-        a, b, c, d, e, texture), details)
+        a, b, c, d, e, texture, details))
     {
         _fontTextures[font].push_back(texture);
         font->Expand(charDatas);
@@ -147,15 +147,17 @@ bool FontManager::ExpandFontCharset(std::string fontFilePath,
             msdf_atlas::TightAtlasPacker packer;
             // Set atlas parameters:
             // setDimensions or setDimensionsConstraint to find the best value
+            packer.setPadding(3);
             packer.setDimensionsConstraint(msdf_atlas::TightAtlasPacker::DimensionsConstraint::SQUARE);
             // setScale for a fixed size or setMinimumScale to use the largest that fits
             double inputEm = 24.0f;
             switch (details)
             {
+            case FontDetails::Oversimplified: inputEm = 8.0f; break;
             case FontDetails::Small: inputEm = 16.0f; break;
-            case FontDetails::Better: inputEm = 36.0f; break;
-            case FontDetails::ReallyAccurate: inputEm = 42.0f; break;
-            case FontDetails::Overkill: inputEm = 52.0f; break;
+            case FontDetails::Better: inputEm = 38.0f; break;
+            case FontDetails::ReallyAccurate: inputEm = 46.0f; break;
+            case FontDetails::Overkill: inputEm = 60.0f; break;
             case FontDetails::Default: default: inputEm = 26.0f; break;
             }
 

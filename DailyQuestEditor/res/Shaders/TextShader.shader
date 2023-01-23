@@ -38,30 +38,45 @@ layout(location = 0) out vec4 color;
 uniform float char_width = 0.35;
 uniform float char_edge = 0.09;
 
-uniform float border_width = 0.4;
+uniform float border_width = 0.1;
 uniform float border_edge = 0.09;
+uniform vec4 second_color = vec4(0.0,0.0,0.0,0.0);
+
+uniform vec2 shadow_offset = vec2(0.0,0.0);
+
+uniform float metrics_ratio;
 
 float median(float r, float g, float b) {
 	return max(min(r, g), min(max(r, g), b));
 }
 float screenPxRange()
 {
-	return 32.0;
+	return 2.0;
 }
 
 void main()
 {
 	int index = int(v_texIndex);
 	vec4 mtsdf = texture(v_textures[index], vec2(v_texCoord.x, v_texCoord.y));//vec4(out_color, 1.0);
+	vec4 mtsdf2 = texture(v_textures[index], vec2(v_texCoord.x + shadow_offset.x, v_texCoord.y + shadow_offset.y));//vec4(out_color, 1.0);
 	//color = mtsdf;
 	//return;
+	float edge = char_edge;
 	vec3 msd = mtsdf.rgb;
 	float sd = median(msd.r, msd.g, msd.b);
 	float distance = 1.0 - mtsdf.a;
-	float alpha = 1.0 - smoothstep(char_width, char_width + char_edge, distance);
+	float alpha = 1.0 - smoothstep(char_width, char_width + edge, distance);
+
+	float bedge = 0.1;//border_edge;
+	vec3 msd2 = mtsdf2.rgb;
+	float sd2 = median(msd2.r, msd2.g, msd2.b);
+	float distance2 = 1.0 - mtsdf2.a;
+	float outline_alpha = 1.0 - smoothstep(border_width, border_width + bedge, distance2);
+
+	float overallAlpha = alpha + (1.0 - alpha) * outline_alpha;
+	vec4 overallColor = mix(second_color, v_color, alpha / overallAlpha);
+
 	float screenPxDistance = screenPxRange() * (sd - 0.5);
-	float opacity = clamp(screenPxDistance + 0.5, char_edge, 1.0);
-	color = vec4(v_color.rgb, alpha * opacity);
-	//color = vec4(v_texCoord.x, v_texCoord.y, v_texIndex, 1.0);
-	//color = vec4(0.0,0.0,0.0,1.0);
+	float opacity = smoothstep(edge, 1.0, screenPxDistance + 0.5);//clamp(screenPxDistance + 0.5, edge, 1.0);
+	color = overallColor;//vec4(v_color.rgb, max(alpha, opacity));
 };
