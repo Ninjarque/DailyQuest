@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DailyQuestCore", "DailyQues
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DailyQuestEditor", "DailyQuestEditor\DailyQuestEditor.vcxproj", "{FAAF5A34-9745-4A20-AD1B-D76AC79DD0C1}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Moashy", "Moashy\Moashy.vcxproj", "{486FC26D-57CA-45E9-ABED-C989009E6ABD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{FAAF5A34-9745-4A20-AD1B-D76AC79DD0C1}.Release|x64.Build.0 = Release|x64
 		{FAAF5A34-9745-4A20-AD1B-D76AC79DD0C1}.Release|x86.ActiveCfg = Release|Win32
 		{FAAF5A34-9745-4A20-AD1B-D76AC79DD0C1}.Release|x86.Build.0 = Release|Win32
+		{486FC26D-57CA-45E9-ABED-C989009E6ABD}.Debug|x64.ActiveCfg = Debug|x64
+		{486FC26D-57CA-45E9-ABED-C989009E6ABD}.Debug|x64.Build.0 = Debug|x64
+		{486FC26D-57CA-45E9-ABED-C989009E6ABD}.Debug|x86.ActiveCfg = Debug|Win32
+		{486FC26D-57CA-45E9-ABED-C989009E6ABD}.Debug|x86.Build.0 = Debug|Win32
+		{486FC26D-57CA-45E9-ABED-C989009E6ABD}.Release|x64.ActiveCfg = Release|x64
+		{486FC26D-57CA-45E9-ABED-C989009E6ABD}.Release|x64.Build.0 = Release|x64
+		{486FC26D-57CA-45E9-ABED-C989009E6ABD}.Release|x86.ActiveCfg = Release|Win32
+		{486FC26D-57CA-45E9-ABED-C989009E6ABD}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

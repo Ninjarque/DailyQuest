@@ -29,6 +29,11 @@ public:
 	void Set(const char* name, int count, int* value);
 	void Set(const char* name, int count, float* value);
 	void Set(const char* name, int count, double* value);
+
+	void Set(const char* name, glm::vec2 value);
+	void Set(const char* name, glm::vec3 value);
+	void Set(const char* name, glm::vec4 value);
+
 	void SetMatrix4(const char* name, glm::mat4 value);
 	void SetMatrix3(const char* name, glm::mat3 value);
 

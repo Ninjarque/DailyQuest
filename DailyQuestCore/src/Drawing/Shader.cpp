@@ -1,5 +1,7 @@
 #include "Shader.h"
 
+#include <glm/glm.hpp>
+
 Shader::~Shader()
 {
 	glDeleteProgram(program);
@@ -34,6 +36,11 @@ void Shader::Set(const char* name, double value) { glUniform1d(GetUniform(name),
 void Shader::Set(const char* name, int count, int* value) { glUniform1iv(GetUniform(name), count, value); }
 void Shader::Set(const char* name, int count, float* value) { glUniform1fv(GetUniform(name), count, value); }
 void Shader::Set(const char* name, int count, double* value) { glUniform1dv(GetUniform(name), count, value); }
+
+void Shader::Set(const char* name, glm::vec2 value) { glUniform2f(GetUniform(name), value.x, value.y); }
+void Shader::Set(const char* name, glm::vec3 value) { glUniform3f(GetUniform(name), value.x, value.y, value.z); }
+void Shader::Set(const char* name, glm::vec4 value) { glUniform4f(GetUniform(name), value.x, value.y, value.z, value.w); }
+
 void Shader::SetMatrix4(const char* name, glm::mat4 value)
 {
 	glUniformMatrix4fv(GetUniform(name), 1, GL_FALSE, glm::value_ptr(value));

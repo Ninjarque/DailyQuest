@@ -45,12 +45,16 @@ public:
 	void Render(Shader* fontShader, std::string text,
 		glm::vec2 position, glm::vec2 bounds, float textSize, glm::vec4 color);
 
+	void Render(Shader* fontShader, std::string text,
+		glm::vec2 position, glm::vec2 bounds, float textSize, glm::vec4 color,
+		float borders, glm::vec2 shadowOffset, glm::vec4 secondColor);
+
 	void Render(Shader* fontShader, std::u32string text, 
 		glm::vec2 position, glm::vec2 bounds, float textSize, glm::vec4 color);
 
 	void Render(Shader* fontShader, std::u32string text,
 		glm::vec2 position, glm::vec2 bounds, float textSize, glm::vec4 color,
-		float borders, glm::vec4 borderColor, glm::vec2 shadowOffset, glm::vec4 shadowColor);
+		float borders, glm::vec2 shadowOffset, glm::vec4 secondColor);
 
 	/*
 	Maybe make static Render use std::string and create Font if not already made
