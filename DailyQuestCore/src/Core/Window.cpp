@@ -63,6 +63,7 @@ int Window::Run()
 #endif
 
     InputManager::Init(window);
+    PhysicsManager::Init();
     Window::Current = this;
 
     // Setup Dear ImGui context
@@ -235,7 +236,12 @@ bool Window::UpdateCall(float& deltaTime)
     /* Poll for and process events */
     glfwPollEvents();
 
+    PhysicsManager::Update(deltaTime);
+
     OnUpdate(deltaTime);
+
+    PhysicsManager::LateUpdate(deltaTime);
+
     if (disposed)
         return false;
     return true;
