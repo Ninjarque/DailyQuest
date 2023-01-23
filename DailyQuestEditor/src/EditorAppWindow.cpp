@@ -137,6 +137,7 @@ void EditorAppWindow::OnUpdate(float deltaTime)
             glm::vec4(1.0f, 0.4f, 0.3f, 1.0f),
             0);
         fire.PositionVariation = glm::vec3(0.03f) * (float)h;
+        fire.Torque = glm::vec3(glm::pi<float>() * 2.0f);
         fire.Velocity = glm::vec3(0.0f, -0.3f, 0.0f) * 0.5f * (float)h;
         fire.VelocityVariation = glm::vec3(0.3f, 0.5f, 0.0f) * 0.2f * (float)h;
         fire.ColorChange = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);
@@ -204,7 +205,7 @@ void EditorAppWindow::OnDraw()
                 float rw = w / xs;
                 float rh = h / ys;
                 ry += cos(time * 0.05f * (rx - (0.5f * w))) * (h / xs * 4.0f);
-                Renderer2D::DrawQuad({ rx, ry }, { rw, rh }, 0.0f, glm::vec4(x / xs, 0.0f, y / ys, 1.0f));//textures[t]);                
+                Renderer2D::DrawQuad({ rx, ry }, { rw, rh }, 0.0f, glm::vec4(x / xs, 0.0f, y / ys, 1.0f), glm::vec2(0.0f), 0.0f);//textures[t]);                
                 //Renderer2D::DrawQuad({ rx, ry }, { rw, rh }, 0.0f, textures[t]);                
                 t++;
                 t %= textures.size();

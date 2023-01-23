@@ -120,7 +120,7 @@ void Font::Render(Shader* fontShader, std::u32string text,
 				glm::vec2 shownSize = glm::vec2(rect.z - rect.x, -rect.w + rect.y);//size;
 				//glm::vec2 shadowPosOffset = glm::vec2(glm::max(0.0f, shadowOffset.x / (float)width), glm::min(0.0f, shadowOffset.y / (float)height));
 				//glm::vec2 shadowSizeOffset = glm::vec2(glm::abs(shadowOffset.x / (float)width), -glm::abs(shadowOffset.y / (float)height));
-				Renderer2D::DrawQuad(shownPos + position, shownSize, 0.0f, texture, uvPos, uvSize);
+				Renderer2D::DrawQuad(shownPos + position, shownSize, 0.0f, texture, uvPos, uvSize, glm::vec2(0.0f), 0.0f);
 				x += advance;//size.x;
 			}
 			break;

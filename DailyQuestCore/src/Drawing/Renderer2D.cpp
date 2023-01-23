@@ -55,6 +55,15 @@ void Renderer2D::Init(int maxQuadCount, int maxTextureCount)
 	//glEnableVertexArrayAttrib(data.quadVAO, 4);
 	glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (const void*)offsetof(Vertex2D, TextureID));
 
+
+	glEnableVertexAttribArray(5);
+	//glEnableVertexArrayAttrib(data.quadVAO, 4);
+	glVertexAttribPointer(5, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (const void*)offsetof(Vertex2D, Origin));
+
+	glEnableVertexAttribArray(6);
+	//glEnableVertexArrayAttrib(data.quadVAO, 4);
+	glVertexAttribPointer(6, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (const void*)offsetof(Vertex2D, Angle));
+
 	unsigned int* indices = new unsigned int[MaxIndexCount];
 	int offset = 0;
 	for (int i = 0; i < MaxIndexCount; i += 6)
@@ -163,51 +172,60 @@ void Renderer2D::Flush()
 }
 
 
-void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, glm::vec4 color)
+void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, glm::vec4 color,
+	glm::vec2 origin, float angle)
 {
-	DrawQuad(position, size, depth, color, data.defaultTexture);
+	DrawQuad(position, size, depth, color, data.defaultTexture, origin, angle);
 }
 
-void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, GLuint textureID)
+void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, GLuint textureID,
+	glm::vec2 origin, float angle)
 {
-	DrawQuad(position, size, depth, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), textureID);
+	DrawQuad(position, size, depth, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), textureID, origin, angle);
 }
 
-void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, GLuint textureID, glm::vec2 uv_position, glm::vec2 uv_size)
+void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, GLuint textureID, glm::vec2 uv_position, glm::vec2 uv_size,
+	glm::vec2 origin, float angle)
 {
-	DrawQuad(position, size, depth, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), textureID, uv_position, uv_size);
+	DrawQuad(position, size, depth, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), textureID, uv_position, uv_size, origin, angle);
 }
 
-void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, Texture* texture)
-{
-	GLuint id = 0; if (texture != nullptr) id = *texture;
-	DrawQuad(position, size, depth, id);
-}
-
-void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, Texture* texture, glm::vec2 uv_position, glm::vec2 uv_size)
+void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, Texture* texture,
+	glm::vec2 origin, float angle)
 {
 	GLuint id = 0; if (texture != nullptr) id = *texture;
-	DrawQuad(position, size, depth, id, uv_position, uv_size);
+	DrawQuad(position, size, depth, id, origin, angle);
 }
 
-void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, glm::vec4 color, Texture* texture)
+void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, Texture* texture, glm::vec2 uv_position, glm::vec2 uv_size,
+	glm::vec2 origin, float angle)
 {
 	GLuint id = 0; if (texture != nullptr) id = *texture;
-	DrawQuad(position, size, depth, color, id);
+	DrawQuad(position, size, depth, id, uv_position, uv_size, origin, angle);
 }
 
-void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, glm::vec4 color, Texture* texture, glm::vec2 uv_position, glm::vec2 uv_size)
+void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, glm::vec4 color, Texture* texture,
+	glm::vec2 origin, float angle)
 {
 	GLuint id = 0; if (texture != nullptr) id = *texture;
-	DrawQuad(position, size, depth, color, id, glm::vec2(0.0f), glm::vec2(1.0f));
+	DrawQuad(position, size, depth, color, id, origin, angle);
 }
 
-void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, glm::vec4 color, GLuint textureID)
+void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, glm::vec4 color, Texture* texture, glm::vec2 uv_position, glm::vec2 uv_size,
+	glm::vec2 origin, float angle)
 {
-	DrawQuad(position, size, depth, color, textureID, glm::vec2(0.0f), glm::vec2(1.0f));
+	GLuint id = 0; if (texture != nullptr) id = *texture;
+	DrawQuad(position, size, depth, color, id, glm::vec2(0.0f), glm::vec2(1.0f), origin, angle);
 }
 
-void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, glm::vec4 color, GLuint textureID, glm::vec2 uv_position, glm::vec2 uv_size)
+void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, glm::vec4 color, GLuint textureID,
+	glm::vec2 origin, float angle)
+{
+	DrawQuad(position, size, depth, color, textureID, glm::vec2(0.0f), glm::vec2(1.0f), origin, angle);
+}
+
+void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, glm::vec4 color, GLuint textureID, glm::vec2 uv_position, glm::vec2 uv_size,
+	glm::vec2 origin, float angle)
 {
 	if (data.indexCount >= MaxIndexCount || data.textureSlotIndex >= MaxTextureCount)
 	{
@@ -225,22 +243,22 @@ void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, glm::
 
 	*data.quadBufferPtr =
 		Vertex2D(position.x, position.y, depth, color.x, color.y, color.z, color.w,
-			uv_position.x, uv_position.y, texture);
+			uv_position.x, uv_position.y, texture, origin.x, origin.y, angle);
 	data.quadBufferPtr++;
 
 	*data.quadBufferPtr =
 		Vertex2D(position.x + size.x, position.y, depth, color.x, color.y, color.z, color.w,
-			uv_position.x + uv_size.x, uv_position.y, texture);
+			uv_position.x + uv_size.x, uv_position.y, texture, origin.x, origin.y, angle);
 	data.quadBufferPtr++;
 
 	*data.quadBufferPtr =
 		Vertex2D(position.x + size.x, position.y + size.y, depth, color.x, color.y, color.z, color.w,
-			uv_position.x + uv_size.x, uv_position.y + uv_size.y, texture);
+			uv_position.x + uv_size.x, uv_position.y + uv_size.y, texture, origin.x, origin.y, angle);
 	data.quadBufferPtr++;
 
 	*data.quadBufferPtr =
 		Vertex2D(position.x, position.y + size.y, depth, color.x, color.y, color.z, color.w,
-			uv_position.x, uv_position.y + uv_size.y, texture);
+			uv_position.x, uv_position.y + uv_size.y, texture, origin.x, origin.y, angle);
 	data.quadBufferPtr++;
 
 	data.indexCount += 6;

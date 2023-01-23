@@ -51,23 +51,23 @@ public:
 	static void End();
 
 	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
-		glm::vec4 color);
+		glm::vec4 color, glm::vec2 origin, float angle);
 	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
-		GLuint textureID);
+		GLuint textureID, glm::vec2 origin, float angle);
 	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
-		GLuint textureID, glm::vec2 uv_position, glm::vec2 uv_size);
+		GLuint textureID, glm::vec2 uv_position, glm::vec2 uv_size, glm::vec2 origin, float angle);
 	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
-		glm::vec4 color, GLuint textureID);
+		glm::vec4 color, GLuint textureID, glm::vec2 origin, float angle);
 	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
-		glm::vec4 color, GLuint textureID, glm::vec2 uv_position, glm::vec2 uv_size);
+		glm::vec4 color, GLuint textureID, glm::vec2 uv_position, glm::vec2 uv_size, glm::vec2 origin, float angle);
 	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
-		Texture* texture);
+		Texture* texture, glm::vec2 origin, float angle);
 	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
-		Texture* texture, glm::vec2 uv_position, glm::vec2 uv_size);
+		Texture* texture, glm::vec2 uv_position, glm::vec2 uv_size, glm::vec2 origin, float angle);
 	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
-		glm::vec4 color, Texture* texture);
+		glm::vec4 color, Texture* texture, glm::vec2 origin, float angle);
 	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
-		glm::vec4 color, Texture* texture, glm::vec2 uv_position, glm::vec2 uv_size);
+		glm::vec4 color, Texture* texture, glm::vec2 uv_position, glm::vec2 uv_size, glm::vec2 origin, float angle);
 
 	static void GetStats(int& drawCount, int& quadCount);
 	static void ResetStats();

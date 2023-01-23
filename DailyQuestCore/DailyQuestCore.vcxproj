@@ -191,6 +191,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Drawing\Vertex.h" />
     <ClInclude Include="src\vendor\GL\eglew.h" />
     <ClInclude Include="src\vendor\GL\glew.h" />
     <ClInclude Include="src\vendor\GL\glxew.h" />
@@ -217,7 +218,6 @@
     <ClInclude Include="src\Core\Timer.h" />
     <ClInclude Include="src\Drawing\Frame.h" />
     <ClInclude Include="src\Drawing\Shader.h" />
-    <ClInclude Include="src\Drawing\Vertex.h" />
     <ClInclude Include="src\Drawing\Vertex2D.h" />
     <ClInclude Include="src\Error.h" />
     <ClInclude Include="src\IO\Serializable.h" />

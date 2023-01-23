@@ -155,10 +155,10 @@ void ParticleSystem::_Render2DBegin(Shader& shader)
 void ParticleSystem::_Render2DDraw(Shader& shader, const ParticleData& data,
 	const int& currentCount, const int& maxCount)
 {
-	glm::vec2 pos = glm::vec2(data.Position.x - data.Scale.x / 2.0f, data.Position.y - data.Scale.x / 2.0f);
+	glm::vec2 pos = glm::vec2(data.Position.x - data.Scale.x / 2.0f, data.Position.y - data.Scale.y / 2.0f);
 	glm::vec2 size = glm::vec2(data.Scale.x, data.Scale.y);
 	Renderer2D::DrawQuad(pos, size, 0.0f, 
-		data.Color, data.TextureID);
+		data.Color, data.TextureID, glm::vec2(data.Position.x, data.Position.y), data.Rotation.y);
 }
 void ParticleSystem::_Render2DEnd(Shader& shader)
 {
