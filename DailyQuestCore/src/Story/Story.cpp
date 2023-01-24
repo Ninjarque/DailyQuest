@@ -20,57 +20,58 @@ void Story::SubStory::Dispose()
 		delete _hasntName; _hasntName = nullptr;
 	}
 	_actionRequierements.clear();
+	_actionNames.clear();
 	_longestActionRequierement = nullptr;
 }
 
-void Story::SubStory::Push(std::shared_ptr<ActionRequierement> actionRequierement)
+void Story::SubStory::Push(std::shared_ptr<Name> actionName, std::shared_ptr<ActionRequierement> actionRequierement)
 {
 	if (actionRequierement == nullptr) return;
 	if (HasChilds())
 	{
 		if (actionRequierement->Contains(_targetName))
-			_hasName->Push(std::move(actionRequierement));
+			_hasName->Push(actionName, actionRequierement);
 		else
-			_hasntName->Push(std::move(actionRequierement));
+			_hasntName->Push(actionName, actionRequierement);
 		return;
 	}
 	_actionRequierements[actionRequierement] = actionRequierement->GetRequierementAverageNameCount();
+	_actionNames[actionName] = actionRequierement;
 	if (_longestActionRequierement == nullptr || _longestActionRequierement->GetRequierementAverageNameCount())
 		_longestActionRequierement = actionRequierement.get();
+
+	Build(ACTION_REQUIEREMENT_COUNT_SPLIT);
 }
 
-bool Story::SubStory::Erase(std::shared_ptr<ActionRequierement> actionRequierement)
+bool Story::SubStory::Erase(std::shared_ptr<Name> actionName)
 {
 	if (HasChilds())
 	{
 		bool erased = false;
-		if (actionRequierement->Contains(_targetName))
+		erased = _hasName->Erase(actionName);
+		if (!erased)
+			erased = _hasntName->Erase(actionName);
+		if (erased && _hasName->IsEmpty() && _hasntName->IsEmpty())
 		{
-			erased = _hasName->Erase(std::move(actionRequierement));
-			if (erased && _hasName->IsEmpty() && _hasntName->IsEmpty())
-			{
-				Dispose();
-			}
-			return erased;
+			Dispose();
 		}
-		else
-		{
-			erased = _hasntName->Erase(std::move(actionRequierement));
-			if (erased && _hasName->IsEmpty() && _hasntName->IsEmpty())
-			{
-				Dispose();
-			}
-			return erased;
-		}
+		return erased;
 	}
-	if (_actionRequierements.count(actionRequierement))
+	if (_actionNames.count(actionName))
 	{
-		if (_longestActionRequierement == actionRequierement.get())
+		std::shared_ptr<ActionRequierement> action = _actionNames[actionName];
+		if (_actionRequierements.count(action))
 		{
-			RecalculateLongest();
+			if (_longestActionRequierement == action.get())
+			{
+				RecalculateLongest();
+			}
+			_actionRequierements.erase(action);
+			_actionNames.erase(actionName);
+			return true;
 		}
-		_actionRequierements.erase(actionRequierement);
 	}
+	return false;
 }
 
 std::vector<Story::ActionRequierement*> Story::SubStory::MatchingActions(std::unordered_map<std::shared_ptr<Name>, std::shared_ptr<Information>> context,
@@ -94,20 +95,22 @@ void Story::SubStory::Build(int actionRequierementCountSplit)
 		_targetName = GetBestName();
 		_hasName = new SubStory();
 		_hasntName = new SubStory();
-		for (auto it = _actionRequierements.begin(); it != _actionRequierements.end(); )
+		for (auto it = _actionNames.begin(); it != _actionNames.end(); )
 		{
-			if (it->first->Contains(_targetName))
+			std::shared_ptr<ActionRequierement> action = it->second;
+			if (action->Contains(_targetName))
 			{
-				it->first->DisableUpdateForName(_targetName);
-				_hasName->Push(it->first);
+				action->DisableUpdateForName(_targetName);
+				_hasName->Push(it->first, action);
 			}
 			else
 			{
-				_hasntName->Push(it->first);
+				_hasntName->Push(it->first, action);
 			}
 			++it;
 		}
 		_actionRequierements.clear();
+		_actionNames.clear();
 
 		_hasName->Build(actionRequierementCountSplit);
 		_hasntName->Build(actionRequierementCountSplit);
@@ -192,9 +195,14 @@ Story::~Story()
 	_subStory.Dispose();
 }
 
-void Story::Define(std::unique_ptr<Action> action, std::unique_ptr<Definition> definition)
+void Story::Define(std::shared_ptr<Name> actionName, std::unique_ptr<Action> action, std::unique_ptr<Definition> definition)
 {
-	_subStory.Push(std::make_shared<ActionRequierement>(std::move(action), std::move(definition)));
+	_subStory.Push(actionName, std::make_shared<ActionRequierement>(std::move(action), std::move(definition)));
+}
+
+bool Story::Delete(std::shared_ptr<Name> actionName)
+{
+	return _subStory.Erase(actionName);
 }
 
 std::unique_ptr<Event> Story::TriggerEvent(std::unordered_map<std::shared_ptr<Name>, std::shared_ptr<Information>> context)

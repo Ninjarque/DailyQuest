@@ -12,7 +12,7 @@
 #include "Event.h"
 #include "Definition.h"
 
-class Definition;
+#define ACTION_REQUIEREMENT_COUNT_SPLIT 1000
 
 class Story
 {
@@ -82,8 +82,8 @@ private:
 
 		void Dispose();
 
-		void Push(std::shared_ptr<ActionRequierement> actionRequierement);
-		bool Erase(std::shared_ptr<ActionRequierement> actionRequierement);
+		void Push(std::shared_ptr<Name> actionName, std::shared_ptr<ActionRequierement> actionRequierement);
+		bool Erase(std::shared_ptr<Name> actionName);
 
 		std::vector<ActionRequierement*> MatchingActions(std::unordered_map<std::shared_ptr<Name>, std::shared_ptr<Information>> context,
 			int minMatchCount, int maxMatchIterationTries);
@@ -102,6 +102,7 @@ private:
 		SubStory* _hasName;
 		SubStory* _hasntName;
 
+		std::unordered_map<std::shared_ptr<Name>, std::shared_ptr<ActionRequierement>> _actionNames;
 		std::map<std::shared_ptr<ActionRequierement>, float, cmp_actions> _actionRequierements;
 		ActionRequierement* _longestActionRequierement;
 		
@@ -118,7 +119,8 @@ public:
 	Story();
 	~Story();
 
-	void Define(std::unique_ptr<Action> action, std::unique_ptr<Definition> definition);
+	void Define(std::shared_ptr<Name> actionName, std::unique_ptr<Action> action, std::unique_ptr<Definition> definition);
+	bool Delete(std::shared_ptr<Name> actionName);
 	std::unique_ptr<Event> TriggerEvent(std::unordered_map<std::shared_ptr<Name>, std::shared_ptr<Information>> context);
 
 private:
