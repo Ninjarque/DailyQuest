@@ -245,6 +245,7 @@
     <ClInclude Include="vendor\box2d\dynamics\b2_island.h" />
     <ClInclude Include="vendor\box2d\dynamics\b2_polygon_circle_contact.h" />
     <ClInclude Include="vendor\box2d\dynamics\b2_polygon_contact.h" />
+    <ClInclude Include="vendor\entt\entt.hpp" />
     <ClInclude Include="vendor\GL\eglew.h" />
     <ClInclude Include="vendor\GL\glew.h" />
     <ClInclude Include="vendor\GL\glxew.h" />
