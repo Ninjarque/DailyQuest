@@ -25,6 +25,6 @@ public:
 
 private:
 	static std::unique_ptr<b2World> _world;
-	static std::unordered_map<Name*, b2Body*> _bodies;
+	static std::unordered_map<std::shared_ptr<Name>, b2Body*> _bodies;
 };
 

@@ -1,7 +1,7 @@
 #include "PhysicsManager.h"
 
 std::unique_ptr<b2World> PhysicsManager::_world;
-std::unordered_map<Name*, b2Body*> PhysicsManager::_bodies;
+std::unordered_map<std::shared_ptr<Name>, b2Body*> PhysicsManager::_bodies;
 
 void PhysicsManager::Init()
 {
