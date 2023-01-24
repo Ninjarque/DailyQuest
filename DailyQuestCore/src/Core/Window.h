@@ -20,7 +20,7 @@
 #include "Random.h"
 
 #include "IO/ContentManager.h"
-#include "Physics/PhysicsManager.h"
+#include "Physics/Physics2D.h"
 
 class Window : public Program
 {

@@ -5,9 +5,9 @@
 #include <memory>
 #include <unordered_map>
 
-#include "Story/Name.h"
+#include "Quest/Name.h"
 
-class PhysicsManager
+class Physics2D
 {
 public:
 	static void Init();
