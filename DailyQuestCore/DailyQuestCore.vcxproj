@@ -191,11 +191,12 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Story\Event.h" />
-    <ClInclude Include="src\Physics\PhysicsManager.h" />
+    <ClInclude Include="src\Quest\Event.h" />
+    <ClInclude Include="src\Physics\Physics2D.h" />
     <ClInclude Include="src\Drawing\Vertex.h" />
-    <ClInclude Include="src\Story\Definition.h" />
-    <ClInclude Include="src\Story\Information.h" />
+    <ClInclude Include="src\Quest\Requirement.h" />
+    <ClInclude Include="src\Quest\Information.h" />
+    <ClInclude Include="src\Story\Story.h" />
     <ClInclude Include="vendor\box2d\b2_api.h" />
     <ClInclude Include="vendor\box2d\b2_block_allocator.h" />
     <ClInclude Include="vendor\box2d\b2_body.h" />
@@ -988,12 +989,12 @@
     <ClInclude Include="vendor\utf8\utf8\cpp11.h" />
     <ClInclude Include="vendor\utf8\utf8\cpp17.h" />
     <ClInclude Include="vendor\utf8\utf8\unchecked.h" />
-    <ClInclude Include="src\Story\Story.h" />
+    <ClInclude Include="src\Quest\Quest.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Story\Action.h" />
-    <ClCompile Include="src\Story\Event.cpp" />
-    <ClCompile Include="src\Physics\PhysicsManager.cpp" />
+    <ClCompile Include="src\Quest\Action.h" />
+    <ClCompile Include="src\Quest\Event.cpp" />
+    <ClCompile Include="src\Physics\Physics2D.cpp" />
     <ClCompile Include="src\Drawing\Text\Font.cpp" />
     <ClCompile Include="src\Drawing\Text\FontManager.cpp" />
     <ClCompile Include="src\Localization\LocalizationManager.cpp" />
@@ -1011,7 +1012,8 @@
     <ClCompile Include="src\Core\Timer.cpp" />
     <ClCompile Include="src\Drawing\Shader.cpp" />
     <ClCompile Include="src\Error.cpp" />
-    <ClCompile Include="src\Story\Name.h" />
+    <ClCompile Include="src\Quest\Name.h" />
+    <ClCompile Include="src\Story\Story.cpp" />
     <ClCompile Include="vendor\box2d\collision\b2_broad_phase.cpp" />
     <ClCompile Include="vendor\box2d\collision\b2_chain_shape.cpp" />
     <ClCompile Include="vendor\box2d\collision\b2_circle_shape.cpp" />
@@ -1109,7 +1111,7 @@
     <ClCompile Include="vendor\msdfgen\ext\save-png.cpp" />
     <ClCompile Include="vendor\msdfgen\lib\lodepng.cpp" />
     <ClCompile Include="vendor\msdfgen\lib\tinyxml2.cpp" />
-    <ClCompile Include="src\Story\Story.cpp" />
+    <ClCompile Include="src\Quest\Quest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies\GLEW\doc\advanced.html" />

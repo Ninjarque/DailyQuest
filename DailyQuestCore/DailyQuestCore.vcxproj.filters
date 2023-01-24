@@ -2391,22 +2391,25 @@
     <ClInclude Include="vendor\box2d\dynamics\b2_polygon_contact.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\Physics\PhysicsManager.h">
+    <ClInclude Include="src\Physics\Physics2D.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\Story\Story.h">
+    <ClInclude Include="src\Quest\Quest.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\Story\Definition.h">
+    <ClInclude Include="src\Quest\Requirement.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\Story\Information.h">
+    <ClInclude Include="src\Quest\Information.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\Story\Event.h">
+    <ClInclude Include="src\Quest\Event.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="vendor\entt\entt.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Story\Story.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
@@ -2753,19 +2756,22 @@
     <ClCompile Include="vendor\box2d\collision\b2_time_of_impact.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\Physics\PhysicsManager.cpp">
+    <ClCompile Include="src\Physics\Physics2D.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Quest\Quest.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Quest\Name.h">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Quest\Event.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Quest\Action.h">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="src\Story\Story.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Story\Name.h">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Story\Event.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Story\Action.h">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
