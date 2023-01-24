@@ -3,5 +3,5 @@
 class Information 
 {
 public:
-
+	
 };

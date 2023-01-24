@@ -125,6 +125,7 @@ int Window::Run()
         });
 
     ContentManager::Init();
+    StoryManager::Init();
 
     OnInit();
 
@@ -237,6 +238,8 @@ bool Window::UpdateCall(float& deltaTime)
     glfwPollEvents();
 
     Physics2D::Update(deltaTime);
+    
+    StoryManager::Update(deltaTime);
 
     OnUpdate(deltaTime);
 
@@ -267,6 +270,8 @@ void Window::DrawCall(float deltaTime)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     OnDraw();
+
+    StoryManager::Draw();
 
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
