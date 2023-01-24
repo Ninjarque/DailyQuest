@@ -194,7 +194,7 @@ Story::~Story()
 
 void Story::Define(std::unique_ptr<Action> action, std::unique_ptr<Definition> definition)
 {
-	_subStory.Push(std::make_shared<ActionRequierement>(action, definition));
+	_subStory.Push(std::make_shared<ActionRequierement>(std::move(action), std::move(definition)));
 }
 
 std::unique_ptr<Event> Story::TriggerEvent(std::unordered_map<std::shared_ptr<Name>, std::shared_ptr<Information>> context)

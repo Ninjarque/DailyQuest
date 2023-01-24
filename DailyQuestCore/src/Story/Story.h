@@ -69,7 +69,7 @@ private:
 	};
 
 	struct cmp_actions {
-		bool operator() (const ActionRequierement*& a, const ActionRequierement*& b) const {
+		bool operator() (const std::shared_ptr<ActionRequierement>& a, const std::shared_ptr<ActionRequierement>& b) const {
 			return a->GetRequierementWeight() > b->GetRequierementWeight();
 		}
 	};
