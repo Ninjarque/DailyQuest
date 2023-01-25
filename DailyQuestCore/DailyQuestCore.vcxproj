@@ -191,12 +191,15 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Story\Components.h" />
+    <ClInclude Include="src\Story\Entity.h" />
     <ClInclude Include="src\Quest\Event.h" />
     <ClInclude Include="src\Physics\Physics2D.h" />
     <ClInclude Include="src\Drawing\Vertex.h" />
     <ClInclude Include="src\Quest\Requirement.h" />
     <ClInclude Include="src\Quest\Information.h" />
     <ClInclude Include="src\Story\Story.h" />
+    <ClInclude Include="src\Story\StoryManager.h" />
     <ClInclude Include="vendor\box2d\b2_api.h" />
     <ClInclude Include="vendor\box2d\b2_block_allocator.h" />
     <ClInclude Include="vendor\box2d\b2_body.h" />
@@ -992,6 +995,7 @@
     <ClInclude Include="src\Quest\Quest.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Quest\Name.cpp" />
     <ClCompile Include="src\Quest\Action.h" />
     <ClCompile Include="src\Quest\Event.cpp" />
     <ClCompile Include="src\Physics\Physics2D.cpp" />
@@ -1013,7 +1017,7 @@
     <ClCompile Include="src\Drawing\Shader.cpp" />
     <ClCompile Include="src\Error.cpp" />
     <ClCompile Include="src\Quest\Name.h" />
-    <ClCompile Include="src\Story\Story.cpp" />
+    <ClCompile Include="src\Story\StoryManager.cpp" />
     <ClCompile Include="vendor\box2d\collision\b2_broad_phase.cpp" />
     <ClCompile Include="vendor\box2d\collision\b2_chain_shape.cpp" />
     <ClCompile Include="vendor\box2d\collision\b2_circle_shape.cpp" />
