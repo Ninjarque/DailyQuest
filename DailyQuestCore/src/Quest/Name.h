@@ -17,7 +17,7 @@ public:
 		_count++;
 	}
 	~Name() { }
-	static std::shared_ptr<Name>Create(std::string value) { return std::make_shared<Name>(value); }
+	static std::shared_ptr<Name> Create(std::string value);
 
 	operator std::string() const { return _value; }
 private:
