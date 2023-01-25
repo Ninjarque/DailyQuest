@@ -199,6 +199,7 @@
     <ClInclude Include="src\Quest\Requirement.h" />
     <ClInclude Include="src\Quest\Information.h" />
     <ClInclude Include="src\Story\Story.h" />
+    <ClInclude Include="src\Story\StoryInformations.h" />
     <ClInclude Include="src\Story\StoryManager.h" />
     <ClInclude Include="vendor\box2d\b2_api.h" />
     <ClInclude Include="vendor\box2d\b2_block_allocator.h" />

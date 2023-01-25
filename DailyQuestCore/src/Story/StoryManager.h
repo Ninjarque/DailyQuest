@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "Story.h"
+#include "Quest/Quest.h"
 
 class StoryManager
 {
@@ -55,6 +56,11 @@ public:
 		return story;
 	}
 
+	static std::unique_ptr<Quest> CreateQuest(std::shared_ptr<Story> targetStory)
+	{
+		return std::make_unique<Quest>(targetStory);
+	}
+
 	template<typename... Component>
 	static std::vector<std::tuple<std::vector<Component>...>> GetInAllStories();
 
@@ -74,7 +80,17 @@ static std::vector<std::tuple<std::vector<Component>...>> StoryManager::GetInAll
 	for (auto s = _stories.begin(); s != _stories.end(); )
 	{
 		if (auto story = s->lock())
-			listOfComponents.push_back(story->GetAll<Component...>());
+		{
+			if (auto informations = story->GetInformations().lock())
+			{
+				listOfComponents.push_back(informations->GetAll<Component...>());
+			}
+			else
+			{
+				//s = std::remove(_stories.begin(), _stories.end(), s);
+				s = _stories.erase(s);
+			}
+		}
 		else
 		{
 			//s = std::remove(_stories.begin(), _stories.end(), s);

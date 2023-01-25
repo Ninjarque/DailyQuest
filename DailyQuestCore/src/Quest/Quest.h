@@ -12,7 +12,11 @@
 #include "Event.h"
 #include "Requirement.h"
 
+#include "Story/Story.h"
+
 #define ACTION_REQUIEREMENT_COUNT_SPLIT 1000
+
+class Story;
 
 class Quest
 {
@@ -117,6 +121,7 @@ private:
 
 public:
 	Quest();
+	Quest(std::shared_ptr<Story> story);
 	~Quest();
 
 	void Define(std::shared_ptr<Name> eventName, std::unique_ptr<Action> action, std::unique_ptr<Requirement> requirement);
@@ -125,5 +130,6 @@ public:
 
 private:
 	SubQuest _subQuest;
+	std::weak_ptr<Story> _story;
 };
 

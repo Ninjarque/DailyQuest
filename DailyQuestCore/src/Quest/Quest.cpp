@@ -185,14 +185,17 @@ std::vector<Quest::ActionRequierement*> Quest::SubQuest::MatchingActions(std::un
 	}
 	return res;
 }
+Quest::Quest() {}
 
-Quest::Quest()
+Quest::Quest(std::shared_ptr<Story> story)
 {
+	_story = story;
 }
 
 Quest::~Quest()
 {
 	_subQuest.Dispose();
+	_story.reset();
 }
 
 void Quest::Define(std::shared_ptr<Name> eventName, std::unique_ptr<Action> action, std::unique_ptr<Requirement> requirement)
@@ -210,10 +213,16 @@ std::unique_ptr<Event> Quest::TriggerEvent(std::unordered_map<std::shared_ptr<Na
 	std::vector<ActionRequierement*> actionRequierements = _subQuest.MatchingActions(context, 1, 0);
 	if (actionRequierements.size() > 0)
 	{
-		Action* action = actionRequierements[0]->GetAction();
-		std::unique_ptr<Event> e = std::make_unique<Event>(action, context);
-		e->Run();
-		return e;
+		if (auto story = _story.lock())
+		{
+			if (auto storyInformations = story->GetInformations().lock())
+			{
+				Action* action = actionRequierements[0]->GetAction();
+				std::unique_ptr<Event> e = std::make_unique<Event>(storyInformations, action, context);
+				e->Run();
+				return e;
+			}
+		}
 	}
 	return nullptr;
 }

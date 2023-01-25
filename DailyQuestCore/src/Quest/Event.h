@@ -3,16 +3,24 @@
 #include <memory>
 
 #include "Action.h"
+#include "Story/StoryInformations.h"
 
 class Event
 {
 public:
-	Event(Action* action, std::unordered_map<std::shared_ptr<Name>, std::shared_ptr<Information>> context) : _action(action), _context(context) { }
-	~Event() { _action = nullptr; _context.clear(); }
+	Event(std::shared_ptr<StoryInformations> storyInformations, Action* action,
+		std::unordered_map<std::shared_ptr<Name>, std::shared_ptr<Information>> context) 
+		: _action(action), _context(context), _storyInformations(storyInformations) { }
+	~Event() { _action = nullptr; _context.clear(); _storyInformations.reset(); }
 
-	void Run() { _action->Run(_context); }
+	void Run() 
+	{
+		if (auto storyInformations = _storyInformations.lock())
+			_action->Run(storyInformations, _context);
+	}
 private:
 	Action* _action;
 	std::unordered_map<std::shared_ptr<Name>, std::shared_ptr<Information>> _context;
+	std::weak_ptr<StoryInformations> _storyInformations;
 };
 

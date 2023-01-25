@@ -5,6 +5,7 @@
 #include "Error.h"
 
 #include "Quest/Name.h"
+#include "StoryInformations.h"
 
 class Entity
 {
@@ -27,17 +28,25 @@ public:
 	~Entity()
 	{
 		_registry->destroy(_handle);
+		_storyInformations.reset();
 	}
+
+	operator bool() const { return _registry != nullptr && !_storyInformations.expired(); }
 private:
-	Entity(std::shared_ptr<entt::registry> registry)
+	Entity(std::weak_ptr<StoryInformations> storyInformations, std::shared_ptr<entt::registry> registry)
 	{
-		_handle = registry->create();
-		_registry = registry.get();
-		Add<std::shared_ptr<Name>>();
+		_storyInformations = storyInformations;
+		if (auto informations = storyInformations.lock())
+		{
+			_handle = registry->create();
+			_registry = registry.get();
+			Add<std::shared_ptr<Name>>();
+		}
 	}
 
 	entt::entity _handle{0};
 	entt::registry* _registry = nullptr;
+	std::weak_ptr<StoryInformations> _storyInformations;
 
 	friend class Story;
 };

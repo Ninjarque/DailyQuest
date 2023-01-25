@@ -9,13 +9,20 @@
 //#include "StoryManager.h"
 
 #include "Quest/Quest.h"
+#include "StoryInformations.h"
 
 //class Entity;
 //class StoryManager;
+class Quest;
 
 class Story
 {
 public:
+	Story() 
+	{
+		_informations = std::make_shared<StoryInformations>();
+	}
+	Story(const Story& story) = default;
 	~Story()
 	{
 
@@ -23,40 +30,23 @@ public:
 
 	Entity CreateEntity()
 	{
-		return Entity(_registry);
+		return Entity(_informations, _informations->GetRegistry().lock());
 	}
 	template <typename T, typename... Args>
 	Entity CreateEntity(Args&&... args)
 	{
-		Entity entity = Entity(_registry);
+		Entity entity = Entity(_informations, _informations->GetRegistry().lock());
 		entity.Add<T, Args>(args);
 		return entity;
 	}
 
-
-	std::unique_ptr<Quest> CreateQuest()
-	{
-		return std::unique_ptr<Quest>();
-	}
+	std::weak_ptr<StoryInformations> GetInformations() { return _informations; }
 
 private:
-	Story() { }
 	void Update(float deltaTime) { }
 	void Draw() { }
 
-	template<typename... Component>
-	std::tuple<std::vector<Component>...> GetAll()
-	{
-		std::tuple<std::vector<Component>...> components;
-		auto view = _registry->view<Component...>();
-		for (auto entity : view) {
-			((std::get<std::vector<Component>>(components).push_back(_registry->get<Component>(entity)), ...));
-		}
-		return components;
-	}
-	
-	std::shared_ptr<entt::registry> _registry;
-	std::weak_ptr<Story> _self;
+	std::shared_ptr<StoryInformations> _informations;
 
 	friend class Entity;
 	friend class StoryManager;
