@@ -75,9 +75,9 @@ void Physics2D::SetBodyPosition(Body body, Shape shape,
 {
 	//if (auto name = body.ID.lock())
 	//{
-		auto b2body = _bodies[body.ID];
+	auto b2body = _bodies[body.ID];
 
-		b2body->SetTransform(b2Vec2(location.X, location.Y), angle.Value);
+	b2body->SetTransform(b2Vec2(location.X, location.Y), angle.Value);
 	//}
 }
 void Physics2D::UpdateFromBodyTransforms(Body body, Shape shape,
@@ -87,8 +87,8 @@ void Physics2D::UpdateFromBodyTransforms(Body body, Shape shape,
 	//{
 		auto b2body = _bodies[body.ID];
 
-		(& location)->X = b2body->GetPosition().x;
-		(& location)->Y = b2body->GetPosition().y;
-		(& angle)->Value = b2body->GetAngle();
+	(&location)->X = b2body->GetPosition().x;
+	(&location)->Y = b2body->GetPosition().y;
+	(&angle)->Value = b2body->GetAngle();
 	//}
 }
