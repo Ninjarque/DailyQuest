@@ -18,11 +18,6 @@ class Quest;
 class Story
 {
 public:
-	Story() 
-	{
-		_informations = std::make_shared<StoryInformations>();
-	}
-	Story(const Story& story) = default;
 	~Story()
 	{
 
@@ -43,6 +38,10 @@ public:
 	std::weak_ptr<StoryInformations> GetInformations() { return _informations; }
 
 private:
+	Story() 
+	{
+		_informations = std::make_shared<StoryInformations>();
+	}
 	void Update(float deltaTime) { }
 	void Draw() { }
 

@@ -185,7 +185,6 @@ std::vector<Quest::ActionRequierement*> Quest::SubQuest::MatchingActions(std::un
 	}
 	return res;
 }
-Quest::Quest() {}
 
 Quest::Quest(std::shared_ptr<Story> story)
 {
@@ -218,7 +217,9 @@ std::unique_ptr<Event> Quest::TriggerEvent(std::unordered_map<std::shared_ptr<Na
 			if (auto storyInformations = story->GetInformations().lock())
 			{
 				Action* action = actionRequierements[0]->GetAction();
-				std::unique_ptr<Event> e = std::make_unique<Event>(storyInformations, action, context);
+				Event* event = new Event(storyInformations, action, context);
+				std::unique_ptr<Event> e(event);// = std::make_unique<Event>(event);
+				event = nullptr;
 				e->Run();
 				return e;
 			}

@@ -120,7 +120,6 @@ private:
 	};
 
 public:
-	Quest();
 	Quest(std::shared_ptr<Story> story);
 	~Quest();
 
