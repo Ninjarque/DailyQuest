@@ -11,7 +11,7 @@ void Physics2D::Init()
 
 void Physics2D::Update(float deltaTime)
 {
-	StoryManager::ComputeForEach<
+	StoryManager::ComputeForEachEntity<
 		Body, 
 		Shape, 
 		Location,
@@ -19,7 +19,7 @@ void Physics2D::Update(float deltaTime)
 
 	_world->Step(deltaTime, 6, 2);
 
-	StoryManager::ComputeForEach<
+	StoryManager::ComputeForEachEntity<
 		Body,
 		Shape,
 		Location,
@@ -75,19 +75,20 @@ Shape& Physics2D::CreateBoxShape(Entity& entity)
 }
 
 
-void Physics2D::SetBodyPosition(Body& body, Shape& shape, 
+void Physics2D::SetBodyPosition(Entity entity, Body& body, Shape& shape,
 	Location& location, Angle& angle)
 {
 	auto b2body = _bodies[body.ID];
 
 	b2body->SetTransform(b2Vec2(location.X * WORLD_RATIO, location.Y * WORLD_RATIO), angle.Value);
 }
-void Physics2D::UpdateFromBodyTransforms(Body& body, Shape& shape,
+void Physics2D::UpdateFromBodyTransforms(Entity entity, Body& body, Shape& shape,
 	Location& location, Angle& angle)
 {
 	auto b2body = _bodies[body.ID];
+	Location& l = entity.Get<Location>();
 
-	location.X = b2body->GetPosition().x / WORLD_RATIO;
-	location.Y = b2body->GetPosition().y / WORLD_RATIO;
+	l.X = b2body->GetPosition().x / WORLD_RATIO;
+	l.Y = b2body->GetPosition().y / WORLD_RATIO;
 	angle.Value = b2body->GetAngle();
 }

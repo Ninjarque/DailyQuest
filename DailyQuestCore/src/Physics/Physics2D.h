@@ -41,9 +41,9 @@ private:
 	static std::unordered_map<Name, b2Body*> _bodies;
 	static std::unordered_map<Name, b2Fixture*> _fixtures;
 
-	static void SetBodyPosition(Body& body, Shape& shape,
+	static void SetBodyPosition(Entity entity, Body& body, Shape& shape,
 		Location& location, Angle& angle);
-	static void UpdateFromBodyTransforms(Body& body, Shape& shape,
+	static void UpdateFromBodyTransforms(Entity entity, Body& body, Shape& shape,
 		Location& location, Angle& angle);
 };
 
