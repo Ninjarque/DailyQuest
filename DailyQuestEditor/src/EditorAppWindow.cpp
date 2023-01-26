@@ -97,9 +97,9 @@ void EditorAppWindow::OnInit()
     std::cout << "Entity name : " << name << std::endl;
     int w, h;
     Window::Current->GetSize(w, h);
-    square.Add<Location>(w/2.0f, h/4.0f);
-    square.Add<Size>(100.0f, 100.0f);
-    Physics2D::CreateBody(square);
+    square.Add<Location>((float)w/2.0f, (float)h-100.0f);
+    square.Add<Size>((float)w/2.0f, 100.0f);
+    Physics2D::CreateBody(square, true);
     Physics2D::CreateBoxShape(square);
 }
 
@@ -135,11 +135,23 @@ void EditorAppWindow::OnUpdate(float deltaTime)
     {
         std::cout << "Hold on" << std::endl;
     }
+    square.Set<Location>((float)w / 2.0f, (float)h - 100.0f);
+    square.Set<Size>((float)w/2.0f, 100.0f);
     if ((InputManager::IsDown("Spawn") || InputManager::IsDown("None")) && spawn)
     {
+        float ox = (Random::Float() - 0.5f) * w / 6.0f;
+        float oy = (Random::Float() - 0.5f) * h / 6.0f;
         double x;
         double y;
         Mouse::GetPosition(x, y);
+        Entity e = story->CreateEntity();
+        e.Add<Location>((float)x + ox, (float)y + oy);
+        e.Add<Size>(100.0f, 100.0f);
+        Physics2D::CreateBody(e);
+        Physics2D::CreateBoxShape(e);
+        testEntities.push_back(e);
+
+        /*
         particleSpawnTime = 0.0f;
         ParticleProperties fire(
             1.0f,
@@ -157,6 +169,7 @@ void EditorAppWindow::OnUpdate(float deltaTime)
         {
             particleSystem.Emit(fire);
         }
+        */
     }
 
     particleSystem.Update(deltaTime);
@@ -206,6 +219,14 @@ void EditorAppWindow::OnDraw()
     Renderer2D::DrawQuad(glm::vec2(loc.X - size.X / 2.0f, loc.Y - size.Y / 2.0f), glm::vec2(size.X, size.Y),
         0.0f, texture, glm::vec2(loc.X, loc.Y), angle.Value);
 
+    for (auto entity : testEntities)
+    {
+        auto loc = entity.Get<Location>();
+        auto size = entity.Get<Size>();
+        auto angle = entity.Get<Angle>();
+        Renderer2D::DrawQuad(glm::vec2(loc.X - size.X / 2.0f, loc.Y - size.Y / 2.0f), glm::vec2(size.X, size.Y),
+            0.0f, nullptr, glm::vec2(loc.X, loc.Y), angle.Value);
+    }
 
     if (false)//(time < 100.0f)
     {

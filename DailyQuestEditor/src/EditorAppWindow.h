@@ -83,6 +83,7 @@ protected:
 
 	std::shared_ptr<Story> story;
 	Entity square;
+	std::vector<Entity> testEntities;
 
 	float time = 0.0f;
 	float deltaTime = 0.0f;
