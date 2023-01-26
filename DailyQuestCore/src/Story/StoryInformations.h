@@ -18,12 +18,12 @@ public:
 		_registry.reset();
 	}
 	template<typename... Component>
-	std::tuple<std::vector<Component>...> GetAll()
+	std::tuple<std::vector<Component*>...> GetAll()
 	{
-		std::tuple<std::vector<Component>...> components;
+		std::tuple<std::vector<Component*>...> components;
 		auto view = _registry->view<Component...>();
 		for (auto entity : view) {
-			((std::get<std::vector<Component>>(components).push_back(_registry->get<Component>(entity)), ...));
+			((std::get<std::vector<Component*>>(components).push_back(&_registry->get<Component>(entity)), ...));
 		}
 		return components;
 	}

@@ -62,10 +62,10 @@ public:
 	}
 
 	template<typename... Component>
-	static std::vector<std::tuple<std::vector<Component>...>> GetInAllStories();
+	static std::vector<std::tuple<std::vector<Component*>...>> GetInAllStories();
 
 	template<typename... Component>
-	static void ComputeForEach(void (*f)(Component... components));
+	static void ComputeForEach(void (*f)(Component&... components));
 
 private:
 	static std::vector<std::weak_ptr<Story>> _stories;
@@ -74,9 +74,9 @@ private:
 };
 
 template<typename... Component>
-static std::vector<std::tuple<std::vector<Component>...>> StoryManager::GetInAllStories()
+static std::vector<std::tuple<std::vector<Component*>...>> StoryManager::GetInAllStories()
 {
-	std::vector<std::tuple<std::vector<Component>...>> listOfComponents;
+	std::vector<std::tuple<std::vector<Component*>...>> listOfComponents;
 	for (auto s = _stories.begin(); s != _stories.end(); )
 	{
 		if (auto story = s->lock())
@@ -84,16 +84,15 @@ static std::vector<std::tuple<std::vector<Component>...>> StoryManager::GetInAll
 			if (auto informations = story->GetInformations().lock())
 			{
 				listOfComponents.push_back(informations->GetAll<Component...>());
+				++s;
 			}
 			else
 			{
-				//s = std::remove(_stories.begin(), _stories.end(), s);
 				s = _stories.erase(s);
 			}
 		}
 		else
 		{
-			//s = std::remove(_stories.begin(), _stories.end(), s);
 			s = _stories.erase(s);
 		}
 	}
@@ -101,16 +100,15 @@ static std::vector<std::tuple<std::vector<Component>...>> StoryManager::GetInAll
 }
 
 template<typename... Component>
-static void StoryManager::ComputeForEach(void (*f)(Component... components))
+static void StoryManager::ComputeForEach(void (*f)(Component&... components))
 {
 	auto all = GetInAllStories<Component...>();
 	for (auto& tuple : all)
 	{
-		auto argsTuple = tuple;
-		std::apply([&f](const auto&... argsVectors) {
+		std::apply([&f](auto&... argsVectors) {
 			for (int i = 0; i < std::min({ argsVectors.size()... }); ++i) {
-				f(argsVectors[i]...);
+				f(*argsVectors[i]...);
 			}
-			}, argsTuple);
+			}, tuple);
 	}
 }
