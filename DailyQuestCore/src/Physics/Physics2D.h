@@ -12,7 +12,7 @@
 
 #include "Quest/Name.h"
 
-#define WORLD_RATIO 0.05f
+#define WORLD_RATIO 0.01f
 
 struct Body
 {
@@ -33,7 +33,7 @@ public:
 	static void Update(float deltaTime);
 	static void LateUpdate(float deltaTime);
 
-	static Body& CreateBody(Entity& entity);
+	static Body& CreateBody(Entity& entity, bool isStatic = false);
 	static Shape& CreateBoxShape(Entity& entity);
 
 private:

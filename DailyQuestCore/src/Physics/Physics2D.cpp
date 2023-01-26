@@ -30,7 +30,7 @@ void Physics2D::LateUpdate(float deltaTime)
 {
 }
 
-Body& Physics2D::CreateBody(Entity& entity)
+Body& Physics2D::CreateBody(Entity& entity, bool isStatic)
 {
 	b2BodyDef def;
 	Location location = Location(0.0f, 0.0f);
@@ -43,7 +43,7 @@ Body& Physics2D::CreateBody(Entity& entity)
 		angle = entity.Get<Angle>();
 	else
 		entity.Add<Angle>(angle.Value);
-	def.type = b2_dynamicBody;
+	def.type = isStatic ? b2_staticBody : b2_dynamicBody;
 	def.position.Set(location.X * WORLD_RATIO, location.Y * WORLD_RATIO);
 	def.angle = angle.Value;
 
@@ -78,22 +78,16 @@ Shape& Physics2D::CreateBoxShape(Entity& entity)
 void Physics2D::SetBodyPosition(Body& body, Shape& shape, 
 	Location& location, Angle& angle)
 {
-	//if (auto name = body.ID.lock())
-	//{
 	auto b2body = _bodies[body.ID];
 
 	b2body->SetTransform(b2Vec2(location.X * WORLD_RATIO, location.Y * WORLD_RATIO), angle.Value);
-	//}
 }
 void Physics2D::UpdateFromBodyTransforms(Body& body, Shape& shape,
 	Location& location, Angle& angle)
 {
-	//if (auto name = body.ID.lock())
-	//{
-		auto b2body = _bodies[body.ID];
+	auto b2body = _bodies[body.ID];
 
 	location.X = b2body->GetPosition().x / WORLD_RATIO;
 	location.Y = b2body->GetPosition().y / WORLD_RATIO;
 	angle.Value = b2body->GetAngle();
-	//}
 }
