@@ -13,6 +13,8 @@
 #include "Quest/Quest.h"
 #include "StoryInformations.h"
 
+#include "Core/TimeStep.h"
+
 //class Entity;
 //class StoryManager;
 class Quest;
@@ -65,7 +67,7 @@ private:
 	{
 		_informations = std::make_shared<StoryInformations>();
 	}
-	void Update(float deltaTime) { }
+	void Update(TimeStep timestep) { }
 	void Draw() 
 	{
 		ComputeForEachEntity<Location, Size>(DrawEntity);

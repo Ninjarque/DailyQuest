@@ -9,7 +9,7 @@ void Physics2D::Init()
 	_world = std::make_unique<b2World>(b2Vec2(0.0f, 9.81f));
 }
 
-void Physics2D::Update(float deltaTime)
+void Physics2D::Update(TimeStep timestep)
 {
 	StoryManager::ComputeForEachEntity<
 		Body, 
@@ -17,7 +17,7 @@ void Physics2D::Update(float deltaTime)
 		Location,
 		Angle>(SetBodyPosition);
 
-	_world->Step(deltaTime, 6, 2);
+	_world->Step(timestep, 6, 2);
 
 	StoryManager::ComputeForEachEntity<
 		Body,
@@ -26,7 +26,7 @@ void Physics2D::Update(float deltaTime)
 		Angle>(UpdateFromBodyTransforms);
 }
 
-void Physics2D::LateUpdate(float deltaTime)
+void Physics2D::LateUpdate(TimeStep timestep)
 {
 }
 

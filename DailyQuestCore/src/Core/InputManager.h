@@ -8,6 +8,8 @@
 #include <vector>
 #include <unordered_map>
 
+#include "TimeStep.h"
+
 enum class InputType
 {
 	Keyboard,
@@ -67,7 +69,7 @@ private:
 		InputState() {}
 		~InputState() {}
 
-		void Update(float deltaTime)
+		void Update(TimeStep timestep)
 		{
 			for (auto state : _currentState)
 			{
@@ -122,8 +124,8 @@ private:
 public:
 	static void Init(GLFWwindow* window);
 
-	static void Update(float deltaTime);
-	static void LateUpdate(float deltaTime);
+	static void Update(TimeStep timestep);
+	static void LateUpdate(TimeStep timestep);
 
 	static void SetBinding(InputType type, std::string newName, int key);
 

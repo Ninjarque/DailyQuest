@@ -6,6 +6,8 @@
 #include <memory>
 #include <unordered_map>
 
+#include "Core/TimeStep.h"
+
 #include "Story/Components.h"
 #include "Story/StoryManager.h"
 #include "Story/Entity.h"
@@ -30,8 +32,8 @@ class Physics2D
 public:
 	static void Init();
 
-	static void Update(float deltaTime);
-	static void LateUpdate(float deltaTime);
+	static void Update(TimeStep timestep);
+	static void LateUpdate(TimeStep timestep);
 
 	static Body& CreateBody(Entity& entity, bool isStatic = false);
 	static Shape& CreateBoxShape(Entity& entity);

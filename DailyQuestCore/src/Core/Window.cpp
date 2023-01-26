@@ -147,6 +147,7 @@ int Window::Run()
             DrawCall(deltaTime);
             LateUpdateCall(deltaTime);
         }
+        _frameID++;
     }
 
     // Cleanup
@@ -201,6 +202,7 @@ void Window::ResizeCallback(GLFWwindow* window, int width, int height)
         DrawCall(deltaTime);
         LateUpdateCall(deltaTime);
     }
+    _frameID++;
 }
 
 void Window::FocusCallback(GLFWwindow* window, int focus)
@@ -232,18 +234,20 @@ bool Window::UpdateCall(float& deltaTime)
     deltaTime = Timer::end(-1, TIME_TYPE::MILLISECONDES) / 1000.0f;
     Timer::start(-1);
 
-    InputManager::Update(deltaTime);
+    TimeStep timestep(deltaTime, _frameID);
+
+    InputManager::Update(timestep);
 
     /* Poll for and process events */
     glfwPollEvents();
 
-    Physics2D::Update(deltaTime);
+    Physics2D::Update(timestep);
     
-    StoryManager::Update(deltaTime);
+    StoryManager::Update(timestep);
 
-    OnUpdate(deltaTime);
+    OnUpdate(timestep);
 
-    Physics2D::LateUpdate(deltaTime);
+    Physics2D::LateUpdate(timestep);
 
     if (disposed)
         return false;
@@ -292,7 +296,8 @@ void Window::DrawCall(float deltaTime)
 
 void Window::LateUpdateCall(float deltaTime)
 {
-    InputManager::LateUpdate(deltaTime);
+    TimeStep timestep(deltaTime, _frameID);
+    InputManager::LateUpdate(timestep);
 
     _needsRecalculations = false;
 }

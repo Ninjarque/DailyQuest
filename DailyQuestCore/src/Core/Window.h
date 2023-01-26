@@ -7,6 +7,7 @@
 #include <imgui/imgui_impl_opengl3.h>
 
 #include "Timer.h"
+#include "TimeStep.h"
 #include "InputManager.h"
 
 #include <iostream>
@@ -24,6 +25,7 @@
 #include "Physics/Physics2D.h"
 
 #include "Story/StoryManager.h"
+
 
 class Window : public Program
 {
@@ -46,7 +48,7 @@ public:
 protected:
 	virtual void OnInit() = 0;
 	virtual void OnDispose() = 0;
-	virtual void OnUpdate(float deltaTime) = 0;
+	virtual void OnUpdate(TimeStep timestep) = 0;
 	virtual void OnDraw() = 0;
 	virtual void OnImGUIDraw() = 0;
 
@@ -71,4 +73,6 @@ private:
 	ImGuiIO* _io = nullptr;
 
 	bool _needsRecalculations = false;
+
+	unsigned long _frameID = 0;
 };

@@ -8,6 +8,8 @@
 #include "Story.h"
 #include "Quest/Quest.h"
 
+#include "Core/TimeStep.h"
+
 class StoryManager
 {
 public:
@@ -15,13 +17,13 @@ public:
 	{
 
 	}
-	static void Update(float deltaTime)
+	static void Update(TimeStep timestep)
 	{
 		for (auto s = _stories.begin(); s != _stories.end(); )
 		{
 			if (auto story = s->lock())
 			{
-				story->Update(deltaTime);
+				story->Update(timestep);
 				++s;
 			}
 			else

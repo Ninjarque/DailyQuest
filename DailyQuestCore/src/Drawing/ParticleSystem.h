@@ -90,7 +90,7 @@ public:
 	void SetPhysics(ParticlePhysic physic);
 	void Emit(const ParticleProperties& properties);
 
-	void Update(float deltaTime);
+	void Update(TimeStep timestep);
 	void Render();
 
 private:

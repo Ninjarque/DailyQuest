@@ -76,7 +76,7 @@ void ParticleSystem::Emit(const ParticleProperties& properties)
 	particlePoolIndex--;
 }
 
-void ParticleSystem::Update(float deltaTime)
+void ParticleSystem::Update(TimeStep timestep)
 {
 	for (auto& particle : particlePool)
 	{
@@ -88,7 +88,7 @@ void ParticleSystem::Update(float deltaTime)
 			particle.RemainingTime = 0.0f;
 			continue;
 		}
-
+		float deltaTime = timestep;
 		particle.RemainingTime -= deltaTime;
 		particle.Position += particle.Velocity * deltaTime;
 		particle.Velocity += physic.Acceleration * deltaTime 

@@ -28,7 +28,7 @@ void InputManager::Init(GLFWwindow* window)
 	_bindingsStack.push_back(new Bindings());
 }
 
-void InputManager::Update(float deltaTime)
+void InputManager::Update(TimeStep timeStep)
 {
 	if (_typedKeys.size())
 	{
@@ -37,11 +37,11 @@ void InputManager::Update(float deltaTime)
 	}
 }
 
-void InputManager::LateUpdate(float deltaTime)
+void InputManager::LateUpdate(TimeStep timeStep)
 {
 	for (auto& inputState : _inputStates)
 	{
-		inputState.second.Update(deltaTime);
+		inputState.second.Update(timeStep);
 	}
 	_droppedPaths.clear();
 }
