@@ -138,7 +138,7 @@ int Window::Run()
     float deltaTime = 0.0f;
 
     /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window))
+    while (window && !glfwWindowShouldClose(window))
     {
         if (disposed)
             break;
