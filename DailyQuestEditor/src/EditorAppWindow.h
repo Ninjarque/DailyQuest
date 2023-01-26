@@ -7,6 +7,7 @@
 #include "Core/InputManager.h"
 
 #include "Core/Window.h"
+#include "Core/TimeStep.h"
 
 #include "Drawing/Renderer2D.h"
 #include "Drawing/Frame.h"
@@ -95,7 +96,7 @@ protected:
 
 	void OnInit() override;
 	void OnDispose() override;
-	void OnUpdate(float deltaTime) override;
+	void OnUpdate(TimeStep timestep) override;
 	void OnDraw() override;
 	void OnImGUIDraw() override;
 

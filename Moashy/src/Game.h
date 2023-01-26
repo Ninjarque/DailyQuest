@@ -34,7 +34,7 @@ public:
 protected:
 	void OnInit() override;
 	void OnDispose() override;
-	void OnUpdate(float deltaTime) override;
+	void OnUpdate(TimeStep timestep) override;
 	void OnDraw() override;
 	void OnImGUIDraw() override;
 

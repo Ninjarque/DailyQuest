@@ -191,6 +191,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Core\TimeStep.h" />
     <ClInclude Include="src\Story\Components.h" />
     <ClInclude Include="src\Story\Entity.h" />
     <ClInclude Include="src\Quest\Event.h" />

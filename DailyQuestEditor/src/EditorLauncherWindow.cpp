@@ -13,8 +13,9 @@ void EditorLauncherWindow::OnDispose()
 	cout << "Disposed of launcher so sad..." << endl;
 }
 
-void EditorLauncherWindow::OnUpdate(float deltaTime)
+void EditorLauncherWindow::OnUpdate(TimeStep timestep)
 {
+	float deltaTime = timestep;
 	delay -= deltaTime;
 	cout << delay << endl;
 	if (delay <= 0.0f)

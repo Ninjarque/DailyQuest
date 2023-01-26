@@ -15,7 +15,7 @@ void Game::OnDispose()
 {
 }
 
-void Game::OnUpdate(float deltaTime)
+void Game::OnUpdate(TimeStep timestep)
 {
 }
 

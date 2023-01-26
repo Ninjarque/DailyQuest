@@ -97,7 +97,7 @@ void EditorAppWindow::OnInit()
     std::cout << "Entity name : " << name << std::endl;
     int w, h;
     Window::Current->GetSize(w, h);
-    square.Add<Location>((float)w/2.0f, (float)h-100.0f);
+    square.Add<Location>((float)w/2.0f, (float)h-50.0f);
     square.Add<Size>((float)w/2.0f, 100.0f);
     Physics2D::CreateBody(square, true);
     Physics2D::CreateBoxShape(square);
@@ -108,12 +108,12 @@ void EditorAppWindow::OnDispose()
 	cout << "Disposed of editor I see" << endl;
 }
 
-void EditorAppWindow::OnUpdate(float deltaTime)
+void EditorAppWindow::OnUpdate(TimeStep timestep)
 {
-    this->deltaTime = deltaTime;
-    time += deltaTime;
+    this->deltaTime = timestep;
+    time += timestep;
     static float particleSpawnTime = 0.0f;
-    particleSpawnTime += deltaTime;
+    particleSpawnTime += timestep;
     bool spawn = false;
     if (particleSpawnTime > 0.02f)
     {
@@ -135,7 +135,7 @@ void EditorAppWindow::OnUpdate(float deltaTime)
     {
         std::cout << "Hold on" << std::endl;
     }
-    square.Set<Location>((float)w / 2.0f, (float)h - 100.0f);
+    square.Set<Location>((float)w / 2.0f, (float)h - 50.0f);
     square.Set<Size>((float)w/2.0f, 100.0f);
     if ((InputManager::IsDown("Spawn") || InputManager::IsDown("None")) && spawn)
     {
@@ -172,7 +172,7 @@ void EditorAppWindow::OnUpdate(float deltaTime)
         */
     }
 
-    particleSystem.Update(deltaTime);
+    particleSystem.Update(timestep);
 }
 
 void EditorAppWindow::OnDraw()
