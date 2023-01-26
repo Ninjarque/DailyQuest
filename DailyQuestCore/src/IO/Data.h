@@ -10,17 +10,6 @@
 #include <iostream>
 #include <fstream>
 
-enum DataType
-{
-	Size,
-	Property,
-	Equal,
-	Quote,
-	Semicolon,
-	OpeningBracket,
-	ClosingBracket,
-	EndOfFile,
-};
 
 class Data
 {
@@ -74,6 +63,17 @@ public:
 	std::string ToString() const;
 
 private:
+	enum DataType
+	{
+		Size,
+		Property,
+		Equal,
+		Quote,
+		Semicolon,
+		OpeningBracket,
+		ClosingBracket,
+		EndOfFile,
+	};
 	std::vector<std::string> m_content = std::vector<std::string>();
 
 	std::vector<std::pair<std::string, Data&>> m_vecObjects = std::vector<std::pair<std::string, Data&>>();
