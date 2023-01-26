@@ -22,6 +22,9 @@ public:
 	template <typename T>
 	bool Remove();
 
+	template<typename T, typename ...Args>
+	T& Set(Args&&... args);
+
 	Entity()
 	{
 	}
@@ -80,6 +83,12 @@ T& Entity::Add(Args&&... args)
 	if (Has<T>()) Error::fatalError("Could not add component because it already has been added!");
 
 	return _registry->emplace<T>(*(_handle.get()), std::forward<Args>(args)...);
+}
+
+template<typename T, typename ...Args>
+T& Entity::Set(Args&&... args)
+{
+	return _registry->emplace_or_replace<T>(*(_handle.get()), std::forward<Args>(args)...);
 }
 
 template<typename T>
