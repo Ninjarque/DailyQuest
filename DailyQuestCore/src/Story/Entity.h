@@ -36,6 +36,8 @@ public:
 	}
 	~Entity()
 	{
+		if (_isTemp)
+			return;
 		if (_handle.use_count() == 1)
 			_registry->destroy(*(_handle.get()));
 		//_handle.reset();
@@ -54,10 +56,17 @@ private:
 			Add<Name>();
 		}
 	}
+	Entity(entt::entity handle, entt::registry* registry)
+	{
+		_handle = std::make_shared<entt::entity>(handle);
+		_registry = registry;
+		_isTemp = true;
+	}
 
 	std::shared_ptr<entt::entity> _handle;
 	entt::registry* _registry = nullptr;
 	std::weak_ptr<StoryInformations> _storyInformations;
+	bool _isTemp = false;
 
 	friend class Story;
 };

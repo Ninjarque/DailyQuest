@@ -27,6 +27,19 @@ public:
 		}
 		return components;
 	}
+	template<typename... Component>
+	std::tuple<std::vector<entt::entity>, std::vector<Component*>...> GetAllEntities()
+	{
+		std::tuple<std::vector<entt::entity>, std::vector<Component*>...> components;
+		auto view = _registry->view<Component...>();
+
+		std::get<0>(components) = std::vector<entt::entity>();
+		for (auto entity : view) {
+			std::get<0>(components).push_back(entity);
+			((std::get<std::vector<Component*>>(components).push_back(&_registry->get<Component>(entity)), ...));
+		}
+		return components;
+	}
 private:
 	std::shared_ptr<entt::registry> _registry;
 

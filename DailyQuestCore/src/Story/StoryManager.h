@@ -67,6 +67,9 @@ public:
 	template<typename... Component>
 	static void ComputeForEach(void (*f)(Component&... components));
 
+	template<typename... Component>
+	static void ComputeForEachEntity(void (*f)(Entity, Component&... components));
+
 private:
 	static std::vector<std::weak_ptr<Story>> _stories;
 
@@ -87,14 +90,10 @@ static std::vector<std::tuple<std::vector<Component*>...>> StoryManager::GetInAl
 				++s;
 			}
 			else
-			{
 				s = _stories.erase(s);
-			}
 		}
 		else
-		{
 			s = _stories.erase(s);
-		}
 	}
 	return listOfComponents;
 }
@@ -110,5 +109,20 @@ static void StoryManager::ComputeForEach(void (*f)(Component&... components))
 				f(*argsVectors[i]...);
 			}
 			}, tuple);
+	}
+}
+
+template<typename... Component>
+static void StoryManager::ComputeForEachEntity(void (*f)(Entity, Component&... components))
+{
+	for (auto s = _stories.begin(); s != _stories.end(); )
+	{
+		if (auto story = s->lock())
+		{
+			story->ComputeForEachEntity(f);
+			++s;
+		}
+		else
+			s = _stories.erase(s);
 	}
 }

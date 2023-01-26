@@ -2,12 +2,14 @@
 
 #include <vector>
 #include <tuple>
+#include <iostream>
 
 #include "entt/entt.hpp"
 
 #include "Entity.h"
 //#include "StoryManager.h"
 
+#include "Components.h"
 #include "Quest/Quest.h"
 #include "StoryInformations.h"
 
@@ -37,13 +39,37 @@ public:
 
 	std::weak_ptr<StoryInformations> GetInformations() { return _informations; }
 
+
+	template<typename... Component>
+	void ComputeForEachEntity(void (*f)(Entity entity, Component&... components))
+	{
+		auto all = _informations->GetAllEntities<Component...>();
+		std::apply([&f, this](auto& entities, auto&... argsVectors) {
+			for (int i = 0; i < std::min({ entities.size(), argsVectors.size()... }); ++i) {
+				Entity e = CreateTempEntity(entities[i], _informations);
+				f(e,  * argsVectors[i]...);
+			}
+			}, all);
+	}
 private:
+	static void DrawEntity(Entity entity, Location& location, Size& size)
+	{
+		//std::cout << "Rendering an entity at " << location.X << "," << location.Y << " dude!" << std::endl;
+	}
+	static Entity CreateTempEntity(entt::entity entity, std::shared_ptr<StoryInformations> informations)
+	{
+		return Entity(entity, informations->GetRegistry().lock().get());
+	}
+
 	Story() 
 	{
 		_informations = std::make_shared<StoryInformations>();
 	}
 	void Update(float deltaTime) { }
-	void Draw() { }
+	void Draw() 
+	{
+		ComputeForEachEntity<Location, Size>(DrawEntity);
+	}
 
 	std::shared_ptr<StoryInformations> _informations;
 
