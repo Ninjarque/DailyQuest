@@ -2783,10 +2783,10 @@
     <ClCompile Include="src\Quest\Action.h">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\Quest\Name.cpp">
+    <ClCompile Include="src\Story\StoryManager.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\Story\StoryManager.cpp">
+    <ClCompile Include="src\Quest\Name.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

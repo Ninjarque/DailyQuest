@@ -27,6 +27,11 @@
 
 #include "Node.h"
 
+#include "Story/StoryManager.h"
+#include "Story/Components.h"
+
+#include "Physics/Physics2D.h"
+
 class EditorAppWindow : public Window
 {
 public:
@@ -75,6 +80,9 @@ protected:
 	ParticleSystem particleSystem;
 
 	Font* font;
+
+	std::shared_ptr<Story> story;
+	Entity square;
 
 	float time = 0.0f;
 	float deltaTime = 0.0f;

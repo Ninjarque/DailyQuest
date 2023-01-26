@@ -12,10 +12,12 @@
 
 #include "Quest/Name.h"
 
+#define WORLD_RATIO 0.05f
+
 struct Body
 {
-	Name* ID;
-	Body(Name* id) : ID(id) { }
+	Name ID;
+	Body(Name id) : ID(id) { }
 };
 struct Shape
 {
@@ -36,12 +38,12 @@ public:
 
 private:
 	static std::unique_ptr<b2World> _world;
-	static std::unordered_map<Name*, b2Body*> _bodies;
-	static std::unordered_map<Name*, b2Fixture*> _fixtures;
+	static std::unordered_map<Name, b2Body*> _bodies;
+	static std::unordered_map<Name, b2Fixture*> _fixtures;
 
-	static void SetBodyPosition(Body body, Shape shape,
-		Location location, Angle angle);
-	static void UpdateFromBodyTransforms(Body body, Shape shape,
-		Location location, Angle angle);
+	static void SetBodyPosition(Body& body, Shape& shape,
+		Location& location, Angle& angle);
+	static void UpdateFromBodyTransforms(Body& body, Shape& shape,
+		Location& location, Angle& angle);
 };
 

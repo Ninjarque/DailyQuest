@@ -86,9 +86,21 @@ void EditorAppWindow::OnInit()
     CommandManagerPrint();
     std::cout << "Test expression current " << TestExpression << std::endl;
 
-    //font = FontManager::Create("res/Fonts/Pokemon.ttf", FontDetails::Small);
+    //font = FontManager::Create("res/Fonts/Pokemon.ttf", FontDetails::Better);
     //font = FontManager::Create("res/Fonts/Xiomara.ttf", FontDetails::Better);
     font = FontManager::Create("res/Fonts/Consola.ttf", FontDetails::Better);
+
+    story = StoryManager::CreateStory();
+    square = story->CreateEntity();
+    struct Test { std::string Name; Test(std::string name) : Name(name) { } };
+    auto name = square.Get<Name>();
+    std::cout << "Entity name : " << name << std::endl;
+    int w, h;
+    Window::Current->GetSize(w, h);
+    square.Add<Location>(w/2.0f, h/4.0f);
+    square.Add<Size>(100.0f, 100.0f);
+    Physics2D::CreateBody(square);
+    Physics2D::CreateBoxShape(square);
 }
 
 void EditorAppWindow::OnDispose()
@@ -166,8 +178,8 @@ void EditorAppWindow::OnDraw()
 
     //Renderer2D::End();
 
-
     particleSystem.Render();
+
 
     shader.End();
     
@@ -187,6 +199,13 @@ void EditorAppWindow::OnDraw()
     //frame.StartFrame(buffer_width, buffer_height);
 
     Renderer2D::Begin(&camera, &shader);
+
+    auto loc = square.Get<Location>();
+    auto size = square.Get<Size>();
+    auto angle = square.Get<Angle>();
+    Renderer2D::DrawQuad(glm::vec2(loc.X - size.X / 2.0f, loc.Y - size.Y / 2.0f), glm::vec2(size.X, size.Y),
+        0.0f, texture, glm::vec2(loc.X, loc.Y), angle.Value);
+
 
     if (false)//(time < 100.0f)
     {
