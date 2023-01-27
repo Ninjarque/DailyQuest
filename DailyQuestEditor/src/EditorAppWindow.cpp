@@ -11,23 +11,16 @@ void EditorAppWindow::OnInit()
     modelTexture1 = Image::Load("res/Images/soldier.png");
     
     Renderer2D::Init(128);
-    
     frame.Init(buffer_width, buffer_height);
-    shader.Init("res/Shaders/Basic.shader");
-    textShader.Init("res/Shaders/TextShader.shader");
 
-    model.Init(
-        std::vector<float>{ 
-            -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 2.0f,
-            0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 2.0f,
-            0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 2.0f,
-            -0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 2.0f
-        },
-        std::vector<int>{ 2, 3, 2, 1 },
-        std::vector<bool>{ false, false, false, false },
-        std::vector<unsigned int>{ 0, 1, 2, 2, 3, 0 });
+    Renderer::Init("res/Shaders/Basic.shader");
+
+    story = StoryManager::CreateStory();
     
-    particleSystem.Init(10000, ParticleSystem::RenderMode::Render2D, shader);
+    shader = new Shader("res/Shaders/Basic.shader", Shader::ShaderType::Default);
+    textShader = new Shader("res/Shaders/TextShader.shader", Shader::ShaderType::Default);
+
+    particleSystem.Init(10000, ParticleSystem::RenderMode::Render2D);
     particleSystem.SetPhysics(ParticlePhysic(
         glm::vec3(0.0f, 3.0f, 0.0f),
         glm::vec3(0.0f, 0.0f, 0.0f),
@@ -40,7 +33,8 @@ void EditorAppWindow::OnInit()
     InputManager::SetBinding(InputType::Keyboard, "Z", GLFW_KEY_W);
     InputManager::SetBinding(InputType::Mouse, "Spawn", GLFW_MOUSE_BUTTON_1);
 
-    camera = Camera(glm::vec2(0.0f, 0.0f), 1.0f);
+    cameraEntity = story->CreateEntity();
+    cameraEntity.Add<Camera>(glm::vec2(0.0f, 0.0f), 1.0f);
 
     NodeList* lst = new NodeList(
         std::vector<Node*>
@@ -90,7 +84,6 @@ void EditorAppWindow::OnInit()
     //font = FontManager::Create("res/Fonts/Xiomara.ttf", FontDetails::Better);
     font = FontManager::Create("res/Fonts/Consola.ttf", FontDetails::Better);
 
-    story = StoryManager::CreateStory();
     square = story->CreateEntity();
     struct Test { std::string Name; Test(std::string name) : Name(name) { } };
     auto name = square.Get<Name>();
@@ -101,6 +94,8 @@ void EditorAppWindow::OnInit()
     square.Add<Size>((float)w/2.0f, 100.0f);
     Physics2D::CreateBody(square, true);
     Physics2D::CreateBoxShape(square);
+    squareChild = story->CreateEntity();
+    square.Add<Childrens>(squareChild);
 }
 
 void EditorAppWindow::OnDispose()
@@ -182,7 +177,7 @@ void EditorAppWindow::OnDraw()
     std::vector<Texture*> textures = { modelTexture1, texture };
 
     // /*
-    shader.Begin();
+    shader->Begin();
     
     //Renderer2D::Begin();
     //Renderer2D::SetUniforms(shader);
@@ -191,15 +186,15 @@ void EditorAppWindow::OnDraw()
 
     //Renderer2D::End();
 
-    particleSystem.Render();
+    particleSystem.Render(cameraEntity.Get<Camera>(), *shader);
 
 
-    shader.End();
+    shader->End();
     
 
-    font->Render(&textShader, "Use the msdf_atlas::BitmapAtlasStorage::getData() function instead. This function returns a pointer to the underlying pixel data buffer as a void* type. You can then cast this pointer to the appropriate data type (unsigned char, float, etc.) and use it as you would use any other array of pixels.", 
+    font->Render(&cameraEntity.Get<Camera>(), textShader, "Use the msdf_atlas::BitmapAtlasStorage::getData() function instead. This function returns a pointer to the underlying pixel data buffer as a void* type. You can then cast this pointer to the appropriate data type (unsigned char, float, etc.) and use it as you would use any other array of pixels.",
         glm::vec2(0.0f, 0.0f), glm::vec2(w, h/2.0f), 50.0f, glm::vec4(1.0f,1.0,0.0,1.0f));
-    font->Render(&textShader, U"ça beigne là tranquille Gaëlle ? こんにちは ou bien ?",
+    font->Render(&cameraEntity.Get<Camera>(), textShader, U"ça beigne là tranquille Gaëlle ? こんにちは ou bien ?",
         glm::vec2(0.0f, h/2.0f), glm::vec2(w, h/2.0f), 200.0f, glm::vec4(1.0f, 1.0, 0.0, 1.0f), -0.2f, glm::vec2(-0.01f, 0.01f), glm::vec4(1.0f,0.0f,0.0f,1.0f));
     //font->Render(&textShader, U"t",
     //    glm::vec2(0.0f, h / 2.0f), glm::vec2(w, h / 2.0f), 3.0f, glm::vec4(1.0f, 1.0, 0.0, 1.0f));
@@ -207,12 +202,13 @@ void EditorAppWindow::OnDraw()
     // */
 
     //glViewport(0, 0, m_width, m_height);
-    shader.Begin();
+    shader->Begin();
 
     //frame.StartFrame(buffer_width, buffer_height);
 
-    Renderer2D::Begin(&camera, &shader);
+    Renderer2D::Begin(&cameraEntity.Get<Camera>(), shader);
 
+    /*
     auto loc = square.Get<Location>();
     auto size = square.Get<Size>();
     auto angle = square.Get<Angle>();
@@ -227,6 +223,8 @@ void EditorAppWindow::OnDraw()
         Renderer2D::DrawQuad(glm::vec2(loc.X - size.X / 2.0f, loc.Y - size.Y / 2.0f), glm::vec2(size.X, size.Y),
             0.0f, nullptr, glm::vec2(loc.X, loc.Y), angle.Value);
     }
+    */
+    Renderer::Draw(*story.get());
 
     if (false)//(time < 100.0f)
     {
@@ -270,7 +268,7 @@ void EditorAppWindow::OnDraw()
     //renderer.DrawQuad(-1.0f, -1.0f, 2.0f, 2.0f, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), textures[0]);
     //renderer.EndRender();
 
-    shader.End();
+    shader->End();
 }
 
 void EditorAppWindow::OnImGUIDraw()

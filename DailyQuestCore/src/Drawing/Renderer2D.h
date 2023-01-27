@@ -9,9 +9,12 @@
 #include <unordered_map>
 
 #include "Vertex2D.h"
-#include "Camera.h"
-#include "Shader.h"
-#include "Texture.h"
+
+#include "Components/Basic.h"
+#include "Components/Drawing.h"
+#include "Components/Texture.h"
+#include "Components/Camera.h"
+#include "Components/Shader.h"
 
 #include "Story/Story.h"
 
@@ -46,8 +49,6 @@ public:
 	static void Init(int maxQuadCount, int maxTextureCount = 0);
 	static void Dispose();
 
-	static void Begin(Shader* shader);
-	static void Begin(Shader* shader, bool enableDepth);
 	static void Begin(Camera* camera, Shader* shader);
 	static void Begin(Camera* camera, Shader* shader, bool enableDepth);
 	static void End();
@@ -70,8 +71,6 @@ public:
 		glm::vec4 color, Texture* texture, glm::vec2 origin, float angle);
 	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
 		glm::vec4 color, Texture* texture, glm::vec2 uv_position, glm::vec2 uv_size, glm::vec2 origin, float angle);
-
-	static void Draw(Story* story);
 
 	static void GetStats(int& drawCount, int& quadCount);
 	static void ResetStats();

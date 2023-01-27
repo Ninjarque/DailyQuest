@@ -1,299 +1,95 @@
 #include "Renderer.h"
 
-Renderer::Renderer()
-{
+std::unordered_map<Shader::ShaderType, Shader*> Renderer::_shaders;
+Camera* Renderer::_camera = nullptr;
 
+Shader* Renderer::_defaultShader = nullptr;
+
+void Renderer::Init(const std::string shaderFile)
+{
+	_defaultShader = new Shader(shaderFile, Shader::ShaderType::Default);
 }
 
-Renderer::~Renderer()
+void Renderer::Draw(Story& story)
 {
-    for (auto& vs : vaosList)
-    {
-        auto& vaos = vs.second;
-        auto type = vs.first;
-        currentArrayElementData[type].clear();
-        //if (currentArrayElementIndices.count(type))
-        //    currentArrayElementIndices[type].clear();
-        for (int i = 0; i < vaos.size(); i++)
-            glDeleteBuffers(1, &vaos[i]);
-        vaos.clear();
-    }
-    vaosList.clear();
-    for (auto& vs : vbosList)
-    {
-        auto& vbos = vs.second;
-        for (int i = 0; i < vbos.size(); i++)
-            glDeleteBuffers(1, &vbos[i]);
-        vbos.clear();
-    }
-    vbosList.clear();
-    for (auto& vs : ibosList)
-    {
-        auto& ibos = vs.second;
-        for (int i = 0; i < ibos.size(); i++)
-            glDeleteBuffers(1, &ibos[i]);
-        ibos.clear();
-    }
-    ibosList.clear();
-    currentArrayElementCounts.clear();
-    currentArrayElementData.clear();
-    //currentArrayElementIndices.clear();
+	_shaders.clear();
+	_shaders[Shader::ShaderType::Default] = _defaultShader;
+	_camera = nullptr;
+
+	story.ComputeForEachEntity<Shader>(ExtractShader);
+	story.ComputeForEachEntity<Camera>(ExtractCamera);
+	bool noCam = false;
+	if (_camera == nullptr)
+	{
+		_camera = new Camera(story.CreateEntity());
+		noCam = true;
+	}
+
+	Shader* shader = _shaders[Shader::ShaderType::Default];
+	shader->Begin();
+	Renderer2D::Begin(_camera, shader);
+	story.ComputeForEachEntity<Location, Size>(Render2D);
+	Renderer2D::End();
+	shader->End();
+
+	if (noCam)
+		delete _camera;
 }
 
-void Renderer::Init(int maxBufferElementCount, int maxBufferTextureCount)
+void Renderer::ExtractShader(Entity entity, Shader& shader)
 {
-    this->maxBufferElementCount = maxBufferElementCount;
-    this->maxBufferTextureCount = maxBufferTextureCount;
+	_shaders[shader.GetShaderType()] = &shader;
 }
 
-void Renderer::StartRender()
+void Renderer::ExtractCamera(Entity entity, Camera& camera)
 {
-    for (auto& elements : currentArrayElementCounts)
-    {
-        elements.second = 0;
-        auto type = elements.first;
-        for (auto& lst : currentArrayElementData[type])
-            lst.clear();
-        //if (currentArrayElementIndices.count(type))
-        //    for (auto& l : currentArrayElementIndices[type])
-        //        l.clear();
-        //if (currentArrayElementTextures.count(type))
-        //    for (auto lst : currentArrayElementTextures[type])
-        //        lst.clear();
-    }
-    //currentArrayElementCounts.clear();
-    //currentArrayElementData.clear();
-    //currentArrayElementIndices.clear();
+	if (camera.IsActive())
+	{
+		if (_camera != nullptr)
+			delete _camera;
+		_camera = new Camera(camera);
+	}
 }
 
-void Renderer::DrawQuad(float x, float y, float width, float height, float depth, vec4 color, GLuint texture)
+void Renderer::Render2D(Entity entity, Location& location, Size& size)
 {
-    VertexType type = VertexType::Quad;
+	//if (entity.Has<ParticleSystem>()) return;
+	//if (entity.Has<Font>()) return;
+	
+	Color color;
+	Texture* texture = nullptr;
+	Depth depth;
 
-    if (!currentArrayElementCounts.count(type))
-        currentArrayElementCounts[type] = 0;
-    int index = currentArrayElementCounts[type];
-    
-    currentArrayElementCounts[type] = index + 1;
-
-    //modify index depending on maxBufferTextureCount
-
-    int realIndex = 0;//index;
-    bool recreatVAO = false;
-
-    while (realIndex < currentArrayElementTextures[type].size() 
-        && !currentArrayElementTextures[type][realIndex].count(texture)
-        && currentArrayElementTextures[type][realIndex].size() >= maxBufferTextureCount)
-    {
-        realIndex++;
-    }
-    if (realIndex >= currentArrayElementTextures[type].size())
-    {
-        recreatVAO = true;
-    }
-    else
-    {
-        int vertexesSize = GetSizeofVertexes(type) / sizeof(float);
-        while (realIndex < currentArrayElementData[type].size()
-            && currentArrayElementData[type][realIndex].size() / vertexesSize >= maxBufferElementCount)
-        {
-            realIndex++;
-        }
-        if (realIndex >= currentArrayElementData[type].size())
-            recreatVAO = true;
-    }
-
-    if (recreatVAO)
-    {
-        GLuint vao;
-        GLuint vbo;
-        GLuint ibo;
-        CreateVertexBuffer(vao, vbo, ibo, type, 
-            maxBufferElementCount * GetSizeofVertexes(type), true);
-        currentArrayElementData[type].push_back(
-            std::vector<float>()// maxBufferElementCount * GetSizeofVertexes(type))
-        );
-        //currentArrayElementIndices[type].push_back(
-        //    std::vector<unsigned int>()// maxBufferElementCount * GetSizeofIBO(type))
-        //);
-        currentArrayElementTextures[type].push_back(
-            std::unordered_map<GLuint, int>()
-        );
-
-        realIndex = currentArrayElementData[type].size() - 1;
-
-        vaosList[type].push_back(vao);
-        vbosList[type].push_back(vbo);
-        ibosList[type].push_back(ibo);
-    }
-    if (!currentArrayElementTextures[type][realIndex].count(texture))
-        currentArrayElementTextures[type][realIndex][texture]
-        = currentArrayElementTextures[type][realIndex].size();
-
-    float tex = (float)currentArrayElementTextures[type][realIndex][texture];//texture;
-
-    currentArrayElementData[type][realIndex].insert(currentArrayElementData[type][realIndex].end(),
-        { x, y, depth, color.x, color.y, color.z, color.w, 0.0f, 0.0f, tex });
-    currentArrayElementData[type][realIndex].insert(currentArrayElementData[type][realIndex].end(),
-        { x + width, y, depth, color.x, color.y, color.z, color.w, 1.0f, 0.0f, tex });
-    currentArrayElementData[type][realIndex].insert(currentArrayElementData[type][realIndex].end(),
-        { x + width, y + height, depth, color.x, color.y, color.z, color.w, 1.0f, 1.0f, tex });
-    currentArrayElementData[type][realIndex].insert(currentArrayElementData[type][realIndex].end(),
-        { x, y + height, depth, color.x, color.y, color.z, color.w, 0.0f, 1.0f, tex });
-    /*
-    unsigned int offset = currentArrayElementData[type][realIndex].size() / (GetSizeofVertexes(type) / sizeof(float)) - 1;
-    offset *= GetVertexesCount(type);
-        //index * GetVertexesCount(type);
-    currentArrayElementIndices[type][realIndex].push_back(0 + offset);
-    currentArrayElementIndices[type][realIndex].push_back(1 + offset);
-    currentArrayElementIndices[type][realIndex].push_back(2 + offset);
-    currentArrayElementIndices[type][realIndex].push_back(2 + offset);
-    currentArrayElementIndices[type][realIndex].push_back(3 + offset);
-    currentArrayElementIndices[type][realIndex].push_back(0 + offset);
-    */
-}
-
-void Renderer::EndRender()
-{
-    for (auto vs : vaosList)
-    {
-        auto vaos = vs.second;
-        auto type = vs.first;
-
-        for (int i = 0; i < vaos.size(); i++)
-        {
-            for (auto textures : currentArrayElementTextures[type][i])
-            {
-                glBindTextureUnit(textures.second, textures.first);
-            }
-
-            //glBindVertexArray(vaos[i]);
-
-            glBindBuffer(GL_ARRAY_BUFFER, vbosList[type][i]);
-
-            int vboSize = currentArrayElementData[type][i].size() * sizeof(float);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, vboSize,
-                (const void*)(currentArrayElementData[type][i].data()));
-
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-            if (ibosList.count(type))
-            {
-                int iboSize = 
-                    vboSize / GetSizeofVertexes(type) * GetSizeofIBO(type);
-                    //currentArrayElementIndices[type][i].size() * sizeof(unsigned int);
-                //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibosList[type][i]);
-                //glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, iboSize,
-                //    (const void*)(currentArrayElementIndices[type][i].data()));
-
-                glBindVertexArray(vaos[i]);
-
-                int iboIndices = iboSize / sizeof(unsigned int);
-                glDrawElements(GL_TRIANGLES, iboIndices, GL_UNSIGNED_INT, nullptr);
-            }
-            else
-            {
-                //glBindVertexArray(vaos[i]);
-                int vertexesCount = currentArrayElementData[type][i].size() / GetSizeofVertexes(type);
-                glDrawArrays(GL_TRIANGLES, 0, vertexesCount);
-            }
-        }
-    }
-
-    glBindVertexArray(0);
-}
-
-int Renderer::GetVertexesCount(VertexType type)
-{
-    switch (type)
-    {
-    case VertexType::Quad:
-        return 4;
-    }
-
-    return 0;
-}
-int Renderer::GetSizeofVertexes(VertexType type)
-{
-    switch (type)
-    {
-    case VertexType::Quad:
-        return 4 * sizeof(Vertex2D);
-    }
-    return 0;
-}
-int Renderer::GetSizeofIBO(VertexType type)
-{
-    switch (type)
-    {
-    case VertexType::Quad:
-        return 6 * sizeof(unsigned int);
-    }
-    return 0;
-}
+	if (entity.Has<Color>())
+		color = entity.Get<Color>();
+	if (entity.Has<Texture>())
+	{
+		texture = new Texture(entity.Get<Texture>());
+	}
+	if (entity.Has<Depth>())
+		depth = entity.Get<Depth>();
+	Origin origin(location.X, location.Y);
+	if (entity.Has<Origin>())
+		origin = entity.Get<Origin>();
+	Angle angle;
+	if (entity.Has<Angle>())
+		angle = entity.Get<Angle>();
+	UVRect uvRect;
+	if (entity.Has<UVRect>())
+		uvRect = entity.Get<UVRect>();
 
 
-void Renderer::CreateVertexBuffer(GLuint& vao, GLuint& vbo, GLuint& ibo,
-    VertexType type, int arrayByteSize, bool useIBO)
-{
-    int size = GetSizeofVertexes(type);
-    int count = arrayByteSize / size;
-    int realSize = size * count;
+	Renderer2D::DrawQuad(
+		glm::vec2(location.X - size.X / 2.0f, location.Y - size.Y / 2.0f),
+		glm::vec2(size.X, size.Y),
+		depth.Value,
+		glm::vec4(color.R, color.G, color.B, color.A),
+		texture,
+		glm::vec2(uvRect.X, uvRect.Y),
+		glm::vec2(uvRect.Width, uvRect.Height),
+		glm::vec2(origin.X, origin.Y),
+		angle.Value);
 
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
 
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, realSize, nullptr, GL_DYNAMIC_DRAW);
-
-    switch (type)
-    {
-    case VertexType::Quad:
-        //glEnableVertexArrayAttrib(vbo, 0);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (const void*)offsetof(Vertex2D, Position));
-
-        //glEnableVertexArrayAttrib(vbo, 1);
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (const void*)offsetof(Vertex2D, Depth));
-
-        //glEnableVertexArrayAttrib(vbo, 2);
-        glEnableVertexAttribArray(2);
-        glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (const void*)offsetof(Vertex2D, Color));
-
-        //glEnableVertexArrayAttrib(vbo, 3);
-        glEnableVertexAttribArray(3);
-        glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (const void*)offsetof(Vertex2D, TexCoords));
-
-        //glEnableVertexArrayAttrib(vbo, 4);
-        glEnableVertexAttribArray(4);
-        glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (const void*)offsetof(Vertex2D, TextureID));
-
-        break;
-    }
-
-    if (useIBO)
-    {
-        glGenBuffers(1, &ibo);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-        int vertexes = GetVertexesCount(type);
-        int iboLength = GetSizeofIBO(type) / sizeof(unsigned int);
-        std::vector<unsigned int> iboLst(maxBufferElementCount * iboLength);
-        int index = 0;
-        for (int i = 0; i < maxBufferElementCount; i++)
-        {
-            iboLst[index] = i * vertexes;
-            iboLst[index+1] = i * vertexes + 1;
-            iboLst[index+2] = i * vertexes + 2;
-            iboLst[index+3] = i * vertexes + 2;
-            iboLst[index+4] = i * vertexes + 3;
-            iboLst[index+5] = i * vertexes;
-            index += 6;
-        }
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, iboLst.size() * sizeof(unsigned int), iboLst.data(), GL_STATIC_DRAW);//GL_DYNAMIC_DRAW);
-    }
-
-    //glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+	if (texture != nullptr) delete texture;
 }

@@ -9,45 +9,40 @@
 #include <unordered_map>
 
 #include "Vertex2D.h"
+#include "Renderer2D.h"
+
+#include "Story/Story.h"
+
+#include "Components/Basic.h"
+#include "Components/Drawing.h"
+#include "Components/Texture.h"
+#include "Components/Camera.h"
+#include "Components/Shader.h"
 
 using namespace glm;
-
-enum class VertexType {
-	Quad,
-};
+using namespace Components;
 
 class Renderer
 {
 public:
-	Renderer();
-	~Renderer();
+	static void Draw(Story& story);
 
-	void Init(int maxBufferElementCount, int maxBufferTextureCount);
-
-	void StartRender();
-
-	void DrawQuad(float x, float y, float width, float height, float depth, 
-		vec4 color = vec4(1.0f, 1.0f, 1.0f, 1.0f), GLuint texture = 0);
-
-	void EndRender();
-
+	static void Init(const std::string shaderPath);
 private:
-	int maxBufferElementCount;
-	int maxBufferTextureCount;
-	std::unordered_map<VertexType, std::vector<GLuint>> vaosList;
-	std::unordered_map<VertexType, std::vector<GLuint>> vbosList;
-	std::unordered_map<VertexType, std::vector<GLuint>> ibosList;
+	enum EntityType
+	{
+		Quad,
+		Text
+	};
 
-	std::unordered_map<VertexType, int> currentArrayElementCounts;
-	std::unordered_map<VertexType, std::vector<std::vector<float>>> currentArrayElementData;
-	//std::unordered_map<VertexType, std::vector<std::vector<unsigned int>>> currentArrayElementIndices;
-	std::unordered_map<VertexType, std::vector<std::unordered_map<GLuint, int>>> currentArrayElementTextures;
+	static void ExtractShader(Entity entity, Shader& shader);
+	static void ExtractCamera(Entity entity, Camera& camera);
 
-	int GetVertexesCount(VertexType type);
-	int GetSizeofVertexes(VertexType type);
-	int GetSizeofIBO(VertexType type);
+	static void Render2D(Entity entity, Location& location, Size& size);
 
-	void CreateVertexBuffer(GLuint& vao, GLuint& vbo, GLuint& ibo,
-		VertexType type, int arrayByteSize, bool useIBO);
+	static std::unordered_map<Shader::ShaderType, Shader*> _shaders;
+	static Camera* _camera;
+
+	static Shader* _defaultShader;
 };
 

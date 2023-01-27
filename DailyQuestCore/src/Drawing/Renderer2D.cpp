@@ -6,7 +6,7 @@ int Renderer2D::MaxIndexCount;
 int Renderer2D::MaxTextureCount;
 
 Camera* Renderer2D::_currentCamera;
-Camera* Renderer2D::_defaultCamera = new Camera();
+Camera* Renderer2D::_defaultCamera = nullptr;
 
 Shader* Renderer2D::_currentShader;
 
@@ -110,14 +110,6 @@ void Renderer2D::Dispose()
 	delete[] data.quadBuffer;
 }
 
-void Renderer2D::Begin(Shader* shader)
-{
-	Begin(_defaultCamera, shader);
-}
-void Renderer2D::Begin(Shader* shader, bool enableDepth)
-{
-	Begin(_defaultCamera, shader, enableDepth);
-}
 void Renderer2D::Begin(Camera* camera, Shader* shader, bool enableDepth)
 {
 	if (enableDepth)

@@ -9,9 +9,9 @@
 #include "Core/Window.h"
 #include "Core/TimeStep.h"
 
+#include "Drawing/Renderer.h"
 #include "Drawing/Renderer2D.h"
 #include "Drawing/Frame.h"
-#include "Drawing/Shader.h"
 #include "Drawing/Model.h"
 #include "Drawing/ParticleSystem.h"
 
@@ -29,7 +29,11 @@
 #include "Node.h"
 
 #include "Story/StoryManager.h"
-#include "Story/Components.h"
+
+#include "Components/Basic.h"
+#include "Components/Texture.h"
+#include "Components/Shader.h"
+#include "Components/Camera.h"
 
 #include "Physics/Physics2D.h"
 
@@ -71,9 +75,9 @@ protected:
 	int buffer_height = 300;
 
 	Frame frame;
-	Shader shader;
-	Shader textShader;
-	Camera camera;
+	Shader* shader;
+	Shader* textShader;
+	Entity cameraEntity;
 
 	Model model;
 	Texture* modelTexture1 = nullptr;
@@ -84,6 +88,7 @@ protected:
 
 	std::shared_ptr<Story> story;
 	Entity square;
+	Entity squareChild;
 	std::vector<Entity> testEntities;
 
 	float time = 0.0f;
