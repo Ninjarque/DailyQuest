@@ -6,7 +6,7 @@
 
 #include "Font.h"
 #include "Drawing/Image.h"
-#include "Drawing/Shader.h"
+#include "Components/Shader.h"
 
 #include <msdfgen.h>
 #include <msdf-atlas-gen.h>

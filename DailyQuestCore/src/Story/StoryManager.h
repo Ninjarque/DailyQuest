@@ -6,7 +6,7 @@
 #include <memory>
 
 #include "Story.h"
-#include "Quest/Quest.h"
+//#include "Quest/Quest.h"
 
 #include "Core/TimeStep.h"
 
@@ -56,11 +56,6 @@ public:
 		auto story = std::shared_ptr<Story>(new Story());
 		_stories.push_back(story);
 		return story;
-	}
-
-	static std::unique_ptr<Quest> CreateQuest(std::shared_ptr<Story> targetStory)
-	{
-		return std::make_unique<Quest>(targetStory);
 	}
 
 	template<typename... Component>

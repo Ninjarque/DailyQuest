@@ -9,7 +9,6 @@
 #include "Entity.h"
 //#include "StoryManager.h"
 
-#include "Components.h"
 #include "Quest/Quest.h"
 #include "StoryInformations.h"
 
@@ -22,6 +21,10 @@ class Quest;
 class Story
 {
 public:
+	Story(const Story& story) 
+	{
+		_informations = story._informations;
+	}
 	~Story()
 	{
 
@@ -41,6 +44,10 @@ public:
 
 	std::weak_ptr<StoryInformations> GetInformations() { return _informations; }
 
+	std::unique_ptr<Quest> CreateQuest()
+	{
+		return std::make_unique<Quest>(std::shared_ptr<Story>(this));
+	}
 
 	template<typename... Component>
 	void ComputeForEachEntity(void (*f)(Entity entity, Component&... components))
@@ -54,10 +61,12 @@ public:
 			}, all);
 	}
 private:
+	/*
 	static void DrawEntity(Entity entity, Location& location, Size& size)
 	{
 		//std::cout << "Rendering an entity at " << location.X << "," << location.Y << " dude!" << std::endl;
 	}
+	*/
 	static Entity CreateTempEntity(entt::entity entity, std::shared_ptr<StoryInformations> informations)
 	{
 		return Entity(entity, informations->GetRegistry().lock().get());
@@ -70,7 +79,7 @@ private:
 	void Update(TimeStep timestep) { }
 	void Draw() 
 	{
-		ComputeForEachEntity<Location, Size>(DrawEntity);
+		//ComputeForEachEntity<Location, Size>(DrawEntity);
 	}
 
 	std::shared_ptr<StoryInformations> _informations;

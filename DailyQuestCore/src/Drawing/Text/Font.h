@@ -9,6 +9,8 @@
 #include "Drawing/Renderer2D.h"
 #include "FontManager.h"
 
+#include "Components/Camera.h"
+
 #include "utf8/utf8.h"
 
 struct CharData
@@ -42,17 +44,17 @@ public:
 	~Font();
 	void Dispose();
 
-	void Render(Shader* fontShader, std::string text,
+	void Render(Camera* camera, Shader* fontShader, std::string text,
 		glm::vec2 position, glm::vec2 bounds, float textSize, glm::vec4 color);
 
-	void Render(Shader* fontShader, std::string text,
+	void Render(Camera* camera, Shader* fontShader, std::string text,
 		glm::vec2 position, glm::vec2 bounds, float textSize, glm::vec4 color,
 		float borders, glm::vec2 shadowOffset, glm::vec4 secondColor);
 
-	void Render(Shader* fontShader, std::u32string text, 
+	void Render(Camera* camera, Shader* fontShader, std::u32string text,
 		glm::vec2 position, glm::vec2 bounds, float textSize, glm::vec4 color);
 
-	void Render(Shader* fontShader, std::u32string text,
+	void Render(Camera* camera, Shader* fontShader, std::u32string text,
 		glm::vec2 position, glm::vec2 bounds, float textSize, glm::vec4 color,
 		float borders, glm::vec2 shadowOffset, glm::vec4 secondColor);
 
@@ -60,10 +62,10 @@ public:
 	Maybe make static Render use std::string and create Font if not already made
 	could make it easier to use
 	*/
-	static void Render(Font* font, Shader* fontShader, std::string text, 
+	static void Render(Font* font, Camera* camera, Shader* fontShader, std::string text,
 		glm::vec2 position, glm::vec2 bounds, float textSize, glm::vec4 color);
 
-	static void Render(Font* font, Shader* fontShader, std::u32string text,
+	static void Render(Font* font, Camera* camera, Shader* fontShader, std::u32string text,
 		glm::vec2 position, glm::vec2 bounds, float textSize, glm::vec4 color);
 
 	friend class FontManager;

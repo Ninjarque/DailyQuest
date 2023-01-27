@@ -3,8 +3,10 @@
 #include <string>
 #include <vector>
 
-#include "Texture.h"
-#include "Color.h"
+#include "Components/Drawing.h"
+#include "Components/Texture.h"
+
+using namespace Components;
 
 class Image
 {

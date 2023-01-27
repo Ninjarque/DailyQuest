@@ -8,7 +8,8 @@
 
 #include "Core/TimeStep.h"
 
-#include "Story/Components.h"
+#include "Components/Basic.h"
+#include "Components/Physics.h"
 #include "Story/StoryManager.h"
 #include "Story/Entity.h"
 
@@ -16,16 +17,7 @@
 
 #define WORLD_RATIO 0.01f
 
-struct Body
-{
-	Name ID;
-	Body(Name id) : ID(id) { }
-};
-struct Shape
-{
-	b2Fixture* Fixture;
-	Shape(b2Fixture* fixture) : Fixture(fixture) { }
-};
+using namespace Components;
 
 class Physics2D
 {
