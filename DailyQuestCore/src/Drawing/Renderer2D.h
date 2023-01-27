@@ -13,6 +13,8 @@
 #include "Shader.h"
 #include "Texture.h"
 
+#include "Story/Story.h"
+
 struct RendererData
 {
 	GLuint quadVAO;
@@ -68,6 +70,8 @@ public:
 		glm::vec4 color, Texture* texture, glm::vec2 origin, float angle);
 	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
 		glm::vec4 color, Texture* texture, glm::vec2 uv_position, glm::vec2 uv_size, glm::vec2 origin, float angle);
+
+	static void Draw(Story* story);
 
 	static void GetStats(int& drawCount, int& quadCount);
 	static void ResetStats();
