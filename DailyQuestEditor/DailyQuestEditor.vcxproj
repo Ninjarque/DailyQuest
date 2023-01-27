@@ -179,10 +179,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Actions\Actions.h" />
     <ClInclude Include="src\Editor\CommandManager.h" />
     <ClInclude Include="src\Node.h" />
     <ClInclude Include="src\EditorLauncherWindow.h" />
     <ClInclude Include="src\EditorAppWindow.h" />
+    <ClInclude Include="src\Requirements\Requirements.h" />
     <ClInclude Include="src\Test\CommandTests.h" />
   </ItemGroup>
   <ItemGroup>
