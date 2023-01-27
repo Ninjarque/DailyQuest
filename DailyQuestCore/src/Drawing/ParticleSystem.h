@@ -7,7 +7,9 @@
 
 #include "Core/Random.h"
 #include "Renderer2D.h"
-#include "Shader.h"
+#include "Components/Shader.h"
+
+using namespace Components;
 
 struct ParticlePhysic
 {
@@ -79,19 +81,17 @@ public:
 		renderFunctionDraw = &_FacingDraw;
 		renderFunctionEnd = &_FacingEnd;
 		renderFunctionDispose = &_FacingDispose;
-
-		shader = nullptr;
 	}
 	~ParticleSystem() { Dispose(); }
 
-	void Init(int particlePoolSize, RenderMode mode, Shader& particleShader);
+	void Init(int particlePoolSize, RenderMode mode);
 	void Dispose();
 
 	void SetPhysics(ParticlePhysic physic);
 	void Emit(const ParticleProperties& properties);
 
 	void Update(TimeStep timestep);
-	void Render();
+	void Render(Camera camera, Shader shader);
 
 private:
 	struct ParticleData
@@ -117,25 +117,24 @@ private:
 	std::vector<ParticleData> particlePool;
 	int particlePoolIndex;
 
-	Shader* shader;
 	RenderMode renderMode;
 
-	void(*renderFunctionBegin)(Shader& shader);
-	void(*renderFunctionDraw)(Shader& shader, const ParticleData& data, 
+	void(*renderFunctionBegin)(Camera& camera, Shader& shader);
+	void(*renderFunctionDraw)(Camera& camera, Shader& shader, const ParticleData& data,
 		const int& currentCount, const int& maxCount);
-	void(*renderFunctionEnd)(Shader& shader);
-	void(*renderFunctionDispose)(Shader& shader);
+	void(*renderFunctionEnd)(Camera& camera, Shader& shader);
+	void(*renderFunctionDispose)();
 
-	static void _Render2DBegin(Shader& shader);
-	static void _Render2DDraw(Shader& shader, const ParticleData& data,
+	static void _Render2DBegin(Camera& camera, Shader& shader);
+	static void _Render2DDraw(Camera& camera, Shader& shader, const ParticleData& data,
 		const int& currentCount, const int& maxCount);
-	static void _Render2DEnd(Shader& shader);
-	static void _Render2DDispose(Shader& shader);
+	static void _Render2DEnd(Camera& camera, Shader& shader);
+	static void _Render2DDispose();
 	
-	static void _FacingBegin(Shader& shader);
-	static void _FacingDraw(Shader& shader, const ParticleData& data,
+	static void _FacingBegin(Camera& camera, Shader& shader);
+	static void _FacingDraw(Camera& camera, Shader& shader, const ParticleData& data,
 		const int& currentCount, const int& maxCount);
-	static void _FacingEnd(Shader& shader);
-	static void _FacingDispose(Shader& shader);
+	static void _FacingEnd(Camera& camera, Shader& shader);
+	static void _FacingDispose();
 };
 
