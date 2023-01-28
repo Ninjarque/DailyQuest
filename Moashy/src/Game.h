@@ -10,7 +10,6 @@
 #include "Core/TimeStep.h"
 
 #include "Drawing/Renderer.h"
-#include "Drawing/Renderer2D.h"
 #include "Drawing/Frame.h"
 #include "Drawing/Model.h"
 #include "Drawing/ParticleSystem.h"
@@ -32,6 +31,8 @@
 
 #include "Physics/Physics2D.h"
 
+using namespace Components;
+
 class Game : public Window
 {
 public:
@@ -51,6 +52,11 @@ protected:
 	bool SaveImGUILayout() override { return false; }
 
 private:
-	Shader* shader;
+	Shader* _fontShader;
+	std::shared_ptr<Story> _story;
+
+	//Pour te montrer en simple
+	Texture* _texture;
+	Entity _cube;
 };
 

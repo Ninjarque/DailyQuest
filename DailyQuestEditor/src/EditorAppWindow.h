@@ -10,7 +10,6 @@
 #include "Core/TimeStep.h"
 
 #include "Drawing/Renderer.h"
-#include "Drawing/Renderer2D.h"
 #include "Drawing/Frame.h"
 #include "Drawing/Model.h"
 #include "Drawing/ParticleSystem.h"

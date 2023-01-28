@@ -10,7 +10,6 @@ void EditorAppWindow::OnInit()
     //IM_ASSERT(ret);
     modelTexture1 = Image::Load("res/Images/soldier.png");
     
-    Renderer2D::Init(128);
     frame.Init(buffer_width, buffer_height);
 
     Renderer::Init("res/Shaders/Basic.shader");
@@ -136,8 +135,8 @@ void EditorAppWindow::OnUpdate(TimeStep timestep)
     {
         float ox = (Random::Float() - 0.5f) * w / 6.0f;
         float oy = (Random::Float() - 0.5f) * h / 6.0f;
-        double x;
-        double y;
+        float x;
+        float y;
         Mouse::GetPosition(x, y);
         Entity e = story->CreateEntity();
         e.Add<Location>((float)x + ox, (float)y + oy);
@@ -252,8 +251,8 @@ void EditorAppWindow::OnDraw()
     }
     else
     {
-        double x;
-        double y;
+        float x;
+        float y;
         Mouse::GetPosition(x, y);
         //Renderer2D::DrawQuad({ (float)w / 2.0f, (float)h / 2.0f }, { (float)x- (float)w / 2.0f, (float)y - (float)h / 2.0f }, 0.0f, texture);
     }
