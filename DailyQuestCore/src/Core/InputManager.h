@@ -42,8 +42,8 @@ private:
 class Mouse
 {
 public:
-	static void SetPosition(double x, double y);
-	static void GetPosition(double& x, double& y) { x = _x; y = _y; }
+	static void SetPosition(float x, float y);
+	static void GetPosition(float& x, float& y) { x = (float)_x; y = (float)_y; }
 	static void GetScroll(double& xOffset, double& yOffset) 
 	{ xOffset = _xScroll; yOffset = _yScroll; }
 

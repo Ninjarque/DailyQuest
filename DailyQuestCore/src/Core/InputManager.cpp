@@ -284,9 +284,9 @@ void InputManager::ResolvePopStates(Bindings* newBindings)
 	}
 }
 
-void Mouse::SetPosition(double x, double y)
+void Mouse::SetPosition(float x, float y)
 {
-	glfwSetCursorPos(InputManager::_window, x, y);
+	glfwSetCursorPos(InputManager::_window, (double)x, (double)y);
 }
 
 void Mouse::Hide()

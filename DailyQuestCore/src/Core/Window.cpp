@@ -28,6 +28,7 @@ int Window::Run()
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
+    glfwSwapInterval(1);
 
     glewExperimental = GL_TRUE;
     GLenum err = glewInit();

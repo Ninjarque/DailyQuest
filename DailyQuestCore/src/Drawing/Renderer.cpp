@@ -8,6 +8,7 @@ Shader* Renderer::_defaultShader = nullptr;
 void Renderer::Init(const std::string shaderFile)
 {
 	_defaultShader = new Shader(shaderFile, Shader::ShaderType::Default);
+	Renderer2D::Init(128);
 }
 
 void Renderer::Draw(Story& story)
