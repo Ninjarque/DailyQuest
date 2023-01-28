@@ -56,7 +56,11 @@ private:
 	std::shared_ptr<Story> _story;
 
 	//Pour te montrer en simple
+	int Width, Height;
 	Texture* _texture;
 	Entity _cube;
+	bool _cubePhysique;
+
+	Entity _plateau;
 };
 
