@@ -192,7 +192,7 @@ void EditorAppWindow::OnDraw()
     shader->End();
     
 
-    font->Render(&cameraEntity.Get<Camera>(), textShader, "Use the msdf_atlas::BitmapAtlasStorage::getData() function instead. This function returns a pointer to the underlying pixel data buffer as a void* type. You can then cast this pointer to the appropriate data type (unsigned char, float, etc.) and use it as you would use any other array of pixels.",
+    font->Render(&cameraEntity.Get<Camera>(), textShader, ("Cubes : ") + std::to_string(testEntities.size()),
         glm::vec2(0.0f, 0.0f), glm::vec2(w, h/2.0f), 50.0f, glm::vec4(1.0f,1.0,0.0,1.0f));
     font->Render(&cameraEntity.Get<Camera>(), textShader, U"ça beigne là tranquille Gaëlle ? こんにちは ou bien ?",
         glm::vec2(0.0f, h/2.0f), glm::vec2(w, h/2.0f), 200.0f, glm::vec4(1.0f, 1.0, 0.0, 1.0f), -0.2f, glm::vec2(-0.01f, 0.01f), glm::vec4(1.0f,0.0f,0.0f,1.0f));
