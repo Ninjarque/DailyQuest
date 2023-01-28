@@ -8,7 +8,8 @@ namespace Components
 	struct Body
 	{
 		Name ID;
-		Body(Name id) : ID(id) { }
+		bool IsDynamic;
+		Body(Name id, bool isDynamic) : ID(id), IsDynamic(isDynamic) { }
 	};
 	struct Shape
 	{

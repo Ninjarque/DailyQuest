@@ -50,7 +50,7 @@ Body& Physics2D::CreateBody(Entity& entity, bool isStatic)
 	b2Body* b2body = _world->CreateBody(&def);
 	auto name = entity.Get<Name>();
 	_bodies[name] = b2body;
-	return entity.Add<Body>(name);
+	return entity.Add<Body>(name, !isStatic);
 }
 Shape& Physics2D::CreateBoxShape(Entity& entity)
 {
@@ -79,6 +79,11 @@ void Physics2D::MakeBox(Entity& entity, glm::vec2 location, glm::vec2 size, floa
 	entity.Add<Location>(location.x, location.y);
 	entity.Add<Size>(size.x, size.y);
 	entity.Add<Angle>(angle);
+	MakeBox(entity, isStatic);
+}
+
+void Physics2D::MakeBox(Entity& entity, bool isStatic)
+{
 	CreateBody(entity, isStatic);
 	CreateBoxShape(entity);
 }
@@ -95,6 +100,7 @@ void Physics2D::SetBodyPosition(Entity entity, Body& body, Shape& shape,
 		Size size = entity.Get<Size>();
 		box->SetAsBox(size.X / 2.0f * WORLD_RATIO, size.Y / 2.0f * WORLD_RATIO);
 	}
+	b2body->SetType(!body.IsDynamic ? b2_staticBody : b2_dynamicBody);
 	b2body->SetTransform(b2Vec2(location.X * WORLD_RATIO, location.Y * WORLD_RATIO), angle.Value);
 }
 void Physics2D::UpdateFromBodyTransforms(Entity entity, Body& body, Shape& shape,

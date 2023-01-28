@@ -31,6 +31,7 @@ public:
 	static Shape& CreateBoxShape(Entity& entity);
 
 	static void MakeBox(Entity& entity, glm::vec2 location, glm::vec2 size, float angle, bool isStatic = false);
+	static void MakeBox(Entity& entity, bool isStatic = false);
 
 private:
 	static std::unique_ptr<b2World> _world;
