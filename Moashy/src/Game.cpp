@@ -4,9 +4,7 @@ void Game::OnInit()
 {
 	//Initialisation obligatoire
 	Renderer2D::Init(128);
-	shader.Init("res/Shaders/Basic.shader");
-
-	camera = Camera(glm::vec2(0.0f, 0.0f), 1.0f);
+	shader = new Shader("res/Shaders/Basic.shader", Shader::ShaderType::Default);
 
 	//Tout le code pour les initialisation du jeu ici
 }

@@ -7,10 +7,11 @@
 #include "Core/InputManager.h"
 
 #include "Core/Window.h"
+#include "Core/TimeStep.h"
 
+#include "Drawing/Renderer.h"
 #include "Drawing/Renderer2D.h"
 #include "Drawing/Frame.h"
-#include "Drawing/Shader.h"
 #include "Drawing/Model.h"
 #include "Drawing/ParticleSystem.h"
 
@@ -21,6 +22,15 @@
 
 #include "Drawing/Text/FontManager.h"
 #include "Drawing/Text/Font.h"
+
+#include "Story/StoryManager.h"
+
+#include "Components/Basic.h"
+#include "Components/Texture.h"
+#include "Components/Shader.h"
+#include "Components/Camera.h"
+
+#include "Physics/Physics2D.h"
 
 class Game : public Window
 {
@@ -41,7 +51,6 @@ protected:
 	bool SaveImGUILayout() override { return false; }
 
 private:
-	Shader shader;
-	Camera camera;
+	Shader* shader;
 };
 
