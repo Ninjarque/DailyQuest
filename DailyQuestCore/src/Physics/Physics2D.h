@@ -30,6 +30,8 @@ public:
 	static Body& CreateBody(Entity& entity, bool isStatic = false);
 	static Shape& CreateBoxShape(Entity& entity);
 
+	static void MakeBox(Entity& entity, glm::vec2 location, glm::vec2 size, float angle, bool isStatic = false);
+
 private:
 	static std::unique_ptr<b2World> _world;
 	static std::unordered_map<Name, b2Body*> _bodies;

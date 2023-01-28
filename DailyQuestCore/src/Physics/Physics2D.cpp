@@ -74,12 +74,27 @@ Shape& Physics2D::CreateBoxShape(Entity& entity)
 	return entity.Add<Shape>(_fixtures[name]);
 }
 
+void Physics2D::MakeBox(Entity& entity, glm::vec2 location, glm::vec2 size, float angle, bool isStatic)
+{
+	entity.Add<Location>(location.x, location.y);
+	entity.Add<Size>(size.x, size.y);
+	entity.Add<Angle>(angle);
+	CreateBody(entity, isStatic);
+	CreateBoxShape(entity);
+}
+
 
 void Physics2D::SetBodyPosition(Entity entity, Body& body, Shape& shape,
 	Location& location, Angle& angle)
 {
 	auto b2body = _bodies[body.ID];
-
+	auto fixture = _fixtures[body.ID];
+	auto s = shape.Fixture;
+	if (auto box = dynamic_cast<b2PolygonShape*>(s->GetShape()))
+	{
+		Size size = entity.Get<Size>();
+		box->SetAsBox(size.X / 2.0f * WORLD_RATIO, size.Y / 2.0f * WORLD_RATIO);
+	}
 	b2body->SetTransform(b2Vec2(location.X * WORLD_RATIO, location.Y * WORLD_RATIO), angle.Value);
 }
 void Physics2D::UpdateFromBodyTransforms(Entity entity, Body& body, Shape& shape,

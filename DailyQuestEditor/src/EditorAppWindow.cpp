@@ -139,10 +139,11 @@ void EditorAppWindow::OnUpdate(TimeStep timestep)
         float y;
         Mouse::GetPosition(x, y);
         Entity e = story->CreateEntity();
-        e.Add<Location>((float)x + ox, (float)y + oy);
-        e.Add<Size>(100.0f, 100.0f);
-        Physics2D::CreateBody(e);
-        Physics2D::CreateBoxShape(e);
+        Physics2D::MakeBox(e,
+            glm::vec2((float)x + ox, (float)y + oy),
+            glm::vec2(100.0f, 100.0f),
+            0.0f,
+            false);
         testEntities.push_back(e);
 
         /*
