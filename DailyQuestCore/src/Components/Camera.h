@@ -102,7 +102,7 @@ namespace Components
 		}
 		float GetAngleFromEntity()
 		{
-			float a = 1.0f;
+			float a = 0.0f;
 			if (_entity.Has<Angle>())
 			{
 				Angle angle = _entity.Get<Angle>();
