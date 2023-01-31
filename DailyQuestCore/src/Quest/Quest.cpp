@@ -115,6 +115,10 @@ void Quest::SubQuest::Build(int actionRequierementCountSplit)
 		_hasName->Build(actionRequierementCountSplit);
 		_hasntName->Build(actionRequierementCountSplit);
 	}
+	for (auto action : _actionNames)
+	{
+		action.second->ClearDisabledUpdatesForAllNames();
+	}
 }
 
 //best is the one wich has the least distance to the half of the set

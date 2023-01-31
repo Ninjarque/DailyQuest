@@ -14,6 +14,7 @@ public:
 
 	virtual void UpdateMatchingNames(std::unordered_map<std::shared_ptr<Name>, int>& matches) = 0;
 	virtual void DisableUpdateForName(std::shared_ptr<Name> name) = 0;
+	virtual void ClearDisabledUpdatesForAllNames() = 0;
 	virtual float GetWeight() = 0;
 	virtual int GetAverageNameCount() = 0;
 };

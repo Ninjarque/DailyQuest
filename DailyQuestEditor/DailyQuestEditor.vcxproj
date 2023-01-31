@@ -172,6 +172,7 @@
     <ClCompile Include="src\EditorLauncherWindow.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="src\EditorAppWindow.cpp" />
+    <ClCompile Include="src\Requirements\Requirements.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DailyQuestCore\DailyQuestCore.vcxproj">

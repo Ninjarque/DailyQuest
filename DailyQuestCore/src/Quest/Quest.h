@@ -56,6 +56,10 @@ private:
 		{
 			_requirement->DisableUpdateForName(name);
 		}
+		void ClearDisabledUpdatesForAllNames()
+		{
+			_requirement->ClearDisabledUpdatesForAllNames();
+		}
 
 		float GetRequierementWeight() const
 		{

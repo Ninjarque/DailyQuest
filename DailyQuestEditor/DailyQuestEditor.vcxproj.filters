@@ -30,6 +30,9 @@
     <ClCompile Include="src\Editor\CommandManager.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="src\Requirements\Requirements.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\EditorAppWindow.h">
