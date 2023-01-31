@@ -19,6 +19,7 @@ public:
 	}
 	static void Update(TimeStep timestep)
 	{
+		bool needsStoryUpdate = false;
 		for (auto s = _stories.begin(); s != _stories.end(); )
 		{
 			if (auto story = s->lock())
@@ -30,12 +31,15 @@ public:
 			{
 				//s = std::remove(_stories.begin(), _stories.end(), s);
 				s = _stories.erase(s);
+				needsStoryUpdate = true;
 			}
 		}
+		if (needsStoryUpdate) UpdateStories();
 	}
 
 	static void Draw()
 	{
+		bool needsStoryUpdate = false;
 		for (auto s = _stories.begin(); s != _stories.end(); )
 		{
 			if (auto story = s->lock())
@@ -47,15 +51,24 @@ public:
 			{
 				//s = std::remove(_stories.begin(), _stories.end(), s);
 				s = _stories.erase(s);
+				needsStoryUpdate = true;
 			}
 		}
+		if (needsStoryUpdate) UpdateStories();
 	}
 
 	static std::shared_ptr<Story> CreateStory()
 	{
 		auto story = std::shared_ptr<Story>(new Story());
 		_stories.push_back(story);
+		_storiesFromInformations[story->GetInformations().lock()] = story;
 		return story;
+	}
+	static std::shared_ptr<Story> GetStory(std::shared_ptr<StoryInformations> storyInformations)
+	{
+		if (_storiesFromInformations.count(storyInformations))
+			return _storiesFromInformations[storyInformations].lock();
+		return nullptr;
 	}
 
 	template<typename... Component>
@@ -69,13 +82,29 @@ public:
 
 private:
 	static std::vector<std::weak_ptr<Story>> _stories;
+	static std::unordered_map<std::shared_ptr<StoryInformations>, std::weak_ptr<Story>> _storiesFromInformations;
+
+	static void UpdateStories()
+	{
+		_storiesFromInformations.clear();
+		for (auto s = _stories.begin(); s != _stories.end(); )
+		{
+			if (auto story = s->lock())
+			{
+				_storiesFromInformations[story->GetInformations().lock()] = story;
+				++s;
+			}
+		}
+	}
 
 	//friend class Story;
 };
 
+
 template<typename... Component>
 static std::vector<std::tuple<std::vector<Component*>...>> StoryManager::GetInAllStories()
 {
+	bool needsStoryUpdate = false;
 	std::vector<std::tuple<std::vector<Component*>...>> listOfComponents;
 	for (auto s = _stories.begin(); s != _stories.end(); )
 	{
@@ -87,11 +116,18 @@ static std::vector<std::tuple<std::vector<Component*>...>> StoryManager::GetInAl
 				++s;
 			}
 			else
+			{
 				s = _stories.erase(s);
+				needsStoryUpdate = true;
+			}
 		}
 		else
+		{
 			s = _stories.erase(s);
+			needsStoryUpdate = true;
+		}
 	}
+	if (needsStoryUpdate) UpdateStories();
 	return listOfComponents;
 }
 
@@ -112,6 +148,7 @@ static void StoryManager::ComputeForEach(void (*f)(Component&... components))
 template<typename... Component>
 static void StoryManager::ComputeForEachEntity(void (*f)(Entity, Component&... components))
 {
+	bool needsStoryUpdate = false;
 	for (auto s = _stories.begin(); s != _stories.end(); )
 	{
 		if (auto story = s->lock())
@@ -120,6 +157,10 @@ static void StoryManager::ComputeForEachEntity(void (*f)(Entity, Component&... c
 			++s;
 		}
 		else
+		{
 			s = _stories.erase(s);
+			needsStoryUpdate = true;
+		}
 	}
+	if (needsStoryUpdate) UpdateStories();
 }
