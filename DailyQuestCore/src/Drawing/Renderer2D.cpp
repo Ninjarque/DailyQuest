@@ -10,6 +10,8 @@ Camera* Renderer2D::_defaultCamera = nullptr;
 
 Shader* Renderer2D::_currentShader;
 
+Viewport* Renderer2D::_currentViewport = nullptr;
+
 RendererData Renderer2D::data;
 RendererStats Renderer2D::stats;
 
@@ -110,17 +112,18 @@ void Renderer2D::Dispose()
 	delete[] data.quadBuffer;
 }
 
-void Renderer2D::Begin(Camera* camera, Shader* shader, bool enableDepth)
+void Renderer2D::Begin(Camera* camera, Shader* shader, Viewport* viewport, bool enableDepth)
 {
 	if (enableDepth)
 		glEnable(GL_DEPTH_TEST);
-	Begin(camera, shader);
+	Begin(camera, shader, viewport);
 }
 
-void Renderer2D::Begin(Camera* camera, Shader* shader)
+void Renderer2D::Begin(Camera* camera, Shader* shader, Viewport* viewport)
 {
 	_currentCamera = camera;
 	_currentShader = shader;
+	_currentViewport = viewport;
 
 	data.quadBufferPtr = data.quadBuffer;
 	data.textureSlotsMap.clear();
@@ -223,7 +226,7 @@ void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, float depth, glm::
 	{
 		End(false);
 		Flush();
-		Begin(_currentCamera, _currentShader);
+		Begin(_currentCamera, _currentShader, _currentViewport);
 	}
 	if (textureID == 0) textureID = data.defaultTexture;
 	if (!data.textureSlotsMap.count(textureID))
@@ -266,7 +269,18 @@ void Renderer2D::SetUniforms(Shader* shader)
 		s = i; i++;
 	}
 	shader->Set("v_textures", sampler.size(), sampler.data());
-	shader->SetMatrix4("P", _currentCamera->GetTransforms());
+	bool noViewport = false;
+	if (_currentViewport == nullptr)
+	{
+		_currentViewport = new Viewport();
+		noViewport = true;
+	}
+	shader->SetMatrix4("P", _currentCamera->GetTransforms(*_currentViewport));
+	if (noViewport)
+	{
+		delete _currentViewport;
+		_currentViewport = nullptr;
+	}
 }
 
 void Renderer2D::GetStats(int& drawCount, int& quadCount)

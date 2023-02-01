@@ -49,8 +49,8 @@ public:
 	static void Init(int maxQuadCount, int maxTextureCount = 0);
 	static void Dispose();
 
-	static void Begin(Camera* camera, Shader* shader);
-	static void Begin(Camera* camera, Shader* shader, bool enableDepth);
+	static void Begin(Camera* camera, Shader* shader, Viewport* viewport);
+	static void Begin(Camera* camera, Shader* shader, Viewport* viewport, bool enableDepth);
 	static void End();
 
 	static void DrawQuad(glm::vec2 position, glm::vec2 size, float depth,
@@ -83,6 +83,7 @@ private:
 	static Camera* _currentCamera;
 	static Camera* _defaultCamera;
 	static Shader* _currentShader;
+	static Viewport* _currentViewport;
 
 	static void SetUniforms(Shader* shader);
 

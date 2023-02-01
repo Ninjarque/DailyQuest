@@ -2,6 +2,7 @@
 
 std::unordered_map<Shader::ShaderType, Shader*> Renderer::_shaders;
 Camera* Renderer::_camera = nullptr;
+Viewport* Renderer::_viewport = nullptr;
 
 Shader* Renderer::_defaultShader = nullptr;
 
@@ -16,6 +17,7 @@ void Renderer::Draw(Story& story)
 	_shaders.clear();
 	_shaders[Shader::ShaderType::Default] = _defaultShader;
 	_camera = nullptr;
+	_viewport = nullptr;
 
 	story.ComputeForEachEntity<Shader>(ExtractShader);
 	story.ComputeForEachEntity<Camera>(ExtractCamera);
@@ -25,16 +27,29 @@ void Renderer::Draw(Story& story)
 		_camera = new Camera(story.CreateEntity());
 		noCam = true;
 	}
+	/*
+	bool noViewport = false;
+	if (_viewport == nullptr)
+	{
+		float x = 0.0f, y = 0.0f;
+		int w, h;
+		Window::Current->GetSize(w, h);
+		_viewport = new Viewport(x, y, (float)w, (float)h);
+		noViewport = true;
+	}
+	*/
 
 	Shader* shader = _shaders[Shader::ShaderType::Default];
 	shader->Begin();
-	Renderer2D::Begin(_camera, shader);
+	Renderer2D::Begin(_camera, shader, _viewport);
 	story.ComputeForEachEntity<Location, Size>(Render2D);
 	Renderer2D::End();
 	shader->End();
 
-	if (noCam)
+	//if (noCam)
 		delete _camera;
+	if (_viewport != nullptr)//noViewport)
+		delete _viewport;
 }
 
 void Renderer::ExtractShader(Entity entity, Shader& shader)
@@ -49,6 +64,12 @@ void Renderer::ExtractCamera(Entity entity, Camera& camera)
 		if (_camera != nullptr)
 			delete _camera;
 		_camera = new Camera(camera);
+		if (entity.Has<Viewport>())
+		{
+			if (_viewport != nullptr)
+				delete _viewport;
+			_viewport = new Viewport(entity.Get<Viewport>());
+		}
 	}
 }
 

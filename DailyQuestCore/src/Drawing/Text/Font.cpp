@@ -27,34 +27,34 @@ void Font::Dispose()
 	_disposed = true;
 }
 
-void Font::Render(Camera* camera, Shader* fontShader, std::string text,
+void Font::Render(Camera* camera, Shader* fontShader, Viewport* viewport, std::string text,
 	glm::vec2 position, glm::vec2 bounds, float textSize, glm::vec4 color)
 {
 	std::u32string str = to_utf32(text);
-	Render(camera, fontShader, str, position, bounds, textSize, color);
+	Render(camera, fontShader, viewport, str, position, bounds, textSize, color);
 }
 
-void Font::Render(Camera* camera, Shader* fontShader, std::string text, glm::vec2 position, glm::vec2 bounds, float textSize, glm::vec4 color, float borders, glm::vec2 shadowOffset, glm::vec4 secondColor)
+void Font::Render(Camera* camera, Shader* fontShader, Viewport* viewport, std::string text, glm::vec2 position, glm::vec2 bounds, float textSize, glm::vec4 color, float borders, glm::vec2 shadowOffset, glm::vec4 secondColor)
 {
 	std::u32string str = to_utf32(text);
-	Render(camera, fontShader, str, position, bounds, textSize, color,
+	Render(camera, fontShader, viewport, str, position, bounds, textSize, color,
 		0.0f, glm::vec2(0.0f), glm::vec4(0.0f));
 }
 
-void Font::Render(Camera* camera, Shader* fontShader, std::u32string text,
+void Font::Render(Camera* camera, Shader* fontShader, Viewport* viewport, std::u32string text,
 	glm::vec2 position, glm::vec2 bounds, float textSize, glm::vec4 color)
 {
-	Render(camera, fontShader, text, position, bounds, textSize, color,
+	Render(camera, fontShader, viewport, text, position, bounds, textSize, color,
 		0.0f, glm::vec2(0.0f), glm::vec4(0.0f));
 }
 
-void Font::Render(Camera* camera, Shader* fontShader, std::u32string text,
+void Font::Render(Camera* camera, Shader* fontShader, Viewport* viewport, std::u32string text,
 	glm::vec2 position, glm::vec2 bounds, float textSize, glm::vec4 color,
 	float borders, glm::vec2 shadowOffset, glm::vec4 secondColor)
 {
 	fontShader->Begin();
 
-	Renderer2D::Begin(camera, fontShader);
+	Renderer2D::Begin(camera, fontShader, viewport);
 	
 	float metricsModifier = lerp(1.5f, 1.0f, _metricRatio / 4.0f);
 	float char_width = lerp(0.45f, 0.5f, textSize / 200.0f / metricsModifier);
@@ -131,15 +131,15 @@ void Font::Render(Camera* camera, Shader* fontShader, std::u32string text,
 	fontShader->End();
 }
 
-void Font::Render(Font* font, Camera* camera, Shader* fontShader, std::string text,
+void Font::Render(Font* font, Camera* camera, Shader* fontShader, Viewport* viewport, std::string text,
 	glm::vec2 position, glm::vec2 bounds, float textSize, glm::vec4 color)
 {
-	if (font != nullptr) font->Render(camera, fontShader, text, position, bounds, textSize, color);
+	if (font != nullptr) font->Render(camera, fontShader, viewport, text, position, bounds, textSize, color);
 }
 
-void Font::Render(Font* font, Camera* camera, Shader* fontShader, std::u32string text, glm::vec2 position, glm::vec2 bounds, float textSize, glm::vec4 color)
+void Font::Render(Font* font, Camera* camera, Shader* fontShader, Viewport* viewport, std::u32string text, glm::vec2 position, glm::vec2 bounds, float textSize, glm::vec4 color)
 {
-	if (font != nullptr) font->Render(camera, fontShader, text, position, bounds, textSize, color);
+	if (font != nullptr) font->Render(camera, fontShader, viewport, text, position, bounds, textSize, color);
 }
 
 bool Font::TryGetGlyph(unsigned int character, 

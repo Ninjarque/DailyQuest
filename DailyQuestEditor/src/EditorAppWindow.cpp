@@ -14,6 +14,9 @@ void EditorAppWindow::OnInit()
 
     Renderer::Init("res/Shaders/Basic.shader");
 
+    int w, h;
+    Window::Current->GetSize(w, h);
+
     story = StoryManager::CreateStory();
     
     shader = new Shader("res/Shaders/Basic.shader", Shader::ShaderType::Default);
@@ -34,6 +37,7 @@ void EditorAppWindow::OnInit()
 
     cameraEntity = story->CreateEntity();
     cameraEntity.Add<Camera>(glm::vec2(0.0f, 0.0f), 1.0f);
+    cameraEntity.Add<Viewport>();//0.0f, 0.0f, (float)w, (float)h);
 
     NodeList* lst = new NodeList(
         std::vector<Node*>
@@ -87,8 +91,7 @@ void EditorAppWindow::OnInit()
     struct Test { std::string Name; Test(std::string name) : Name(name) { } };
     auto name = square.Get<Name>();
     std::cout << "Entity name : " << name << std::endl;
-    int w, h;
-    Window::Current->GetSize(w, h);
+
     square.Add<Location>((float)w/2.0f, (float)h-50.0f);
     square.Add<Size>((float)w/2.0f, 100.0f);
     Physics2D::CreateBody(square, true);
@@ -186,15 +189,15 @@ void EditorAppWindow::OnDraw()
 
     //Renderer2D::End();
 
-    particleSystem.Render(cameraEntity.Get<Camera>(), *shader);
+    particleSystem.Render(cameraEntity.Get<Camera>(), *shader, cameraEntity.Get<Viewport>());
 
 
     shader->End();
     
 
-    font->Render(&cameraEntity.Get<Camera>(), textShader, ("Cubes : ") + std::to_string(testEntities.size()),
+    font->Render(&cameraEntity.Get<Camera>(), textShader, nullptr, ("Cubes : ") + std::to_string(testEntities.size()),
         glm::vec2(0.0f, 0.0f), glm::vec2(w, h/2.0f), 50.0f, glm::vec4(1.0f,1.0,0.0,1.0f));
-    font->Render(&cameraEntity.Get<Camera>(), textShader, U"ça beigne là tranquille Gaëlle ? こんにちは ou bien ?",
+    font->Render(&cameraEntity.Get<Camera>(), textShader, nullptr, U"ça beigne là tranquille Gaëlle ? こんにちは ou bien ?",
         glm::vec2(0.0f, h/2.0f), glm::vec2(w, h/2.0f), 200.0f, glm::vec4(1.0f, 1.0, 0.0, 1.0f), -0.2f, glm::vec2(-0.01f, 0.01f), glm::vec4(1.0f,0.0f,0.0f,1.0f));
     //font->Render(&textShader, U"t",
     //    glm::vec2(0.0f, h / 2.0f), glm::vec2(w, h / 2.0f), 3.0f, glm::vec4(1.0f, 1.0, 0.0, 1.0f));
@@ -206,7 +209,7 @@ void EditorAppWindow::OnDraw()
 
     //frame.StartFrame(buffer_width, buffer_height);
 
-    Renderer2D::Begin(&cameraEntity.Get<Camera>(), shader);
+    Renderer2D::Begin(&cameraEntity.Get<Camera>(), shader , nullptr);
 
     /*
     auto loc = square.Get<Location>();

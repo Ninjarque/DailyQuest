@@ -199,6 +199,7 @@
     <ClInclude Include="src\Components\Texture.h" />
     <ClInclude Include="src\Core\TimeStep.h" />
     <ClInclude Include="src\Drawing\Renderer.h" />
+    <ClInclude Include="src\Components\Viewport.h" />
     <ClInclude Include="src\Story\Entity.h" />
     <ClInclude Include="src\Quest\Event.h" />
     <ClInclude Include="src\Physics\Physics2D.h" />

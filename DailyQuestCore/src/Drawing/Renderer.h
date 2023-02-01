@@ -42,6 +42,7 @@ private:
 
 	static std::unordered_map<Shader::ShaderType, Shader*> _shaders;
 	static Camera* _camera;
+	static Viewport* _viewport;
 
 	static Shader* _defaultShader;
 };
