@@ -168,6 +168,14 @@ void Window::GetSize(int& width, int& height)
     width = m_width;
     height = m_height;
 }
+int Window::GetWidth()
+{
+    return m_width;
+}
+int Window::GetHeight()
+{
+    return m_height;
+}
 
 void Window::SetFreezeOnLostFocus(bool freeze)
 {

@@ -40,6 +40,8 @@ public:
 	static Window* Current;
 
 	void GetSize(int& width, int& height);
+	int GetWidth();
+	int GetHeight();
 
 	void SetFreezeOnLostFocus(bool freeze);
 
