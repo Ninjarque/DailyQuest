@@ -8,6 +8,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DailyQuestEditor", "DailyQuestEditor\DailyQuestEditor.vcxproj", "{FAAF5A34-9745-4A20-AD1B-D76AC79DD0C1}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Moashy", "Moashy\Moashy.vcxproj", "{486FC26D-57CA-45E9-ABED-C989009E6ABD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AB756D58-189F-4821-B56D-627CAE07933E} = {AB756D58-189F-4821-B56D-627CAE07933E}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
