@@ -7,6 +7,7 @@
 #include "Story/Entity.h"
 
 #include "Basic.h"
+#include "Viewport.h"
 
 
 namespace Components
@@ -61,12 +62,12 @@ namespace Components
 		}
 		bool IsActive() { return _isActive; }
 
-		glm::mat4 GetTransforms()
+		glm::mat4 GetTransforms(Viewport viewport)
 		{
 			GetTransformsFromEntity();
-			if (needsRecalculation || Window::Current->NeedsViewportRecalculations())
+			if (needsRecalculation || viewport.NeedsRecalculations() || Window::Current->NeedsViewportRecalculations())
 			{
-				matrix = CalculateTransforms();
+				matrix = CalculateTransforms(viewport);
 				needsRecalculation = false;
 			}
 			return matrix;
@@ -134,11 +135,13 @@ namespace Components
 			zoom = newZoom;
 		}
 
-		glm::mat4 CalculateTransforms()
+		glm::mat4 CalculateTransforms(Viewport viewport)
 		{
-			int width, height;
-			Window::Current->GetSize(width, height);
-			glm::mat4 ortho = glm::ortho(0.0f, (float)width, (float)height, 0.0f, -1.0f, 1000.0f);
+			float x = viewport.GetX();
+			float y = viewport.GetY();
+			float width = viewport.GetWidth();
+			float height = viewport.GetHeight();
+			glm::mat4 ortho = glm::ortho(x, width, height, y, -1.0f, 1000.0f);
 			glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(position.x, position.y, 0.0f));
 			glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0f, 1.0f, 0.0f));
 			glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(zoom));
