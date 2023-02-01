@@ -91,7 +91,7 @@ public:
 	void Emit(const ParticleProperties& properties);
 
 	void Update(TimeStep timestep);
-	void Render(Camera camera, Shader shader);
+	void Render(Camera camera, Shader shader, Viewport viewport);
 
 private:
 	struct ParticleData
@@ -119,22 +119,22 @@ private:
 
 	RenderMode renderMode;
 
-	void(*renderFunctionBegin)(Camera& camera, Shader& shader);
-	void(*renderFunctionDraw)(Camera& camera, Shader& shader, const ParticleData& data,
+	void(*renderFunctionBegin)(Camera& camera, Shader& shader, Viewport& viewport);
+	void(*renderFunctionDraw)(Camera& camera, Shader& shader, Viewport& viewport, const ParticleData& data,
 		const int& currentCount, const int& maxCount);
-	void(*renderFunctionEnd)(Camera& camera, Shader& shader);
+	void(*renderFunctionEnd)(Camera& camera, Shader& shader, Viewport& viewport);
 	void(*renderFunctionDispose)();
 
-	static void _Render2DBegin(Camera& camera, Shader& shader);
-	static void _Render2DDraw(Camera& camera, Shader& shader, const ParticleData& data,
+	static void _Render2DBegin(Camera& camera, Shader& shader, Viewport& viewport);
+	static void _Render2DDraw(Camera& camera, Shader& shader, Viewport& viewport, const ParticleData& data,
 		const int& currentCount, const int& maxCount);
-	static void _Render2DEnd(Camera& camera, Shader& shader);
+	static void _Render2DEnd(Camera& camera, Shader& shader, Viewport& viewport);
 	static void _Render2DDispose();
 	
-	static void _FacingBegin(Camera& camera, Shader& shader);
-	static void _FacingDraw(Camera& camera, Shader& shader, const ParticleData& data,
+	static void _FacingBegin(Camera& camera, Shader& shader, Viewport& viewport);
+	static void _FacingDraw(Camera& camera, Shader& shader, Viewport& viewport, const ParticleData& data,
 		const int& currentCount, const int& maxCount);
-	static void _FacingEnd(Camera& camera, Shader& shader);
+	static void _FacingEnd(Camera& camera, Shader& shader, Viewport& viewport);
 	static void _FacingDispose();
 };
 

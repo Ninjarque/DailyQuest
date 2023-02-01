@@ -107,11 +107,11 @@ void ParticleSystem::Update(TimeStep timestep)
 	}
 }
 
-void ParticleSystem::Render(Camera camera, Shader shader)
+void ParticleSystem::Render(Camera camera, Shader shader, Viewport viewport)
 {
 	shader.Begin();
 
-	renderFunctionBegin(camera, shader);
+	renderFunctionBegin(camera, shader, viewport);
 	int count = 0;
 	int maxCount = particlePool.size();
 	for (int i = particlePoolIndex - 1; i >= 0; i--)
@@ -119,7 +119,7 @@ void ParticleSystem::Render(Camera camera, Shader shader)
 		ParticleData& particle = particlePool[i];
 		if (!particle.Active)
 			continue;
-		renderFunctionDraw(camera, shader, particle, count, maxCount);
+		renderFunctionDraw(camera, shader, viewport, particle, count, maxCount);
 		count++;
 	}
 	for (int i = particlePool.size() - 1; i >= particlePoolIndex; i--)
@@ -127,7 +127,7 @@ void ParticleSystem::Render(Camera camera, Shader shader)
 		ParticleData& particle = particlePool[i];
 		if (!particle.Active)
 			continue;
-		renderFunctionDraw(camera, shader, particle, count, maxCount);
+		renderFunctionDraw(camera, shader, viewport, particle, count, maxCount);
 		count++;
 	}
 	/*
@@ -139,18 +139,18 @@ void ParticleSystem::Render(Camera camera, Shader shader)
 		count++;
 	}
 	*/
-	renderFunctionEnd(camera, shader);
+	renderFunctionEnd(camera, shader, viewport);
 
 	shader.End();
 }
 
-void ParticleSystem::_Render2DBegin(Camera& camera, Shader& shader)
+void ParticleSystem::_Render2DBegin(Camera& camera, Shader& shader, Viewport& viewport)
 {
-	Renderer2D::Begin(&camera, &shader, false);
+	Renderer2D::Begin(&camera, &shader, &viewport, false);
 
 	glDisable(GL_DEPTH_TEST);
 }
-void ParticleSystem::_Render2DDraw(Camera& camera, Shader& shader, const ParticleData& data,
+void ParticleSystem::_Render2DDraw(Camera& camera, Shader& shader, Viewport& viewport, const ParticleData& data,
 	const int& currentCount, const int& maxCount)
 {
 	glm::vec2 pos = glm::vec2(data.Position.x - data.Scale.x / 2.0f, data.Position.y - data.Scale.y / 2.0f);
@@ -158,7 +158,7 @@ void ParticleSystem::_Render2DDraw(Camera& camera, Shader& shader, const Particl
 	Renderer2D::DrawQuad(pos, size, 0.0f, 
 		data.Color, data.TextureID, glm::vec2(data.Position.x, data.Position.y), data.Rotation.y);
 }
-void ParticleSystem::_Render2DEnd(Camera& camera, Shader& shader)
+void ParticleSystem::_Render2DEnd(Camera& camera, Shader& shader, Viewport& viewport)
 {
 	Renderer2D::End();
 }
@@ -167,14 +167,14 @@ void ParticleSystem::_Render2DDispose()
 	//Renderer2D::End();
 }
 
-void ParticleSystem::_FacingBegin(Camera& camera, Shader& shader)
+void ParticleSystem::_FacingBegin(Camera& camera, Shader& shader, Viewport& viewport)
 {
 }
-void ParticleSystem::_FacingDraw(Camera& camera, Shader& shader, const ParticleData& data,
+void ParticleSystem::_FacingDraw(Camera& camera, Shader& shader, Viewport& viewport, const ParticleData& data,
 	const int& currentCount, const int& maxCount)
 {
 }
-void ParticleSystem::_FacingEnd(Camera& camera, Shader& shader)
+void ParticleSystem::_FacingEnd(Camera& camera, Shader& shader, Viewport& viewport)
 {
 }
 void ParticleSystem::_FacingDispose()
