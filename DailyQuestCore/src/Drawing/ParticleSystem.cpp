@@ -107,9 +107,9 @@ void ParticleSystem::Update(TimeStep timestep)
 	}
 }
 
-void ParticleSystem::Render(Camera camera, Shader shader, Viewport viewport)
+void ParticleSystem::Render(Camera* camera, Shader* shader, Viewport* viewport)
 {
-	shader.Begin();
+	shader->Begin();
 
 	renderFunctionBegin(camera, shader, viewport);
 	int count = 0;
@@ -141,16 +141,16 @@ void ParticleSystem::Render(Camera camera, Shader shader, Viewport viewport)
 	*/
 	renderFunctionEnd(camera, shader, viewport);
 
-	shader.End();
+	shader->End();
 }
 
-void ParticleSystem::_Render2DBegin(Camera& camera, Shader& shader, Viewport& viewport)
+void ParticleSystem::_Render2DBegin(Camera* camera, Shader* shader, Viewport* viewport)
 {
-	Renderer2D::Begin(&camera, &shader, &viewport, false);
+	Renderer2D::Begin(camera, shader, viewport, false);
 
 	glDisable(GL_DEPTH_TEST);
 }
-void ParticleSystem::_Render2DDraw(Camera& camera, Shader& shader, Viewport& viewport, const ParticleData& data,
+void ParticleSystem::_Render2DDraw(Camera* camera, Shader* shader, Viewport* viewport, const ParticleData& data,
 	const int& currentCount, const int& maxCount)
 {
 	glm::vec2 pos = glm::vec2(data.Position.x - data.Scale.x / 2.0f, data.Position.y - data.Scale.y / 2.0f);
@@ -158,7 +158,7 @@ void ParticleSystem::_Render2DDraw(Camera& camera, Shader& shader, Viewport& vie
 	Renderer2D::DrawQuad(pos, size, 0.0f, 
 		data.Color, data.TextureID, glm::vec2(data.Position.x, data.Position.y), data.Rotation.y);
 }
-void ParticleSystem::_Render2DEnd(Camera& camera, Shader& shader, Viewport& viewport)
+void ParticleSystem::_Render2DEnd(Camera* camera, Shader* shader, Viewport* viewport)
 {
 	Renderer2D::End();
 }
@@ -167,14 +167,14 @@ void ParticleSystem::_Render2DDispose()
 	//Renderer2D::End();
 }
 
-void ParticleSystem::_FacingBegin(Camera& camera, Shader& shader, Viewport& viewport)
+void ParticleSystem::_FacingBegin(Camera* camera, Shader* shader, Viewport* viewport)
 {
 }
-void ParticleSystem::_FacingDraw(Camera& camera, Shader& shader, Viewport& viewport, const ParticleData& data,
+void ParticleSystem::_FacingDraw(Camera* camera, Shader* shader, Viewport* viewport, const ParticleData& data,
 	const int& currentCount, const int& maxCount)
 {
 }
-void ParticleSystem::_FacingEnd(Camera& camera, Shader& shader, Viewport& viewport)
+void ParticleSystem::_FacingEnd(Camera* camera, Shader* shader, Viewport* viewport)
 {
 }
 void ParticleSystem::_FacingDispose()

@@ -34,6 +34,7 @@ void EditorAppWindow::OnInit()
     InputManager::SetBinding(InputType::Keyboard, "A", GLFW_KEY_Q);
     InputManager::SetBinding(InputType::Keyboard, "Z", GLFW_KEY_W);
     InputManager::SetBinding(InputType::Mouse, "Spawn", GLFW_MOUSE_BUTTON_1);
+    InputManager::SetBinding(InputType::Mouse, "Particles", GLFW_MOUSE_BUTTON_2);
 
     cameraEntity = story->CreateEntity();
     cameraEntity.Add<Camera>(glm::vec2(0.0f, 0.0f), 1.0f);
@@ -118,6 +119,10 @@ void EditorAppWindow::OnUpdate(TimeStep timestep)
     }
     int w, h;
     Window::Current->GetSize(w, h);
+    float x;
+    float y;
+    Mouse::GetPosition(x, y);
+
     if (InputManager::IsPressed("A"))
     {
         Bindings* b = new Bindings();
@@ -138,9 +143,6 @@ void EditorAppWindow::OnUpdate(TimeStep timestep)
     {
         float ox = (Random::Float() - 0.5f) * w / 6.0f;
         float oy = (Random::Float() - 0.5f) * h / 6.0f;
-        float x;
-        float y;
-        Mouse::GetPosition(x, y);
         Entity e = story->CreateEntity();
         Physics2D::MakeBox(e,
             glm::vec2((float)x + ox, (float)y + oy),
@@ -148,8 +150,10 @@ void EditorAppWindow::OnUpdate(TimeStep timestep)
             0.0f,
             false);
         testEntities.push_back(e);
-
-        /*
+    }
+    if (InputManager::IsDown("Particles"))
+    {
+        ///*
         particleSpawnTime = 0.0f;
         ParticleProperties fire(
             1.0f,
@@ -167,7 +171,7 @@ void EditorAppWindow::OnUpdate(TimeStep timestep)
         {
             particleSystem.Emit(fire);
         }
-        */
+        // */
     }
 
     particleSystem.Update(timestep);
@@ -179,35 +183,21 @@ void EditorAppWindow::OnDraw()
     Window::Current->GetSize(w, h);
     std::vector<Texture*> textures = { modelTexture1, texture };
 
-    // /*
-    shader->Begin();
-    
-    //Renderer2D::Begin();
-    //Renderer2D::SetUniforms(shader);
-
-    //Renderer2D::DrawQuad({ -1.0f, -1.0f }, { 2.0f, 2.0f }, 0.0f, glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
-
-    //Renderer2D::End();
-
-    particleSystem.Render(cameraEntity.Get<Camera>(), *shader, cameraEntity.Get<Viewport>());
-
-
-    shader->End();
-    
 
     font->Render(&cameraEntity.Get<Camera>(), textShader, nullptr, ("Cubes : ") + std::to_string(testEntities.size()),
         glm::vec2(0.0f, 0.0f), glm::vec2(w, h/2.0f), 50.0f, glm::vec4(1.0f,1.0,0.0,1.0f));
     font->Render(&cameraEntity.Get<Camera>(), textShader, nullptr, U"ça beigne là tranquille Gaëlle ? こんにちは ou bien ?",
         glm::vec2(0.0f, h/2.0f), glm::vec2(w, h/2.0f), 200.0f, glm::vec4(1.0f, 1.0, 0.0, 1.0f), -0.2f, glm::vec2(-0.01f, 0.01f), glm::vec4(1.0f,0.0f,0.0f,1.0f));
-    //font->Render(&textShader, U"t",
-    //    glm::vec2(0.0f, h / 2.0f), glm::vec2(w, h / 2.0f), 3.0f, glm::vec4(1.0f, 1.0, 0.0, 1.0f));
-
-    // */
-
-    //glViewport(0, 0, m_width, m_height);
-    shader->Begin();
-
+    
+    //glViewport(0, 0, buffer_width, buffer_height);
     //frame.StartFrame(buffer_width, buffer_height);
+
+    //textures = frame.EndFrame();
+
+    Renderer::Draw(*story.get());
+    //glViewport(0, 0, m_width, m_height);
+
+    shader->Begin();
 
     Renderer2D::Begin(&cameraEntity.Get<Camera>(), shader , nullptr);
 
@@ -227,7 +217,6 @@ void EditorAppWindow::OnDraw()
             0.0f, nullptr, glm::vec2(loc.X, loc.Y), angle.Value);
     }
     */
-    Renderer::Draw(*story.get());
 
     if (false)//(time < 100.0f)
     {
@@ -264,14 +253,10 @@ void EditorAppWindow::OnDraw()
     Renderer2D::End();
     //renderer.EndRender();
 
-    //textures = frame.EndFrame();
-    //glViewport(0, 0, m_width, m_height);
-
-    //renderer.StartRender();
-    //renderer.DrawQuad(-1.0f, -1.0f, 2.0f, 2.0f, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), textures[0]);
-    //renderer.EndRender();
 
     shader->End();
+
+    particleSystem.Render(&cameraEntity.Get<Camera>(), shader, &cameraEntity.Get<Viewport>());
 }
 
 void EditorAppWindow::OnImGUIDraw()
