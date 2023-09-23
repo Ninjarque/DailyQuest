@@ -62,12 +62,12 @@ bool Quest::SubQuest::Erase(std::shared_ptr<Name> actionName)
 		std::shared_ptr<ActionRequierement> action = _actionNames[actionName];
 		if (_actionRequierements.count(action))
 		{
+			_actionRequierements.erase(action);
+			_actionNames.erase(actionName);
 			if (_longestActionRequierement == action.get())
 			{
 				RecalculateLongest();
 			}
-			_actionRequierements.erase(action);
-			_actionNames.erase(actionName);
 			return true;
 		}
 	}
